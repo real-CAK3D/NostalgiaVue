@@ -514,6 +514,7 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 789 | MUSC | Live Music | YouTube (YouTube search + ON DEMAND) |
 | 790 | FIRE | Fireplace Live | YouTube (YouTube search + ON DEMAND) |
 | 791 | TRAIN | Train Cam Live | YouTube (YouTube search + ON DEMAND) |
+| 792 | KLPY | Kaloopy TV Live | YouTube (YouTube search + ON DEMAND) |
 
 ## Shows A–Z (800–899)
 
@@ -640,6 +641,40 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 913 | RSHO | Red Shoe Diaries | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 914 | MAXX | Late Night Cable | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 915 | SWIM | Swimsuit Specials | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 916 | MANS | The Man Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 917 | MNCI | Mind of Mencia | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 918 | CHAP | Chappelle’s Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 919 | AUST | Austin Powers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 920 | CRNK | Crank Yankers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 921 | INSM | Insomniac with Dave Attell | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 922 | TGRN | The Tom Green Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 923 | ALIG | Da Ali G Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 924 | R911 | Reno 911! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 925 | MRSH | Mr. Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 926 | SWC | Strangers with Candy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 927 | K&P | Key & Peele | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 928 | TOSH | Tosh.0 | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 929 | ILC | In Living Color | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 930 | KITH | The Kids in the Hall | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 931 | UCB | Upright Citizens Brigade | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 932 | T&E | Tim and Eric Awesome Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 933 | ATHF | Aqua Teen Hunger Force | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 934 | SEAL | Sealab 2021 | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 935 | BIRD | Harvey Birdman | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 936 | VBRO | The Venture Bros. | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 937 | SQBL | Squidbillies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 938 | DETH | Metalocalypse | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 939 | CRTC | The Critic | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 940 | DKMN | Duckman | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 941 | MHIL | Mission Hill | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 942 | CLON | Clone High | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 943 | UGRD | Undergrads | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 944 | SPRK | South Park | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 945 | FGUY | Family Guy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 946 | SUNY | It’s Always Sunny | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 947 | WRKH | Workaholics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 948 | DLY | The Daily Show (Jon Stewart) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 949 | COLB | The Colbert Report | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 950 | GOLF | Golf Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 951 | NFL | Pro Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 952 | NCAA | College Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
@@ -648,3 +683,17 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 955 | MMA | MMA Fight Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 956 | HOCK | Hockey | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 957 | LFL | Lingerie Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 958 | RWRL | Real World / Road Rules | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 959 | PNKD | Punk’d | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 960 | BAM | Viva La Bam | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 961 | PIMP | Pimp My Ride | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 962 | CRIB | MTV Cribs | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 963 | BANG | Headbangers Ball | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 964 | BNNY | The Benny Hill Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 965 | LMOV | Comedy Movie Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 966 | SPBK | MTV Spring Break | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 967 | TSEX | Teen Sex Comedies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 968 | LNAN | Late Night Anthologies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 969 | PBAD | Playboy After Dark | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 970 | GRND | Grindhouse After Dark | archive.org |
+| 971 | BRLQ | Burlesque & Pin-Up | archive.org |
