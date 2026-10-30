@@ -225,3 +225,52 @@
 @keyframes wipe{from{clip-path:inset(0 100% 0 0);filter:brightness(3)}to{clip-path:inset(0 0 0 0)}}
 @keyframes fade{from{opacity:0}}
 @keyframes fadeout{to{opacity:0;filter:brightness(2)}}
+
+/* weather station pages */
+.wx-days{display:grid;gap:1.2cqw;text-align:center}
+.wx-days.three{grid-template-columns:repeat(3,1fr)}.wx-days.five{grid-template-columns:repeat(5,1fr)}.wx-days.seven{grid-template-columns:repeat(7,1fr)}
+.wx-day{display:flex;flex-direction:column;gap:.4cqw;align-items:center;background:rgba(0,0,40,.45);border:.25cqw solid #6a7cff;padding:1cqw .3cqw;border-radius:.6cqw}
+.wx-day b{color:#ffe066;font-size:2.4cqw}.wx-day small{font-size:1.7cqw;min-height:2cqw}
+.wx-day strong{font-size:3.2cqw}.wx-day em{font-style:normal;color:#9cc8ff;font-size:2.4cqw}.wx-day i{font-style:normal;font-size:1.8cqw;color:#bfe0ff}
+.wx-day .wx-ico{font-size:5cqw}
+.wx-day.big b{font-size:3cqw}.wx-day.big .wx-ico{font-size:8cqw}.wx-day.big strong{font-size:4.6cqw}.wx-day.big em{font-size:3.2cqw}.wx-day.big small{font-size:2.2cqw}
+.wx-today{display:grid;grid-template-columns:34% 1fr;gap:4cqw;align-items:center}
+.wx-today dl{display:grid;grid-template-columns:auto auto;gap:.8cqw 3cqw;font-size:3cqw;margin:0}
+.wx-today dt{color:#bcd0ff}.wx-today dd{margin:0;text-align:right}
+.wx-hours{display:grid;grid-template-columns:repeat(12,1fr);gap:.6cqw;height:36cqw;align-items:end;text-align:center}
+.wx-hours div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:.3cqw}
+.wx-hours em{font-style:normal;font-size:1.7cqw;color:#bcd0ff;order:5}
+.wx-hours .bar{width:70%;background:linear-gradient(#ffcc33,#ff6a00);border-radius:.4cqw .4cqw 0 0;max-height:60%}
+.wx-hours b{font-size:2.2cqw}.wx-hours small{font-size:1.6cqw;color:#9cc8ff;order:6}
+.wx-ico.s{font-size:3cqw}
+.radar{--t:24cqw;position:relative;width:100%;aspect-ratio:16/9.4;overflow:hidden;border:.3cqw solid #6a7cff;border-radius:.6cqw;background:#0b1020;margin-top:-1cqw}
+.rmap{position:absolute;width:calc(var(--t)*5);height:calc(var(--t)*5)}
+.rlayer{position:absolute;inset:0;transition:opacity .2s}
+.rlayer img{position:absolute;width:var(--t);height:var(--t);display:block}
+.rlayer.clouds{opacity:.55;mix-blend-mode:screen;filter:grayscale(1) brightness(1.3)}
+.rlayer.labels{opacity:.9}
+.rpin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:.3cqw}
+.rpin i{width:1.4cqw;height:1.4cqw;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 .4cqw rgba(255,59,48,.35);animation:blink 1.2s steps(2) infinite}
+.rpin span{font:700 2.2cqw Oswald;text-shadow:.2cqw .2cqw 0 #000;margin-top:4cqw}
+.rstamp{position:absolute;right:1.4cqw;top:1cqw;font:3cqw VT323,monospace;background:rgba(0,0,0,.6);padding:0 1cqw}
+.rkey{position:absolute;left:1.4cqw;bottom:1cqw;display:flex;align-items:center;gap:.8cqw;font-size:1.6cqw;background:rgba(0,0,0,.6);padding:.3cqw 1cqw}
+.rkey b{width:14cqw;height:1.2cqw;background:linear-gradient(90deg,#33cc33,#ffff00,#ff9900,#ff0000,#cc00cc)}
+
+/* ON DEMAND picker (YouTube curated lists) */
+.odscene .ondemand{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(40,8,8,.96),rgba(8,2,2,.97));color:#fff;z-index:3}
+.od-head{padding:2cqw 3cqw;font:700 3.2cqw Oswald;color:#ffd23f;border-bottom:.4cqw solid #c4161c;letter-spacing:.06em}
+.od-head small{display:block;font:2.4cqw VT323,monospace;color:#ffb3b3;letter-spacing:0}
+.od-list{flex:1;overflow-y:auto;padding:1cqw 2.4cqw;scrollbar-width:none;pointer-events:auto}
+.od-item{padding:.7cqw 1.2cqw;border-bottom:.15cqw solid rgba(255,255,255,.08);cursor:pointer}
+.od-item b{display:block;font-size:2.6cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.od-item small{font-size:1.9cqw;color:#ffb3b3}
+.od-item.sel{background:#ffd23f;color:#2a0505}.od-item.sel small{color:#6a2a00}
+
+/* widescreen sets: the 4:3 picture is pillarboxed, like a real HD set showing old TV */
+.screen{aspect-ratio:var(--aspect,4/3)}
+.tube{container-type:inline-size}
+.screen.wide .tube{left:12.5%;right:12.5%}
+.screen.wide::after{content:"";position:absolute;inset:0;z-index:0;background:#000}
+.skin-plasma .screen .vignette{box-shadow:none}
+.skin-plasma .screen .scan{display:none}
+.skin-plasma .glare{background:linear-gradient(155deg,rgba(255,255,255,.08),transparent 30%)}

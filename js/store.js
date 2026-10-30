@@ -3,7 +3,7 @@ const KEY = 'nostalgiavue.v1';
 
 export const DEFAULTS = {
   // picture
-  set: '90s',            // '80s' | '90s' | '00s'
+  set: '90s-trino',      // a model id from js/sets.js
   remote: true,          // show the remote next to the set
   zoom: false,           // screen-only mode
   scanlines: 60,         // 0-100
@@ -32,6 +32,8 @@ export const DEFAULTS = {
   bridgeToken: '',
   jellyfinUrl: '',
   jellyfinKey: '',
+  ytKey: '',             // optional YouTube Data API key (search, ON DEMAND, @handles)
+  ytNames: {},           // channel names learned from YouTube
   localMap: {},          // channel number -> {type:'bridge'|'jellyfin', path|parentId, label}
   // channels
   userChannels: [],      // channels added by the user (any section)

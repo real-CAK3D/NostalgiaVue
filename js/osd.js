@@ -4,6 +4,7 @@ import { settings, state } from './store.js';
 import { staticHiss, tone, chime } from './sound.js';
 import { iconSVG } from './icons.js';
 import { emblem, wordmark } from './logo.js';
+import { era } from './sets.js';
 
 /* ---------- snow ---------- */
 const snow = $('#snow'), sctx = snow.getContext('2d'), W = 160, H = 120;
@@ -45,12 +46,12 @@ export function osdChan(ch, text) {
   const el = $('#osdChan');
   if (text) el.innerHTML = `<b>${esc(text)}</b>`;
   else el.innerHTML = `<b>${state.num}</b><span>${esc(ch ? ch.call : '')}</span>`;
-  el.dataset.style = settings.set;
+  el.dataset.style = era();
   flash(el, text ? 2000 : 3500);
 }
 export function osdVol() {
   const n = Math.round(settings.vol * 20), el = $('#osdVol');
-  el.dataset.style = settings.set;
+  el.dataset.style = era();
   el.innerHTML = settings.muted ? '<b>MUTE</b>' : `<b>VOLUME</b> <span class="seg">${'▮'.repeat(n)}${'▯'.repeat(20 - n)}</span> <i>${pad(n)}</i>`;
   flash(el, 2200);
 }

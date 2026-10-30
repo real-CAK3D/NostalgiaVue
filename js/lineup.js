@@ -226,16 +226,60 @@ const NOSTALGIA = [
   a(200, 'MOVIES', 'RLTT', 'Channel Roulette', ['downloads:[1000 TO *]'], { rows: 400 }),
 ];
 
+const CARTOON_YT = ['UCMsgXPD3wzzt8RxHJmXH7hQ', 'UCgPClNr5VSYC3syrDUIlzLw', 'UC9trsD1jCTXXtN3xIOIU8gg', 'UCmst562fALOY2cKb4IFgqEg', 'UC5M_h2S8Ldoc9M6f7B-_m6A', 'UCx8nU9xWEyden60hkKBaAvg', 'UCxGAABgVaQHvpu-6APxDyZg'];
+const TALK_YT = ['UCsT0YIqwnpJCM-mx7-gSA4Q', 'UCAuUUnT6oDeKwE6v1NGQxug', 'UCsooa4yRKGN_zEE8iknghZA', 'UCwzCMiicL-hBUzyjWiJaseg', 'UCJm8Q-9K_8n-UBrgwEo4yLA', 'UCYlCO4i0yJhQPHO5C7FsL0Q'];
+const COZY_YT = ['UCgyeJxD05YnoDquRMNBfBqw', 'UCJ0n5PDCBQZVlZYGmmK5adg', 'UCPD_bxCRGpmmeQcbe2kpPaA'];
+const MOVIE_YT = ['UC0RiBBJuV3vUzvwJJ2cBrJA', 'UC7rrSVE7CSDl5MCsOwI8Gbg'];
+const FIRE_SEASON = ['new years fireplace', 'valentines fireplace', 'irish pub fireplace', 'spring rain fireplace', 'spring fireplace birds', 'summer campfire',
+  'fourth of july campfire', 'summer night campfire', 'autumn fireplace', 'halloween fireplace', 'thanksgiving fireplace', 'christmas fireplace'];
+// autoName: the guide shows the channel's real YouTube name once it has aired
+const yn = (n, call, name, id, x = {}) => yt(n, 'YOUTUBE', call, name, [id], { autoName: true, ...x });
+const genre = (n, call, g, archiveQ) => yt(n, 'MOVIES', call, `Movie Night: ${g}`, MOVIE_YT, { mix: true, search: { q: [`full movie ${g.toLowerCase()}`, `${g.toLowerCase()} full movie free`], channels: MOVIE_YT, long: true }, q: archiveQ, desc: `Full-length ${g.toLowerCase()} movies from YouTube. Press OK for the ON DEMAND list (needs a YouTube API key).` });
+
 const YOUTUBE = [
   yt(201, 'YOUTUBE', '[AS]', 'Adult Swim', ['UCgPClNr5VSYC3syrDUIlzLw']),
-  yt(202, 'YOUTUBE', 'CN', 'Cartoon Network', ['UCMsgXPD3wzzt8RxHJmXH7hQ', 'UCXoZJ2AaqhF8SF0Fgt2RYIw']),
+  yt(202, 'YOUTUBE', 'CN', 'Cartoon Network', ['UCMsgXPD3wzzt8RxHJmXH7hQ']),
   yt(203, 'YOUTUBE', 'WBK', 'Looney Tunes · WB Kids', ['UC9trsD1jCTXXtN3xIOIU8gg']),
   yt(204, 'YOUTUBE', 'BEAN', 'Mr Bean', ['UCkAGrHCLFmlK3H2kd6isipg']),
   yt(205, 'YOUTUBE', 'PBSK', 'PBS Kids', ['UCmNIdCsMr-kjBzpzFH14cZg']),
   yt(206, 'YOUTUBE', 'CNAS', 'Cartoon Network Asia', ['UC9hVEGaTpAYMVd-bRsOYKwA']),
-  // IDs below are unconfirmed; if YouTube refuses them the channel falls back to archive.org
   yt(207, 'YOUTUBE', 'SNL', 'Saturday Night Live', ['UCqFzWxSCi39LnW1JKFR3efg'], { q: [TS('saturday night live', 'snl')] }),
   yt(208, 'YOUTUBE', 'MAD', 'MADtv', ['UCVQHDhC-5u7ze2qWNyTGM3g'], { q: [TS('mad tv', 'madtv')] }),
+  yt(209, 'YOUTUBE', 'BOOM', 'Boomerang', ['UCmst562fALOY2cKb4IFgqEg']),
+  yn(210, 'TOON', 'Toon Playlist', 'PLD_4GEDP7Kh8hdM2i215l-YNUluzt_q7T'),
+  yn(211, 'TCLB', 'Toon Club', 'UC5M_h2S8Ldoc9M6f7B-_m6A'),
+  yn(212, 'TMAR', 'Toon Marathon', 'PLSmufUDCoA7WmNwbemxvVtTQhcl_nXnUK'),
+  yn(213, 'TOON', 'Toon Time', 'UCx8nU9xWEyden60hkKBaAvg'),
+  yn(214, 'TOON', 'Toon Town Tube', 'UCxGAABgVaQHvpu-6APxDyZg'),
+  yn(215, 'MOVA', 'Free Movies A', 'UC0RiBBJuV3vUzvwJJ2cBrJA', { cat: 'MOVIES' }),
+  yn(216, 'MOVB', 'Free Movies B', 'UC7rrSVE7CSDl5MCsOwI8Gbg', { cat: 'MOVIES' }),
+  yn(217, 'STND', 'Stand-Up Tube', 'UCkN6tCk7n8TCJbqlPI8shGg', { cat: 'COMEDY' }),
+  yt(218, 'TALKS', 'TEDX', 'TEDx Talks', ['UCsT0YIqwnpJCM-mx7-gSA4Q']),
+  yt(219, 'TALKS', 'TED', 'TED', ['UCAuUUnT6oDeKwE6v1NGQxug'], { q: [TS('ted talk', 'ted talks')] }),
+  yt(220, 'TALKS', 'TEDE', 'TED-Ed', ['UCsooa4yRKGN_zEE8iknghZA']),
+  yn(221, 'TLK1', 'Talks Channel 1', 'UCwzCMiicL-hBUzyjWiJaseg', { cat: 'TALKS' }),
+  yn(222, 'TLK2', 'Talks Channel 2', 'UCJm8Q-9K_8n-UBrgwEo4yLA', { cat: 'TALKS' }),
+  yn(223, 'TLK3', 'Talks Channel 3', 'UCYlCO4i0yJhQPHO5C7FsL0Q', { cat: 'TALKS' }),
+  yn(224, 'COZ1', 'Cozy Channel 1', COZY_YT[0], { cat: 'COZY' }),
+  yn(225, 'COZ2', 'Cozy Channel 2', COZY_YT[1], { cat: 'COZY' }),
+  yn(226, 'COZ3', 'Cozy Channel 3', COZY_YT[2], { cat: 'COZY' }),
+  // themed mixes
+  yt(230, 'COZY', 'FIRE', 'Fireside', COZY_YT, { mix: true, search: { q: () => [FIRE_SEASON[new Date().getMonth()] + ' 10 hours', FIRE_SEASON[new Date().getMonth()]] }, q: [S('fireplace', 'yule log', 'campfire')], desc: 'A crackling seasonal fire, all day long.' }),
+  yt(231, 'COZY', 'LOFI', 'Lo-Fi Coffeehouse', COZY_YT, { mix: true, search: { q: ['lofi jazz coffee shop', 'coffee shop jazz ambience', 'lofi hip hop jazz cafe'] }, q: [S('lofi', 'lo-fi', 'jazz')], desc: 'Lo-fi jazz and coffeehouse ambience.' }),
+  yt(232, 'TALKS', 'ELON', 'The Elon Channel', [], { search: { q: ['elon musk interview', 'elon musk full interview', 'elon musk talk', 'elon musk podcast', 'elon musk spacex presentation'] }, q: [TS('elon musk', 'spacex', 'tesla')], desc: 'Elon Musk talks, interviews and presentations.' }),
+  yt(233, 'TALKS', 'IDEA', 'Ideas Worth Watching', TALK_YT, { mix: true, q: [TS('ted talk', 'lecture', 'keynote')], desc: 'TED, TEDx, TED-Ed and more talks, rotating every half hour.' }),
+  yt(234, 'COMEDY', 'LEGS', 'Stand-Up Legends', ['UCkN6tCk7n8TCJbqlPI8shGg'], { search: { q: ['robin williams stand up', 'katt williams stand up', 'eddie murphy stand up', 'richard pryor stand up', 'george carlin stand up', 'bernie mac stand up', 'chris rock stand up'] }, q: [S('stand-up comedy', 'stand up comedy', 'comedian')], desc: 'Robin Williams, Katt Williams, Eddie Murphy, Pryor, Carlin and more.' }),
+  yt(235, 'CARTOONS', 'MEGA', 'Cartoon Mega Mix', CARTOON_YT, { mix: true, desc: 'A different cartoon channel every half hour.' }),
+  genre(240, 'ACTN', 'Action', [S('action', 'action film')]),
+  genre(241, 'COMD', 'Comedy', ['collection:feature_films AND subject:comedy']),
+  genre(242, 'HORR', 'Horror', ['subject:horror']),
+  genre(243, 'SCIF', 'Sci-Fi', ['collection:SciFi_Horror']),
+  genre(244, 'WEST', 'Western', [S('western', 'westerns')]),
+  genre(245, 'DRMA', 'Drama', ['collection:feature_films AND subject:drama']),
+  genre(246, 'THRL', 'Thriller', [TS('thriller', 'suspense')]),
+  genre(247, 'FAMY', 'Family', ['collection:feature_films AND subject:family']),
+  genre(248, 'ROMC', 'Romance', ['collection:feature_films AND subject:romance']),
+  genre(249, 'KICK', 'Martial Arts', [S('martial arts', 'kung fu')]),
 ];
 
 const MORE = [
@@ -307,7 +351,7 @@ const MORE = [
   a(416, 'COMEDY', 'ROST', 'Roast Pit', [TS('roast', 'celebrity roast', 'dean martin roast')]),
   a(417, 'COMEDY', 'PRNK', 'Prank Patrol', [TS('candid camera', 'prank', 'pranks', 'hidden camera')]),
   a(418, 'DRAMA', 'HOSP', 'General Hospital Hour', [S('hospital', 'doctors', 'nurses', 'medical drama')]),
-  a(419, 'TALK', 'SIGN', 'Sign-Off', [S('sign-off', 'sign off', 'national anthem', 'station sign off')]),
+  a(419, 'COMEDY', '420', 'Half Baked', [TS('cheech and chong', 'cheech & chong', 'reefer madness', 'stoner', 'stoner comedy', 'marijuana', 'cannabis', 'psychedelic', 'trippy', 'acid trip', 'psychedelic animation', 'visualizer'), S('psychedelic', 'stoner', 'marijuana')], { anyType: true, desc: 'Funny, trippy and stoner stuff. Cheech & Chong, Reefer Madness, psychedelic cartoons and head-trip visuals.' }),
 ];
 
 const POD = 'collection:podcasts';
@@ -351,12 +395,12 @@ const PPV = [
 // Local-area TV presets. 04240 = Lewiston/Auburn, Maine (Portland–Auburn market).
 const AREA_PRESETS = {
   '04240': [
-    { n: 6,  call: 'WCSH', name: 'WCSH 6 · NBC · NEWS CENTER Maine', net: 'NBC', url: 'https://www.newscentermaine.com/' },
-    { n: 8,  call: 'WMTW', name: 'WMTW News 8 · ABC', net: 'ABC', url: 'https://www.wmtw.com/' },
+    { n: 6,  call: 'WCSH', name: 'WCSH 6 · NBC · NEWS CENTER Maine', net: 'NBC', url: 'https://www.newscentermaine.com/', yt: ['UCQAUoXXSGHSntpTPvWwvXbg'] },
+    { n: 8,  call: 'WMTW', name: 'WMTW News 8 · ABC', net: 'ABC', url: 'https://www.wmtw.com/', yt: ['UC8p1vwvWtl6T73JiExfWs1g'] },
     { n: 9,  call: 'WX9',  name: 'Local on the 9s · Weather', kind: 'weather' },
     { n: 10, call: 'WCBB', name: 'WCBB 10 · Maine Public', net: 'PBS', url: 'https://www.mainepublic.org/' },
     { n: 12, call: 'PINE', name: 'Pine Tree Past', kind: 'archive', q: [TS('maine', 'portland maine', 'lewiston', 'auburn maine', 'bangor')], desc: 'Old films and footage from around Maine.' },
-    { n: 13, call: 'WGME', name: 'WGME CBS 13', net: 'CBS', url: 'https://wgme.com/' },
+    { n: 13, call: 'WGME', name: 'WGME CBS 13', net: 'CBS', url: 'https://wgme.com/', yt: ['UCeY0bbntWzzVIaj2z3QigXg'] },
     { n: 21, call: 'GFTV', name: 'Great Falls TV (Auburn)', net: 'PEG', url: 'https://www.auburnmaine.gov/Pages/Great-Falls-TV/Great-Falls-TV' },
     { n: 23, call: 'WPFO', name: 'WPFO 23', net: 'IND', url: 'https://fox23maine.com/' },
     { n: 24, call: 'WPXT', name: 'WPXT · The CW (51)', net: 'CW', url: '' },
@@ -398,6 +442,11 @@ export function buildLineup() {
     const ch = { ...u, user: true };
     if (taken.has(u.n)) all.splice(all.indexOf(taken.get(u.n)), 1, ch); else all.push(ch);
     taken.set(u.n, ch);
+  }
+  const names = settings.ytNames || {};
+  for (let i = 0; i < all.length; i++) {
+    const c = all[i];
+    if (c.autoName && c.yt && names[c.yt[0]]) all[i] = { ...c, name: names[c.yt[0]] };
   }
   all.sort((x, y) => x.n - y.n);
   CHANNELS = all;

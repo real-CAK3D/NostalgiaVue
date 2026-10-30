@@ -63,19 +63,49 @@ export function click() { if (settings.clicks) burst({ dur: .025, freq: 2500, ga
 export function relay() { burst({ dur: .04, freq: 900, type: 'bandpass', gain: .5, q: 3 }); }
 // The 80s set's mechanical dial: a heavy detent clunk.
 export function clunk() { osc({ type: 'triangle', f0: 160, f1: 60, dur: .12, gain: .5 }); burst({ dur: .06, freq: 600, type: 'lowpass', gain: .6 }); }
+// One detent of a rotary VHF tuner: sharp metal snap + plastic body thunk.
+function detent(at) {
+  setTimeout(() => {
+    burst({ dur: .012, freq: 3200, gain: .55 });
+    burst({ dur: .03, freq: 1100, type: 'bandpass', gain: .45, q: 4 });
+    osc({ type: 'triangle', f0: 190, f1: 75, dur: .07, gain: .35 });
+  }, at);
+}
+// Turning the dial across several channels: one click per detent, faster in the middle of the turn.
+export function knobClicks(steps) {
+  if (!ctx) return;
+  const n = Math.max(1, Math.min(12, steps));
+  let t = 0;
+  for (let i = 0; i < n; i++) { detent(t); t += n > 4 ? 80 - 25 * Math.sin(Math.PI * i / n) : 85; }
+}
+// 90s sets: the tuner relay plus a tiny audio pop as the sound cuts over.
+export function tunerTick() { relay(); osc({ type: 'sine', f0: 80, f1: 40, dur: .05, gain: .12 }); }
 // 2000s set: digital beep on every button.
 export function beep() { osc({ type: 'square', f0: 1850, dur: .05, gain: .06 }); }
 // Power on: relay clack, degauss "thwump-buzz", then high voltage settles.
-export function powerOn() {
-  relay();
-  osc({ type: 'sawtooth', f0: 60, f1: 50, dur: .9, gain: .12, at: .05 });
-  osc({ type: 'sine', f0: 120, f1: 40, dur: .5, gain: .35, at: .05 });
-  burst({ dur: .5, freq: 300, type: 'lowpass', gain: .25 });
-  setTimeout(() => whine(true), 600);
+export function powerOn(era = '90s') {
+  // 1. the switch: a pull-knob snap on old sets, a push-button clack on newer ones
+  if (era === '80s') { burst({ dur: .02, freq: 2400, gain: .6 }); osc({ type: 'triangle', f0: 260, f1: 90, dur: .09, gain: .4 }); }
+  else burst({ dur: .03, freq: 1500, type: 'bandpass', gain: .5, q: 2 });
+  // 2. the power relay closing
+  setTimeout(relay, era === '00s' ? 40 : 120);
+  if (era === '00s') { setTimeout(() => whine(true), 300); return; }
+  // 3. degauss coil: a loud 60 Hz "thwump-hummm" that dies away, with the shadow mask ringing
+  osc({ type: 'sawtooth', f0: 60, f1: 58, dur: 1.4, gain: .16, at: .18 });
+  osc({ type: 'sine', f0: 120, f1: 118, dur: 1.2, gain: .22, at: .18 });
+  osc({ type: 'sine', f0: 190, f1: 70, dur: .45, gain: .3, at: .18 });
+  burst({ dur: .35, freq: 220, type: 'lowpass', gain: .35 });
+  // 4. high voltage comes up: the flyback whine and a faint crackle of static charge on the glass
+  setTimeout(() => { burst({ dur: .02, freq: 5000, gain: .25 }); burst({ dur: .015, freq: 6000, gain: .2 }); }, 700);
+  setTimeout(() => burst({ dur: .02, freq: 5500, gain: .18 }), 950);
+  setTimeout(() => whine(true), 500);
 }
-export function powerOff() {
-  relay(); whine(false); staticHiss(false); tone(false);
+export function powerOff(era = '90s') {
+  burst({ dur: .02, freq: era === '80s' ? 2000 : 1500, gain: .5 }); relay(); whine(false); staticHiss(false); tone(false);
+  // the picture collapsing: a falling zap and the hum dying
   osc({ type: 'sine', f0: 900, f1: 40, dur: .35, gain: .05 });
+  osc({ type: 'sawtooth', f0: 60, f1: 30, dur: .4, gain: .06 });
+  if (era !== '00s') setTimeout(() => burst({ dur: .02, freq: 5000, gain: .15 }), 250);
 }
 // NostalgiaVue sonic logo: bright four-note arpeggio with a shimmer.
 export function chime() {

@@ -2,17 +2,17 @@
 import { $, $$, esc, sleep } from './util.js';
 import { settings, save, state } from './store.js';
 import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf } from './lineup.js';
-import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine } from './sound.js';
+import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
 import { tuneArchive } from './sources/archive.js';
-import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl } from './sources/youtube.js';
+import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker } from './sources/youtube.js';
 import { tuneLocal, tuneStream } from './sources/local.js';
 import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
 import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide } from './guide.js';
 import { openMenu, closeMenu, bindMenu, menuNav, renderMenu } from './menu.js';
-import { renderSet, turnDial, irBlink } from './sets.js';
+import { renderSet, turnDial, irBlink, era, setId, SETS } from './sets.js';
 import { runBreak } from './ads.js';
 import { iconSVG } from './icons.js';
 import './ads.js';
@@ -21,6 +21,7 @@ buildLineup();
 if (!chanByNum(state.num)) state.num = 31;
 
 /* ---------- applying settings to the picture ---------- */
+let renderedSet = '';
 function apply() {
   const s = $('#screen').style;
   s.setProperty('--scan', settings.scanlines / 100);
@@ -29,7 +30,7 @@ function apply() {
   $('#prog').style.filter = `saturate(${settings.color}%) brightness(${settings.brightness}%)`;
   document.body.classList.toggle('no-remote', !settings.remote);
   document.body.classList.toggle('zoom', !!settings.zoom);
-  if (document.body.dataset.set !== settings.set) renderSet();
+  if (renderedSet !== setId()) { renderedSet = setId(); renderSet(); }
   applyVolume(); whine(state.on);
   turnDial();
 }
@@ -37,6 +38,8 @@ state.hooks.apply = apply;
 state.hooks.lineupChanged = () => { if (state.on && !chanByNum(state.num)) tune(31); };
 state.hooks.breakNow = () => runBreak(true);
 state.hooks.fullscreen = fullscreen;
+state.hooks.card = ch => tuneCard(ch);
+state.hooks.namesLearned = () => buildLineup();
 
 /* ---------- tuning ---------- */
 function stopAll() {
@@ -48,9 +51,12 @@ export async function tune(n, { silent } = {}) {
   if (n !== state.num) { state.prev = state.num; state.num = n; settings.num = n; save(); }
   const token = ++state.token;
   state.inBreak = false;
-  stopAll(); clearOverlays(); staticOn(); relay();
+  const from = state.prev ?? n;
+  stopAll(); clearOverlays(); staticOn();
+  // the sound of the tuner: rotary detents on 80s sets, a relay tick on 90s sets, near-silent on 2000s sets
+  if (silent !== 'power') { if (era() === '80s') knobClicks(Math.abs(n - from) || 1); else if (era() === '90s') tunerTick(); else relay(); }
   const ch = chanByNum(n);
-  if (!silent) osdChan(ch);
+  osdChan(ch);
   bug(ch); turnDial();
   if (state.guide) closeGuide();
   if (!ch) { msg('NO SIGNAL'); return; }
@@ -109,13 +115,16 @@ async function power() {
   const set = $('#set');
   if (!state.on) {
     state.on = true; set.classList.remove('off-anim'); set.classList.add('on');
-    unlockMedia(); powerOn(); applyVolume();
-    await sleep(500);
+    unlockMedia(); powerOn(era()); applyVolume();
+    // the tube warms up into snow before the picture locks in
+    await sleep(era() === '00s' ? 350 : 650);
+    if (!state.on) return;
+    if (era() !== '00s') { staticOn(); await sleep(900); staticOff(); }
     await splash();
-    if (state.on) tune(state.num);
+    if (state.on) tune(state.num, { silent: 'power' });
   } else {
     state.on = false; state.token++;
-    closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff();
+    closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
     set.classList.remove('on'); set.classList.add('off-anim');
     setTimeout(() => set.classList.remove('off-anim'), 600);
   }
@@ -138,7 +147,7 @@ function fullscreen() {
 
 /* ---------- remote actions ---------- */
 function act(a) {
-  irBlink(); initSound(); remoteClick(settings.set);
+  irBlink(); initSound(); remoteClick(era());
   if (a === 'power') return power();
   if (a === 'zoom') return toggleZoom();
   if (!state.on) return;
@@ -154,6 +163,12 @@ function act(a) {
     if (a === 'right') return guidePage(1);
     if (a === 'ok') { const ch = guideSelected(); closeGuide(); return tune(ch.n); }
     if (a === 'guide' || a === 'back') return closeGuide();
+  }
+  if (pickerOpen()) {
+    if (a === 'up' || a === 'chup') return pickerNav(-1);
+    if (a === 'down' || a === 'chdn') return pickerNav(1);
+    if (a === 'ok') return pickerOK();
+    if (a === 'back' || a === 'guide') return closePicker();
   }
   if (gameState.open) {
     if (a === 'up' && gameNav(-1)) return;
@@ -178,6 +193,7 @@ function act(a) {
     case 'back': clearOverlays(); return;
     case 'ok':
       if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return openExternal(ch);
+      if (ytActive() && openPicker()) return;
       if (programInfo() && !$('#msg').classList.contains('tap')) return showProgramBanner();
       if ($('#msg').classList.contains('tap')) return $('#msg').click();
       return;
@@ -187,7 +203,7 @@ function act(a) {
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act],[data-d]');
   if (!b || b.closest('#menu')) return;
-  if (b.dataset.d != null) { irBlink(); remoteClick(settings.set); digit(b.dataset.d); }
+  if (b.dataset.d != null) { irBlink(); remoteClick(era()); digit(b.dataset.d); }
   else act(b.dataset.act);
 });
 
@@ -195,7 +211,7 @@ document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea, select') && e.key !== 'Escape') return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key;
-  if (/^[0-9]$/.test(k)) { irBlink(); remoteClick(settings.set); return digit(k); }
+  if (/^[0-9]$/.test(k)) { irBlink(); remoteClick(era()); return digit(k); }
   const map = {
     ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', Enter: 'ok', ' ': 'ok',
     PageUp: 'chup', PageDown: 'chdn', '+': 'volup', '=': 'volup', '-': 'voldn',

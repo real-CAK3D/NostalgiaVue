@@ -3,10 +3,10 @@ import { $, $$, esc } from './util.js';
 import { settings, save, state, exportSettings, importSettings, resetAll } from './store.js';
 import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf } from './lineup.js';
 import { iconSVG } from './icons.js';
-import { SETS } from './sets.js';
+import { SETS, setId, era } from './sets.js';
 import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
-import { parseYouTube } from './sources/youtube.js';
+import { parseYouTube, resolveHandle } from './sources/youtube.js';
 import { lockup } from './logo.js';
 
 const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['system', 'System']];
@@ -24,7 +24,7 @@ const text = (k, label, ph = '', type = 'text') => `<label class="m-row"><span>$
 function body() {
   switch (tab) {
     case 'picture': return `
-      ${select('set', 'TV set', Object.entries(SETS).map(([k, s]) => [k, `${k === '80s' ? '1980s' : k === '90s' ? '1990s' : '2000s'} · NostalgiaVue ${s.model}`]))}
+      <label class="m-row"><span>TV set</span><select data-k="set">${Object.entries(SETS).map(([k, s]) => `<option value="${k}" ${k === setId() ? 'selected' : ''}>${s.year} · NostalgiaVue ${esc(s.model)}</option>`).join('')}</select></label>
       ${check('remote', 'Show remote')}${check('zoom', 'Screen only (zoom)')}
       ${range('scanlines', 'Scanlines')}${range('mask', 'Phosphor mask')}${range('curvature', 'Glass & curve')}
       ${range('color', 'Color', 0, 160)}${range('brightness', 'Brightness', 50, 150)}
@@ -62,6 +62,9 @@ function body() {
       <h4>Jellyfin</h4>
       ${text('jellyfinUrl', 'Server address', 'https://jellyfin.tail1234.ts.net')}${text('jellyfinKey', 'API key', 'Dashboard › API Keys', 'password')}
       <div class="m-row"><span></span><button type="button" class="m-btn" data-do="jellyfin">Test & load libraries</button><em id="mJelly"></em></div>
+      <h4>YouTube <small>(optional, free key from console.cloud.google.com › YouTube Data API v3)</small></h4>
+      ${text('ytKey', 'API key', 'AIza…', 'password')}
+      <p class="m-note">Unlocks ON DEMAND lists, Movie Night genres, the Elon Channel, seasonal fireplaces, and adding channels by @handle.</p>
       <h4>Local channels</h4>
       <div class="m-table">${local.map(n => {
         const m = settings.localMap[n], val = m ? (m.type === 'jellyfin' ? 'jellyfin:' + m.parentId : 'bridge:' + m.path) : '';
@@ -100,8 +103,8 @@ function body() {
 
 export function renderMenu() {
   const m = $('#menu');
-  m.dataset.style = settings.set;
-  m.innerHTML = `<div class="m-head"><span>${settings.set === '80s' ? 'TV SETUP' : 'MENU'}</span><button type="button" class="m-close" data-do="close" aria-label="Close">✕</button></div>
+  m.dataset.style = era();
+  m.innerHTML = `<div class="m-head"><span>${era() === '80s' ? 'TV SETUP' : 'MENU'}</span><button type="button" class="m-close" data-do="close" aria-label="Close">✕</button></div>
     <nav class="m-tabs">${TABS.map(([k, t]) => `<button type="button" data-tab="${k}" class="${k === tab ? 'on' : ''}">${t}</button>`).join('')}</nav>
     <div class="m-body">${body()}</div>`;
   if (tab === 'channels') { suggestNumber(); previewIcon(); }
@@ -124,7 +127,7 @@ function previewIcon() {
   $('#aPrev').innerHTML = iconSVG({ n, call: makeCall(name), cat: sec ? sec.label.split(' ')[0] : 'BYO' });
 }
 
-function addChannel() {
+async function addChannel() {
   const secId = $('#aSec').value, type = $('#aType').value, name = $('#aName').value.trim(), val = $('#aVal').value.trim();
   let n = +$('#aNum').value; const sec = SECTIONS.find(s => s.id === secId), out = $('#aMsg');
   const cat = { nostalgia: 'MOVIES', youtube: 'YOUTUBE', podcasts: 'PODCASTS', more: 'MOVIES', byo: 'BYO', ppv: 'PPV' }[secId];
@@ -141,7 +144,12 @@ function addChannel() {
   const existing = chanByNum(n);
   if (existing && !existing.user) { out.textContent = `Channel ${n} is taken by ${existing.name}.`; return; }
   const base = { n, cat, name: name || 'Channel ' + n, call: makeCall(name || 'CH ' + n) };
-  if (type === 'yt') { const id = parseYouTube(val); if (!id) { out.textContent = 'That doesn’t look like a YouTube channel, playlist or video link. Use the /channel/UC… address.'; return; } add({ ...base, kind: 'yt', yt: [id] }); }
+  if (type === 'yt') {
+    let id = parseYouTube(val), learned = null;
+    if (!id && /@/.test(val) && settings.ytKey) { try { learned = await resolveHandle(val); id = learned?.id; } catch {} }
+    if (!id) { out.textContent = settings.ytKey ? 'Couldn’t find that YouTube channel.' : 'Use the /channel/UC… address (or add a YouTube API key in Sources to use @handles).'; return; }
+    add({ ...base, kind: 'yt', yt: [id], name: name || learned?.name || base.name, autoName: !name && !learned });
+  }
   else if (type === 'archive') add({ ...base, kind: 'archive', q: [val], anyType: true });
   else if (type === 'stream') add({ ...base, kind: 'stream', url: val });
   else { try { new URL(val); } catch { out.textContent = 'Website shortcuts need a full https:// link.'; return; } add({ ...base, kind: 'external', url: val, ppv: secId === 'ppv' }); }
