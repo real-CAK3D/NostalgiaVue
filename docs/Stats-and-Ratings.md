@@ -11,8 +11,8 @@
 Shared counts are anonymous. Each TV makes up a random id and, once a minute, sends only that id, the channel number and its category. Turn it off with **Share anonymous viewing counts**.
 
 ### Turning on the shared counts (site owner, once)
-They need a small free database:
-1. Vercel › **nostalgiavue** › **Storage** › **Create Database** › **Upstash for Redis** (free plan) › connect it to the project.
-2. Redeploy. The `KV_REST_API_URL` / `KV_REST_API_TOKEN` variables it adds are picked up by `api/stats.js`.
+They need a small database. Either:
+- **Supabase** (what nostalgiavue.vercel.app uses): run the `nv_*` tables and functions from `supabase/nostalgiavue_stats.sql` in your project, then add `SUPABASE_URL` and `SUPABASE_KEY` (the project's **publishable** key) to the Vercel project's environment variables and redeploy. The tables are closed to direct access; the TV only reaches them through those functions.
+- **Upstash Redis:** Vercel › **Storage** › **Create Database** › **Upstash for Redis** (free) › connect it to the project, then redeploy.
 
 Until then each TV shows only its own stats.

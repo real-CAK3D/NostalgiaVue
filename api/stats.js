@@ -1,8 +1,32 @@
 // Shared, anonymous channel stats for everyone watching NostalgiaVue: who's watching what right
 // now, minutes watched per channel and category, and star ratings. No accounts: each TV sends a
-// random id it made up itself. Stored in a free Upstash Redis database connected to the Vercel
-// project (Vercel › Storage › Upstash for Redis), which sets the two REST variables used here.
-// Without it, this returns 503 and the TV shows its own on-device stats only.
+// random id it made up itself.
+// Storage: Supabase (SUPABASE_URL + SUPABASE_KEY, the project's publishable key; the nv_* SQL
+// functions do all the work and the tables are closed to direct access), or else Upstash Redis
+// (Vercel › Storage › Upstash for Redis sets the KV_REST_* variables). With neither, this returns
+// 503 and each TV shows only its own on-device stats.
+const SB = process.env.SUPABASE_URL, SB_KEY = process.env.SUPABASE_KEY;
+async function rpc(fn, args = {}) {
+  const r = await fetch(`${SB.replace(/\/+$/, '')}/rest/v1/rpc/${fn}`, {
+    method: 'POST', headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args),
+  });
+  if (r.status === 400) return { bad: true };
+  if (!r.ok) throw new Error('supabase ' + r.status);
+  const t = await r.text(); return t ? JSON.parse(t) : null;
+}
+async function viaSupabase(req, res) {
+  if (req.method === 'POST') {
+    const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    if (!okId(b.id)) return res.status(400).json({ error: 'bad id' });
+    let out;
+    if (b.op === 'beat') { if (!okCh(b.ch) || !okCat(b.cat)) return res.status(400).json({ error: 'bad channel' }); out = await rpc('nv_beat', { p_id: b.id, p_ch: b.ch, p_cat: b.cat }); }
+    else if (b.op === 'leave') out = await rpc('nv_leave', { p_id: b.id }) || { ok: true };
+    else if (b.op === 'rate') { if (!okCh(b.ch)) return res.status(400).json({ error: 'bad channel' }); out = await rpc('nv_rate', { p_id: b.id, p_ch: b.ch, p_stars: +b.stars }) || { ok: true }; }
+    else return res.status(400).json({ error: 'unknown op' });
+    return out && out.bad ? res.status(400).json({ error: 'bad input' }) : res.status(200).json(out);
+  }
+  return res.status(200).json(await rpc('nv_summary'));
+}
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const LIVE_SECS = 150;          // a TV counts as watching if it checked in this recently
@@ -30,8 +54,9 @@ async function liveCounts() {
 }
 
 export default async function handler(req, res) {
-  if (!URL_ || !TOKEN) return res.status(503).json({ error: 'stats database not connected' });
   res.setHeader('Cache-Control', 'no-store');
+  if (SB && SB_KEY) { try { return await viaSupabase(req, res); } catch { return res.status(502).json({ error: 'stats database unreachable' }); } }
+  if (!URL_ || !TOKEN) return res.status(503).json({ error: 'stats database not connected' });
   try {
     if (req.method === 'POST') {
       const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
