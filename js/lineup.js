@@ -744,6 +744,21 @@ const SHOWS = [
   show(882, 'SITCOMS', 'NWSR', 'NewsRadio', ['newsradio full episode', 'newsradio joe rogan joe garrelli', 'newsradio best moments']),
   show(883, 'SITCOMS', 'ROGN', 'Joe Rogan’s Early TV', ['newsradio joe rogan', 'hardball 1994 joe rogan sitcom', 'joe rogan 90s sitcom', 'newsradio full episode']),
   show(884, 'COMEDY', 'RWIL', 'Robin Williams Marathon', ['robin williams live at the met full', 'robin williams stand up full', 'mork and mindy full episode', 'robin williams interview carson']),
+  show(885, 'SITCOMS', '3ROK', '3rd Rock from the Sun', ep('3rd Rock from the Sun')),
+  show(886, 'SITCOMS', 'PSTR', 'Perfect Strangers', ep('Perfect Strangers')),
+  show(887, 'SITCOMS', 'WNDR', 'The Wonder Years', ep('The Wonder Years')),
+  show(888, 'SITCOMS', 'CHRS', 'Cheers', ep('Cheers')),
+  show(889, 'SITCOMS', 'TAXI', 'Taxi', ep('Taxi sitcom')),
+  show(890, 'COMEDY', 'ODD', 'Odd VHS', ['dwarf goes fishing', 'dwarf goes golfing', 'weird vhs tape 80s', 'strange 90s vhs found footage'], [], { desc: 'Strange tapes from the back of the rental store: Dwarf Goes Fishing, Dwarf Goes Golfing and more.' }),
+  show(891, 'NATURE', 'BABY', 'Talking Baby Animals', ['baby animals funny voice over', 'talking animals funny voiceover 90s', 'animal crack-ups full episode', 'baby animals just want to have fun'], [], { desc: 'Baby animals with funny dubbed-in voices.' }),
+  show(892, 'TALKS', 'FREE', 'Milton Friedman · Free to Choose', ['milton friedman free to choose full episode', 'milton friedman lecture', 'milton friedman interview'], [TS('milton friedman', 'free to choose')]),
+  show(893, 'SCIENCE', 'EMC2', 'Einstein & the Great Minds', ['albert einstein real footage', 'einstein archival footage', 'einstein documentary full', 'nikola tesla documentary full'], [TS('einstein', 'albert einstein')]),
+  show(894, 'TALKS', 'LECT', 'Lecture Hall', ['richard feynman lecture full', 'feynman messenger lectures', 'carl sagan lecture', 'stephen hawking lecture', 'royal institution christmas lectures'], [TS('feynman', 'lecture', 'lectures')]),
+  show(895, 'SCIENCE', 'SCIC', 'Science Classics', ['james burke connections full episode', 'newtons apple full episode', 'cosmos a personal voyage', 'mr wizards world full episode', 'nova pbs 90s full episode'], [TS('connections', 'newtons apple', 'cosmos')]),
+  show(896, 'MUSIC', 'MTV1', 'Retro Music Videos', ['80s music videos original', 'classic mtv music video 1983', '90s music videos original', '70s music video'], ['subject:("music video" OR "music videos")']),
+  show(897, 'MUSIC', 'BAND', 'Band Footage', ['rare band footage 70s', 'band rehearsal footage rare', 'classic rock live 1970s full', 'backstage band footage 80s', 'old tv performance band live'], [S('concert', 'live music')]),
+  show(898, 'MUSIC', 'RAPC', 'Rap City', ['90s rap music video', 'old school rap video 80s', 'golden age hip hop music video', 'yo mtv raps full episode', 'rap city bet freestyle'], [S('hip hop', 'rap')]),
+  show(899, 'SITCOMS', 'GOLD', 'The Golden Girls', ep('The Golden Girls')),
 ];
 
 export let CHANNELS = [];

@@ -604,3 +604,18 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 882 | NWSR | NewsRadio | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 883 | ROGN | Joe Rogan’s Early TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 884 | RWIL | Robin Williams Marathon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 885 | 3ROK | 3rd Rock from the Sun | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 886 | PSTR | Perfect Strangers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 887 | WNDR | The Wonder Years | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 888 | CHRS | Cheers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 889 | TAXI | Taxi | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 890 | ODD | Odd VHS | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 891 | BABY | Talking Baby Animals | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 892 | FREE | Milton Friedman · Free to Choose | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 893 | EMC2 | Einstein & the Great Minds | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 894 | LECT | Lecture Hall | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 895 | SCIC | Science Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 896 | MTV1 | Retro Music Videos | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 897 | BAND | Band Footage | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 898 | RAPC | Rap City | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 899 | GOLD | The Golden Girls | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
