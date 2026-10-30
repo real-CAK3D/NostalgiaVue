@@ -153,10 +153,12 @@ function digit(d) {
   if (!state.on || state.menu) return;
   if (pinDigit(d)) return;
   state.digits += d;
-  osdChan(null, state.digits + '-'.repeat(3 - state.digits.length));
+  // 3 digits tune right away unless a 4-digit channel (1000+) starts with them
+  const more = CHANNELS.some(c => c.n >= 1000 && String(c.n).startsWith(state.digits));
+  osdChan(null, state.digits + '-'.repeat(Math.max(0, (more ? 4 : 3) - state.digits.length)));
   clearTimeout(digitTimer);
   const commit = () => { const n = parseInt(state.digits, 10); state.digits = ''; if (n > 0) tune(n); };
-  if (state.digits.length >= 3) commit(); else digitTimer = setTimeout(commit, 1600);
+  if (state.digits.length >= 4 || (state.digits.length === 3 && !more)) commit(); else digitTimer = setTimeout(commit, 1600);
 }
 
 function info() {

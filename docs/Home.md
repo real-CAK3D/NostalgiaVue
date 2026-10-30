@@ -28,3 +28,4 @@ NostalgiaVue is a 1980s–2000s TV in your browser: https://nostalgiavue.vercel.
 | 700–799 | LIVE |
 | 800–899 | Shows A–Z (880 = VCR) |
 | 900–999 | More Shows (950s = sports; After Dark is PIN-locked) |
+| 1000–1099 | Extended Cable: docs, gaming, science & tech, Maker Lab, After Dark sci-fi |

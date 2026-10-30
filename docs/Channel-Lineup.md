@@ -725,3 +725,61 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 997 | LVSG | Living Single | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 998 | DEFJ | Def Comedy Jam | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 999 | TICK | The Tick | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+
+## Extended Cable (1000–1099)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 1000 | VICE | VICE | YouTube |
+| 1001 | VCTV | VICE TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1002 | TRFK | Trafficked w/ Mariana van Zeller | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1003 | SKRA | Siddharth Kara · Modern Slavery | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1004 | BLKM | Black Market | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1005 | DSOR | Dark Side of the Ring | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1006 | PHRM | Hamilton’s Pharmacopeia | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1007 | BONG | Bong Appétit | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1008 | DRGS | Drugs, Inc. & Underworld | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1009 | THRX | Louis Theroux | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1010 | FRNT | Frontline | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1011 | LUAB | Locked Up Abroad | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1012 | GANG | Gangland | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1013 | JHAR | Johnny Harris | YouTube |
+| 1014 | REAL | Real Stories | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1020 | IGN | IGN | YouTube |
+| 1021 | GSPT | GameSpot | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1022 | XPLY | G4 · X-Play | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1023 | LGR | Retro Computing & Games | YouTube (rotating mix) |
+| 1024 | GDQ | Speedruns (GDQ) | YouTube |
+| 1025 | E3 | E3 & Classic Trailers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1026 | GHIS | Video Game History | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1027 | LONG | Longplays | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1028 | GCCX | Retro Game Master | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1040 | VERI | Science Channel | YouTube (rotating mix) |
+| 1041 | TREV | Tech Review | YouTube (rotating mix) |
+| 1042 | PHIL | Computerphile & Numberphile | YouTube (rotating mix) |
+| 1043 | ORBT | Space Channel | YouTube (rotating mix) |
+| 1044 | ENGR | Practical Engineering | YouTube |
+| 1045 | TALK | Hacker Talks | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1046 | TTV | TechTV · The Screen Savers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1047 | SPCX | Rocket Launches | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1060 | ESP | ESP32 Lab | YouTube (rotating mix) |
+| 1061 | ESPP | ESP32 Projects | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1062 | RPI | Raspberry Pi Lab | YouTube |
+| 1063 | RPIP | Raspberry Pi Projects | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1064 | ARDU | Arduino | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1065 | HASS | Home Assistant & Smart Home | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1066 | BNCH | Electronics Bench | YouTube (rotating mix) |
+| 1067 | FIX | Repair Shop | YouTube |
+| 1068 | HAK5 | Hak5 | YouTube |
+| 1069 | MESH | Meshtastic & Radio | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1070 | PRNT | 3D Printing | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1071 | LAB | Homelab | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1072 | DRON | Robots & Drones | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1073 | CODE | Linux & Code | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1074 | MODS | Console Mods | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1080 | FLSH | Flesh Gordon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1081 | BARB | Barbarella | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1082 | GALX | Galaxina | archive.org |
+| 1083 | SPBB | Space Babes | archive.org |
+| 1084 | SXSF | Sexy Sci-Fi | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 1085 | HVMT | Heavy Metal & Adult Animation | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

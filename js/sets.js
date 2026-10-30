@@ -116,7 +116,7 @@ export function turnDial() {
   const n = state.num, d = $('#dial');
   if (d) d.style.setProperty('--turn', `${-(n >= 2 && n <= 13 ? (n - 2) * 30 : 330 + (n % 7) * 2)}deg`);
   const vk = $('#volKnob'); if (vk) vk.style.setProperty('--turn', `${settings.vol * 270 - 135}deg`);
-  const led = $('#led7'); if (led) led.textContent = state.on ? String(n).padStart(3, ' ').slice(-3) : '';
+  const led = $('#led7'); if (led) led.textContent = state.on ? String(n).padStart(3, ' ') : '';
   const vfd = $('#vfd');
   if (vfd) vfd.textContent = state.on ? `CH${pad(n % 1000)}` : new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }
