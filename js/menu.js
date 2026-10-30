@@ -193,7 +193,7 @@ async function act(what, el) {
       out.textContent = code === '401' ? '✗ The Bridge answered but the token doesn’t match. Re-open the pairing link from the installer, or copy the token from config.json.'
         : /^\d{3}$/.test(code) ? `✗ The Bridge answered with error ${code}.`
         : !/^https:\/\//.test(settings.bridgeUrl) ? '✗ The address must start with https:// (your tailnet name, e.g. https://pc.tail1234.ts.net).'
-        : '✗ Can’t reach it. Check: the Bridge is running on the PC, Tailscale is on here, and Chrome didn’t block “local network access” (allow it if asked).';
+        : `✗ Can’t reach ${settings.bridgeUrl}. Check: the Bridge is running on the PC, Tailscale is on here, and Chrome didn’t block “local network access” (allow it if asked). On the PC, the checkup script in the wiki pinpoints it.`;
     }
     return;
   }

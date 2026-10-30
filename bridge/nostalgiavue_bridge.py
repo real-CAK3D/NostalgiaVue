@@ -128,7 +128,9 @@ class Handler(BaseHTTPRequestHandler):
     def cors(self):
         origin = self.headers.get('Origin')
         allowed = CFG['allow_origins']
-        if origin and ('*' in allowed or origin in allowed):
+        # nostalgiavue.vercel.app also covers its Vercel preview addresses
+        preview = 'https://nostalgiavue.vercel.app' in allowed and re.match(r'^https://nostalgiavue(-[a-z0-9-]+)?\.vercel\.app$', origin or '')
+        if origin and ('*' in allowed or origin in allowed or preview):
             self.send_header('Access-Control-Allow-Origin', origin)
             self.send_header('Vary', 'Origin')
         self.send_header('Access-Control-Allow-Headers', 'Range, X-NV-Token')

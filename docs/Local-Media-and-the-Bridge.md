@@ -11,6 +11,12 @@ It installs Python, Tailscale and FFmpeg if they're missing, and sets up the Bri
 
 Different folders? Run e.g. `$NVMovies='D:\Films'; $NVTV='D:\Shows'` first, in the same PowerShell window.
 
+## Not connecting? Run the checkup
+```powershell
+irm https://raw.githubusercontent.com/real-CAK3D/NostalgiaVue/main/bridge/diagnose-windows.ps1 | iex
+```
+It checks Python, the Bridge process, the local port, Tailscale, `tailscale serve`, the https address and browser permissions. It prints a report with `[OK]`/`[XX]` per step (token hidden) and copies it to the clipboard.
+
 ## Option A: the NostalgiaVue Bridge, by hand
 The Bridge is a small Python program in [`bridge/`](https://github.com/real-CAK3D/NostalgiaVue/tree/main/bridge) that shares folders you choose.
 
