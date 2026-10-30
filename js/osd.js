@@ -1,4 +1,5 @@
 // Everything drawn on the glass that isn't the program itself: snow, OSD, banners, messages.
+import { watchingNow } from './stats.js';
 import { $, esc, pad, fmtTime, slotNow, SLOT } from './util.js';
 import { settings, state } from './store.js';
 import { staticHiss, tone, chime } from './sound.js';
@@ -98,7 +99,7 @@ export function banner({ ch, title, sub, extra }, ms = 5000) {
   if (!ch) return;
   const { start } = slotNow(), pct = Math.min(100, (Date.now() - start) / SLOT * 100), h24 = settings.clock24;
   $('#banner').innerHTML = `<div class="b-icon">${iconSVG(ch)}</div><div class="b-body">
-    <div class="b-top"><span class="b-ch">${ch.n} ${esc(ch.call)}</span><span class="b-name">${esc(ch.name)}</span><span class="b-time">${fmtTime(start, h24)} – ${fmtTime(start + SLOT, h24)}</span></div>
+    <div class="b-top"><span class="b-ch">${ch.n} ${esc(ch.call)}</span><span class="b-name">${esc(ch.name)}</span><span class="b-time">${fmtTime(start, h24)} – ${fmtTime(start + SLOT, h24)}</span>${watchingNow(ch.n) ? `<span class="b-watch">👁 ${watchingNow(ch.n)}</span>` : ''}</div>
     <div class="b-title">${esc(title || ch.name)}</div><div class="b-sub">${esc(sub || '') || '&nbsp;'}</div>
     <div class="b-prog"><i style="width:${pct}%"></i></div>${extra || ''}</div>`;
   flash($('#banner'), ms);

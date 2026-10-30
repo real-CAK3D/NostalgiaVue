@@ -3,7 +3,7 @@
 ## Windows app
 Download **NostalgiaVue-Setup.exe** from the latest release (it's built by the *Windows app* GitHub Action).
 
-It's the same TV in its own window, with **F11** for full screen. It also lets streaming services show **inside the set** on INPUT 2 (channels 501–519): the app strips the "don't show me inside other pages" headers that block them in a browser. Services that use DRM (Netflix, Disney+, Max, Hulu, Prime) still won't play their video, because that needs Google's Widevine module, which isn't licensed for this app. Pluto TV, Tubi, Plex, Twitch, Kanopy and similar work.
+It's the same TV in its own window, with **F11** for full screen. It also lets streaming services show **inside the set** on INPUT 2 (channels 501–519): the app strips the "don't show me inside other pages" headers that block them in a browser. Services that use DRM (Netflix, Disney+, Max, Hulu, Prime) still won't play their video, because that needs Google's Widevine module, which isn't licensed for this app. Pluto TV, Tubi, Plex, Twitch and similar work. **Sign in once** inside the set and the app remembers you (sign-ins stay in the app's own profile on your PC). The TV sends DRM services straight to your normal browser, which can play them and remembers your login there.
 
 ## Android TV / Fire TV
 NostalgiaVue understands TV remotes: the D-pad, OK, Back, CH+/CH−, the Guide and Info buttons, the color buttons (red = REC, green = Game, yellow = Find, blue = Guide) and CC/Subtitles.

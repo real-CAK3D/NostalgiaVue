@@ -40,7 +40,10 @@ More than 720 channels out of the box. Every channel, including ones you add, ge
 - **NostalgiaVue logo animation** at power-on. All sounds are synthesized: relay clicks, degauss thump, static, 15.7 kHz whine and the dial clunk.
 - Settings for picture (scanlines, phosphor mask, glass, color), sound, commercials, location, sources and channels. Back up and restore all settings as one file.
 - **Classic remote buttons:** SLEEP timer, CC captions, PIP + SWAP, FAV/FAV+ favorites, and **● REC** to tape shows to the **VCR** (channel 880) with VHS tracking lines on playback.
-- **Parental controls:** PIN locks by category or channel, and a Kids profile.
+- **Parental controls:** adult channels are always locked; a PIN (set after an 18+ check) opens them. PIN locks by category or channel, and a Kids profile.
+- **Stats & ratings:** 👁 how many are watching each channel now, star ratings, most watched today and all time, and per-channel, per-category and whole-app stats in MENU › Stats (see [Stats & Ratings](docs/Stats-and-Ratings.md)).
+- **English everywhere:** Spanish and other foreign titles and descriptions are shown in English. **CC** shows subtitles on YouTube and on archive.org, Bridge and Jellyfin videos that have them.
+- **No accounts:** settings, keys, PIN, favorites and history stay on each device.
 - **Realism:** each era changes channels its own way (80s snow and vertical roll, 90s blue mute, 2000s black). A dot lingers when you power off, a hum bar rolls up the screen, the wall glows in the channel's colors and the room darkens at night. On 80s sets you drag the rabbit ears for better reception. Also optional curved glass and an overnight sign-off at 3–5 AM.
 - **Your library:** OK on a local channel lists everything in it and resumes where you stopped. The installer can also connect Jellyfin, and settings sync between devices through the Bridge.
 - **Nightly YouTube pre-fetch** (GitHub Action) so channel surfing doesn't use the API quota.

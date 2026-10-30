@@ -3,6 +3,14 @@ import { $, $$, esc, sleep } from './util.js';
 import { settings, save, saveQuiet, state } from './store.js';
 import { pullSettings, pushSoon } from './sync.js';
 import { toEnglish, langName } from './translate.js';
+import { channelChanged, poweredOff, watchingNow, sharedSummary, myStats, myRating, rate, starsHTML, fmtMins } from './stats.js';
+let sharedNow = null;
+// stars anywhere (INFO panel, Stats tab): click to rate, click the same star again to clear
+document.addEventListener('click', e => {
+  const st = e.target.closest('[data-star]'), g = st && st.closest('[data-rate]'); if (!g) return;
+  const v = rate(+g.dataset.rate, +st.dataset.star);
+  g.querySelectorAll('[data-star]').forEach(b => b.classList.toggle('on', +b.dataset.star <= v));
+});
 import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS, TS } from './lineup.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
@@ -94,6 +102,7 @@ export async function tune(n, { silent } = {}) {
   if (n !== state.num) { state.prev = state.num; state.num = n; settings.num = n; save(); }
   const token = ++state.token;
   state.inBreak = false;
+  channelChanged();
   const from = state.prev ?? n;
   stopAll(); clearOverlays(); staticOn();
   // the sound of the tuner: rotary detents on 80s sets, a relay tick on 90s sets, near-silent on 2000s sets
@@ -153,6 +162,8 @@ let digitTimer = 0;
 function digit(d) {
   if (!state.on || state.menu) return;
   if (pinDigit(d)) return;
+  // with INFO up, 1-5 rate the channel and 0 clears your rating
+  if ($('#info').classList.contains('show') && !state.digits && infoCh) { rate(infoCh, +d || myRating(infoCh)); return info(true); }
   state.digits += d;
   // 3 digits tune right away unless a 4-digit channel (1000+) starts with them
   const more = CHANNELS.some(c => c.n >= 1000 && String(c.n).startsWith(state.digits));
@@ -162,16 +173,22 @@ function digit(d) {
   if (state.digits.length >= 4 || (state.digits.length === 3 && !more)) commit(); else digitTimer = setTimeout(commit, 1600);
 }
 
-function info() {
+let infoCh = 0;
+function info(refresh) {
   const ch = chanByNum(state.num); if (!ch) return;
-  if ($('#info').classList.contains('show')) { $('#info').classList.remove('show'); return; }
+  if (!refresh && $('#info').classList.contains('show')) { $('#info').classList.remove('show'); infoCh = 0; return; }
+  infoCh = ch.n;
   let title = ch.name, body = '', link = '';
   if (ytActive()) { title = ytTitle() || ch.name; body = `${ch.name} on YouTube.`; link = ytUrl(); banner({ ch, title, sub: ch.name + ' · YouTube' }, 9000); }
   else if (programInfo()) { const p = programInfo(); title = p.title; body = p.desc; link = p.link; showProgramBanner(9000); }
   else { body = ch.desc || ''; link = ch.url || ''; }
-  const show = (t, b, from) => infoPanel(`<div class="info-head">${iconSVG(ch)}<div><h3>${esc(t)}</h3><small>CH ${ch.n} · ${esc(ch.name)} · ${esc(sectionOf(ch.n)?.label || '')}</small></div></div>
+  const sum = sharedNow, r = sum && sum.ratings && sum.ratings[ch.n], w = watchingNow(ch.n), mineSecs = myStats().ch[ch.n] || 0;
+  const statLine = `<div class="info-stats">${w != null ? `<span>👁 ${w} watching now</span>` : ''}${r ? `<span>★ ${r.avg} (${r.n} rating${r.n > 1 ? 's' : ''})</span>` : ''}${mineSecs >= 60 ? `<span>You: ${fmtMins(mineSecs)}</span>` : ''}
+    <span>Your rating ${starsHTML(ch.n)} <small>press 1–5</small></span></div>`;
+  const show = (t, b, from) => infoPanel(`<div class="info-head">${iconSVG(ch)}<div><h3>${esc(t)}</h3><small>CH ${ch.n} · ${esc(ch.name)} · ${esc(sectionOf(ch.n)?.label || '')}</small></div></div>${statLine}
     <p>${esc((b || 'No description.').slice(0, 900))}${b.length > 900 ? '…' : ''}</p>${from ? `<p class="info-tr">Translated from ${esc(langName(from))}</p>` : ''}${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">More info ↗</a>` : ''}`);
   show(title, body);
+  if (!refresh) sharedSummary().then(j => { if (j && j !== sharedNow) { sharedNow = j; if (infoCh === ch.n && $('#info').classList.contains('show')) info(true); } });
   // foreign-language titles and descriptions switch to English once translated
   const n = state.num;
   Promise.all([toEnglish(title), toEnglish(body)]).then(([t, b]) => {
@@ -194,7 +211,7 @@ async function power() {
     if (state.on) tune(state.num, { silent: 'power' });
     if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
-    state.on = false; state.token++; clearUnlocks(); cancelPin(); pipClose(); state.sleepAt = 0;
+    state.on = false; state.token++; poweredOff(); clearUnlocks(); cancelPin(); pipClose(); state.sleepAt = 0;
     closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
     set.classList.remove('on'); set.classList.add('off-anim'); updateReception();
     if (era() !== '00s') { const d = $('#dot'); d.classList.remove('go'); void d.offsetWidth; d.classList.add('go'); }

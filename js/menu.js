@@ -8,11 +8,12 @@ import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
 import { applySubs } from './player.js';
+import { myStats, sharedSummary, starsHTML, fmtMins, resetMyStats } from './stats.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
 import { pinSet, setPin, confirmPin, ADULT_CATS } from './parental.js';
 
-const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['system', 'System']];
+const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['stats', 'Stats'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
 
@@ -124,6 +125,9 @@ function body() {
       <h4>Locked channels</h4>
       <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
     }
+    case 'stats': return `<div id="mStats"><p class="m-note">Counting…</p></div>
+      ${check('shareStats', 'Share anonymous viewing counts (channel number and category only, no account)')}
+      <div class="m-row"><span>This TV</span><button type="button" class="m-btn danger" data-do="resetstats">Reset my stats & ratings</button></div>`;
     case 'system': return `
       <div class="m-about">${lockup('color', 'mab')}<p>NostalgiaVue 1.0 · The picture of yesterday.</p></div>
       ${check('translate', 'Show Spanish and other foreign titles and descriptions in English')}
@@ -144,6 +148,49 @@ export function renderMenu() {
     <nav class="m-tabs">${TABS.map(([k, t]) => `<button type="button" data-tab="${k}" class="${k === tab ? 'on' : ''}">${t}</button>`).join('')}</nav>
     <div class="m-body">${body()}</div>`;
   if (tab === 'channels') { suggestNumber(); previewIcon(); }
+  if (tab === 'stats') fillStats();
+}
+
+/* ---------- Stats tab ---------- */
+function bars(entries, fmt, max = 10) {
+  const rows = entries.filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, max);
+  if (!rows.length) return '<p class="m-note">Nothing yet.</p>';
+  const top = rows[0][1];
+  return `<div class="st-bars">${rows.map(([label, v]) => `<div class="st-row"><span>${esc(label)}</span><i style="--w:${Math.max(3, v / top * 100)}%"></i><em>${fmt(v)}</em></div>`).join('')}</div>`;
+}
+const chLabel = n => { const c = chanByNum(+n); return c ? `${c.n} ${c.name}` : `Channel ${n}`; };
+const mins = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`;
+async function fillStats() {
+  const box = $('#mStats'); if (!box) return;
+  const me = myStats(), total = Object.values(me.ch).reduce((a, b) => a + b, 0);
+  const days = Object.entries(me.days).sort().slice(-7).map(([d, v]) => [new Date(d + 'T12:00').toLocaleDateString([], { weekday: 'short' }), v]);
+  const rated = Object.entries(me.rate).map(([n, v]) => [chLabel(n), v]);
+  const cur = chanByNum(state.num);
+  let html = `<h4>This TV <small>(since ${new Date(me.since).toLocaleDateString()})</small></h4>
+    <div class="st-big"><b>${fmtMins(total)}</b><small>watched in all</small></div>
+    ${cur ? `<div class="m-row"><span>Rate ${esc(cur.n + ' ' + cur.name)}</span>${starsHTML(cur.n)}</div>` : ''}
+    <h5>Your most-watched channels</h5>${bars(Object.entries(me.ch).map(([n, v]) => [chLabel(n), v]), fmtMins)}
+    <h5>By category</h5>${bars(Object.entries(me.cat), fmtMins, 12)}
+    <h5>Last 7 days</h5>${bars(days, fmtMins, 7)}
+    <h5>Your ratings</h5>${bars(rated, v => '★'.repeat(v), 20)}`;
+  box.innerHTML = html;
+  const all = await sharedSummary(true);
+  if (!$('#mStats')) return;
+  if (!all) {
+    html += settings.shareStats === false
+      ? '<h4>Everyone</h4><p class="m-note">Sharing is off, so the shared counts are hidden.</p>'
+      : '<h4>Everyone</h4><p class="m-note">Shared counts (who’s watching what, most watched, average ratings) need the site’s free stats database. The site owner connects one in Vercel › Storage › Upstash for Redis. Until then, only this TV’s stats show.</p>';
+  } else {
+    const rt = Object.entries(all.ratings).filter(([, r]) => r.n >= 1).map(([n, r]) => [`${chLabel(n)} (${r.n})`, r.avg]);
+    html += `<h4>Everyone</h4>
+      <div class="st-big"><b>${all.live.total}</b><small>TVs on right now</small><b>${all.tvsToday}</b><small>TVs today</small></div>
+      <h5>Watching right now</h5>${bars(Object.entries(all.live.by).map(([n, v]) => [chLabel(n), v]), v => `👁 ${v}`)}
+      <h5>Most watched today</h5>${bars(Object.entries(all.today).map(([n, v]) => [chLabel(n), v]), mins)}
+      <h5>Most watched of all time</h5>${bars(Object.entries(all.all).map(([n, v]) => [chLabel(n), v]), mins)}
+      <h5>Top rated</h5>${bars(rt, v => '★ ' + v)}
+      <h5>By category (everyone)</h5>${bars(Object.entries(all.cats), mins, 12)}`;
+  }
+  $('#mStats').innerHTML = html;
 }
 export function openMenu(t) {
   if (t) tab = t; state.menu = true;
@@ -233,6 +280,10 @@ async function act(what, el) {
         : `✗ Can’t reach ${settings.bridgeUrl}. Check: the Bridge is running on the PC, Tailscale is on here, and Chrome didn’t block “local network access” (allow it if asked). On the PC, the checkup script in the wiki pinpoints it.`;
     }
     return;
+  }
+  if (what === 'resetstats') {
+    if (!confirm('Erase this TV’s watch history and ratings?')) return;
+    resetMyStats(); renderMenu(); return;
   }
   if (what === 'adult') {
     if (!confirm('Adult channels have sexual content and drug references.\n\nPress OK only if you are 18 or older. This is remembered on this device.')) return;

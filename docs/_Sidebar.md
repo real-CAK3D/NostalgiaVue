@@ -7,5 +7,6 @@
 - [Local Media & the Bridge](Local-Media-and-the-Bridge)
 - [Game Channel](Game-Channel)
 - [Parental Controls](Parental-Controls)
+- [Stats & Ratings](Stats-and-Ratings)
 - [Desktop & TV Apps](Desktop-and-TV-Apps)
 - [Install on Mobile](Install-on-Mobile)

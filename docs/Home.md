@@ -8,7 +8,8 @@ NostalgiaVue is a 1980s–2000s TV in your browser: https://nostalgiavue.vercel.
 - **[Local TV](Local-TV)**: your ZIP, local stations and the weather channel
 - **[Local Media & the Bridge](Local-Media-and-the-Bridge)**: E: drive folders and Jellyfin over Tailscale
 - **[Game Channel](Game-Channel)**: ROMs on channel 3
-- **[Parental Controls](Parental-Controls)**: PIN locks and the Kids profile
+- **[Parental Controls](Parental-Controls)**: adult locks, PIN, 18+ check and the Kids profile
+- **[Stats & Ratings](Stats-and-Ratings)**: who's watching, most watched, star ratings
 - **[Desktop & TV Apps](Desktop-and-TV-Apps)**: Windows app, Android TV / Fire TV
 - **[Install on Mobile](Install-on-Mobile)**: the app on your phone
 

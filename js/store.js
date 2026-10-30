@@ -40,7 +40,8 @@ export const DEFAULTS = {
   jellyfinUrl: '',
   jellyfinKey: '',
   adultOk: false,         // "I'm 18 or older" confirmed on this device (needed to set a PIN)
-  translate: true,        // show foreign-language descriptions in English
+  translate: true,
+  shareStats: true,       // send anonymous "watching channel N" check-ins for the shared counts        // show foreign-language descriptions in English
   ytKey: '',             // optional YouTube Data API key (search, ON DEMAND, @handles)
   ytNames: {},           // channel names learned from YouTube
   localMap: {},          // channel number -> {type:'bridge'|'jellyfin', path|parentId, label}
