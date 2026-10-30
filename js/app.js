@@ -2,6 +2,7 @@
 import { $, $$, esc, sleep } from './util.js';
 import { settings, save, saveQuiet, state } from './store.js';
 import { pullSettings, pushSoon } from './sync.js';
+import { toEnglish, langName } from './translate.js';
 import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS, TS } from './lineup.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
@@ -168,8 +169,14 @@ function info() {
   if (ytActive()) { title = ytTitle() || ch.name; body = `${ch.name} on YouTube.`; link = ytUrl(); banner({ ch, title, sub: ch.name + ' · YouTube' }, 9000); }
   else if (programInfo()) { const p = programInfo(); title = p.title; body = p.desc; link = p.link; showProgramBanner(9000); }
   else { body = ch.desc || ''; link = ch.url || ''; }
-  infoPanel(`<div class="info-head">${iconSVG(ch)}<div><h3>${esc(title)}</h3><small>CH ${ch.n} · ${esc(ch.name)} · ${esc(sectionOf(ch.n)?.label || '')}</small></div></div>
-    <p>${esc((body || 'No description.').slice(0, 900))}${body.length > 900 ? '…' : ''}</p>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">More info ↗</a>` : ''}`);
+  const show = (t, b, from) => infoPanel(`<div class="info-head">${iconSVG(ch)}<div><h3>${esc(t)}</h3><small>CH ${ch.n} · ${esc(ch.name)} · ${esc(sectionOf(ch.n)?.label || '')}</small></div></div>
+    <p>${esc((b || 'No description.').slice(0, 900))}${b.length > 900 ? '…' : ''}</p>${from ? `<p class="info-tr">Translated from ${esc(langName(from))}</p>` : ''}${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">More info ↗</a>` : ''}`);
+  show(title, body);
+  // foreign-language titles and descriptions switch to English once translated
+  const n = state.num;
+  Promise.all([toEnglish(title), toEnglish(body)]).then(([t, b]) => {
+    if ((t.from || b.from) && state.num === n && $('#info').classList.contains('show')) show(t.text, b.text, t.from || b.from);
+  });
 }
 
 /* ---------- power ---------- */
@@ -278,7 +285,7 @@ async function act(a) {
     case 'find': return openMenu('channels');
     case 'back': if (webActive()) { stopWeb(); return tuneCard(ch); } clearOverlays(); return;
     case 'ok':
-      if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() ? openExternal(ch) : watchOnTV(ch);
+      if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() || ch.drm ? openExternal(ch) : watchOnTV(ch);
       if (ch && ch.kind === 'ytlive') return tune(ch.from);
       if (ch && ch.kind === 'local' && await openLibrary(ch)) return;
       if (ytActive() && openPicker()) return;

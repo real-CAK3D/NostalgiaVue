@@ -29,7 +29,7 @@ async function bridgeList(path) {
 async function resolveBridge(f) {
   return {
     kind: f.kind === 'audio' ? 'audio' : 'video',
-    groups: [[{ url: bridgeFile(f.path), len: f.dur || 0, title: f.name }]],
+    groups: [[{ url: bridgeFile(f.path), len: f.dur || 0, title: f.name, sub: f.subs ? { url: bridgeFile(f.subs) } : null }]],
     title: f.name.replace(/\.[^.]+$/, '').replace(/[._]+/g, ' '),
     sub: f.path.split('/').slice(0, -1).join(' › '),
     art: null, desc: '', link: '',
@@ -60,8 +60,18 @@ async function resolveJellyfin(it) {
     ? [[{ url: `${b}/Audio/${id}/stream.mp3?api_key=${k}`, len }]]
     : [[{ url: `${b}/Videos/${id}/master.m3u8?api_key=${k}&MediaSourceId=${id}&VideoCodec=h264&AudioCodec=aac,mp3&TranscodingMaxAudioChannels=2&SegmentContainer=ts`, len, hls: true }],
        [{ url: `${b}/Videos/${id}/stream?static=true&api_key=${k}`, len }]];
+  // text subtitles Jellyfin knows about (English first), served as WebVTT
+  let subs = [];
+  if (!audio) {
+    try {
+      const j = await fetchJSON(`${b}/Items?Ids=${id}&Fields=MediaStreams&api_key=${k}`);
+      const st = ((j.Items || [])[0]?.MediaStreams || []).filter(m => m.Type === 'Subtitle' && m.IsTextSubtitleStream !== false);
+      st.sort((x, y) => (y.Language === 'eng') - (x.Language === 'eng'));
+      subs = st.slice(0, 1).map(m => ({ url: `${b}/Videos/${id}/${id}/Subtitles/${m.Index}/0/Stream.vtt?api_key=${k}`, lang: (m.Language || 'en').slice(0, 2) }));
+    } catch {}
+  }
   return {
-    kind: audio ? 'audio' : 'video', groups,
+    kind: audio ? 'audio' : 'video', groups, subs,
     title: it.SeriesName ? `${it.SeriesName} — ${it.Name}` : it.Name,
     sub: [it.ProductionYear, it.Type].filter(Boolean).join(' · '),
     art: `${b}/Items/${id}/Images/Primary?maxHeight=400&api_key=${k}`,

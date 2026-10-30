@@ -85,9 +85,13 @@ export async function resolveItem(doc) {
   if (!groups.length) { kind = 'audio'; groups = groupsFor(files, AFMT, ['mp3', 'ogg']); }
   if (!groups.length) return null;
   const order = (a, b) => ((parseInt(a.track) || 0) - (parseInt(b.track) || 0)) || a.name.localeCompare(b.name, undefined, { numeric: true });
-  groups = groups.map(arr => arr.sort(order).map(f => ({ url: fileUrl(id, f.name), len: parseLen(f.length), title: f.title || f.name.replace(/\.[^.]+$/, '').replace(/_+/g, ' ') })));
+  // subtitle files (.srt/.vtt), English first, matched to the video with the same name
+  const stem = n => n.replace(/\.[^/]+$/, '').replace(/\.(en|eng|english|es|spa)$/i, '').toLowerCase();
+  const subFiles = files.filter(f => /\.(srt|vtt)$/i.test(f.name)).sort((a, b) => (/\b(en|eng|english)\b/i.test(b.name) ? 1 : 0) - (/\b(en|eng|english)\b/i.test(a.name) ? 1 : 0));
+  const subFor = name => { const f = subFiles.find(x => stem(x.name) === stem(name)); return f ? { url: fileUrl(id, f.name) } : null; };
+  groups = groups.map(arr => arr.sort(order).map(f => ({ url: fileUrl(id, f.name), len: parseLen(f.length), title: f.title || f.name.replace(/\.[^.]+$/, '').replace(/_+/g, ' '), sub: subFor(f.name) })));
   return {
-    kind, groups,
+    kind, groups, subs: subFiles.length && groups[0].length === 1 ? [{ url: fileUrl(id, subFiles[0].name) }] : [],
     title: one(md.title) || one(doc.title) || id,
     sub: [one(md.year) || one(doc.year), one(md.creator) || one(doc.creator)].filter(Boolean).join(' · '),
     art: `${API}/services/img/${encodeURIComponent(id)}`,

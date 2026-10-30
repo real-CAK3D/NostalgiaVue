@@ -3,7 +3,7 @@ import { $, esc, slotNow } from './util.js';
 import { settings, save, state } from './store.js';
 import { CHANNELS, chanByNum, isHidden } from './lineup.js';
 import { osdChan, scene, staticOff, staticOn, msg, banner } from './osd.js';
-import { currentEntry, airList, v } from './player.js';
+import { currentEntry, airList, v, applySubs } from './player.js';
 import { ytActive, ytNow, ytCaptions, tuneYouTube } from './sources/youtube.js';
 import { getList, resolveItem } from './sources/archive.js';
 import { tuneStream } from './sources/local.js';
@@ -27,9 +27,10 @@ setInterval(() => {
 /* ---------- CC ---------- */
 export function ccButton() {
   settings.cc = !settings.cc; save();
-  const ok = ytActive() && ytCaptions();
-  osdChan(null, settings.cc ? (ok || !ytActive() ? 'CC ON' : 'CC ON') : 'CC OFF');
-  if (settings.cc && !ytActive()) setTimeout(() => osdChan(null, 'CC: YouTube channels'), 1600);
+  if (ytActive()) { ytCaptions(); osdChan(null, settings.cc ? 'CC ON' : 'CC OFF'); return; }
+  osdChan(null, settings.cc ? 'CC ON' : 'CC OFF');
+  // archive.org, the Bridge and Jellyfin: subtitle files when the show has them
+  applySubs().then(has => { if (settings.cc && !has) setTimeout(() => osdChan(null, 'CC: none for this show'), 1400); });
 }
 
 /* ---------- favorites ---------- */

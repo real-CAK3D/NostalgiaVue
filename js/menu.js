@@ -6,10 +6,11 @@ import { iconSVG } from './icons.js';
 import { SETS, setId, era } from './sets.js';
 import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
-import { parseYouTube, resolveHandle, testYouTube, explainYtError } from './sources/youtube.js';
+import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
+import { applySubs } from './player.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
-import { pinSet, setPin, confirmPin } from './parental.js';
+import { pinSet, setPin, confirmPin, ADULT_CATS } from './parental.js';
 
 const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
@@ -110,16 +111,24 @@ function body() {
     case 'parental': {
       const cats = [...new Set(CHANNELS.map(c => c.cat))].filter(Boolean).sort();
       return `
-      <p class="m-note">Set a 4-digit PIN to lock channels. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN.</p>
-      <div class="m-row"><span>${pinSet() ? 'Change PIN' : 'Set a PIN'}</span><input type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4 digits" autocomplete="off"><button type="button" class="m-eye" data-eyeid="mPin" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="pin">Save PIN</button><em id="mPinMsg">${pinSet() ? 'PIN is set' : 'No PIN yet: nothing is locked'}</em></div>
+      <p class="m-note">Adult channels (${ADULT_CATS.join(', ')}, Lingerie Football) are always locked. Set a 4-digit PIN to unlock them and to lock anything else. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN. Everything here is stored only on this device.</p>
+      ${settings.adultOk
+        ? '<div class="m-row"><span>Age</span><em>✓ Confirmed 18 or older on this device</em></div>'
+        : '<div class="m-row"><span>Age</span><button type="button" class="m-btn" data-do="adult">I am 18 or older</button><em>Needed before a PIN can be set</em></div>'}
+      <div class="m-row"><span>${pinSet() ? 'Change PIN' : 'Set a PIN'}</span><input type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4 digits" autocomplete="off" ${settings.adultOk ? '' : 'disabled'}><button type="button" class="m-eye" data-eyeid="mPin" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="pin" ${settings.adultOk ? '' : 'disabled'}>Save PIN</button><em id="mPinMsg">${pinSet() ? 'PIN is set' : 'No PIN yet: only adult channels are locked'}</em></div>
       ${check('kids', 'Kids profile')}
       <h4>Locked categories</h4>
-      <div class="m-cats">${cats.map(c => `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
+      <div class="m-cats">${cats.map(c => ADULT_CATS.includes(c)
+        ? `<label class="m-cat" title="Always locked"><input type="checkbox" checked disabled> ${esc(c)} 🔒</label>`
+        : `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
       <h4>Locked channels</h4>
       <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
     }
     case 'system': return `
       <div class="m-about">${lockup('color', 'mab')}<p>NostalgiaVue 1.0 · The picture of yesterday.</p></div>
+      ${check('translate', 'Show Spanish and other foreign titles and descriptions in English')}
+      ${check('cc', 'Closed captions / subtitles (also the CC button)')}
+      <p class="m-note">Your settings, keys, PIN, favorites, tapes and resume points are stored only on this device (and on your own Bridge if you turn on sync). There are no accounts.</p>
       <div class="m-row"><span>Install</span><button type="button" class="m-btn" data-do="install">Install as an app</button></div>
       <div class="m-row"><span>Backup</span><button type="button" class="m-btn" data-do="export">Export settings</button><label class="m-btn">Import<input type="file" id="mImport" accept="application/json" hidden></label></div>
       <div class="m-row"><span>Reset</span><button type="button" class="m-btn danger" data-do="reset">Reset everything</button></div>
@@ -225,6 +234,10 @@ async function act(what, el) {
     }
     return;
   }
+  if (what === 'adult') {
+    if (!confirm('Adult channels have sexual content and drug references.\n\nPress OK only if you are 18 or older. This is remembered on this device.')) return;
+    settings.adultOk = true; save(); renderMenu(); return;
+  }
   if (what === 'ytkey') {
     const out = $('#mYT'); out.textContent = 'Asking YouTube…';
     try { const via = await testYouTube(); out.textContent = `✓ Saved. YouTube is working with ${via}.`; }
@@ -303,6 +316,7 @@ export function bindMenu() {
       changed(k === 'set'); if (k === 'set' || k.startsWith('year')) renderMenu();
       if (k === 'kids' && settings.kids && state.on) hooks().tune?.(state.num);
       if (k.startsWith('year') || k === 'eraYouTube') hooks().eraChanged?.();
+      if (k === 'cc') { ytCaptions(); applySubs(); }
     }
     if (el.dataset.hide) {
       const n = +el.dataset.hide; settings.hidden = settings.hidden.filter(x => x !== n); if (!el.checked) settings.hidden.push(n); changed();

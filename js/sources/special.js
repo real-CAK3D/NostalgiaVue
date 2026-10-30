@@ -158,19 +158,22 @@ export async function tuneGuideChannel(ch, token) {
 const S_LOUNGE = 'subject:("easy listening" OR lounge OR muzak OR "smooth jazz")';
 
 /* ---------- PPV / streaming shortcuts / local stations without a feed ---------- */
+// The Windows app adds "NostalgiaVueApp" to its user agent; there, sites show inside the set and stay signed in.
+export const inApp = /NostalgiaVueApp/.test(navigator.userAgent);
 export function tuneCard(ch) {
   staticOff(); hideMsg();
   const ppv = ch.sec === 'ppv' || ch.ppv || ch.cat === 'PPV';
   const station = ch.kind === 'station';
   const text = station
     ? (ch.url ? 'This station streams live on its own website.' : ch.open ? 'This channel is open. Add a station in MENU › Location.' : 'Add a YouTube channel or live link for this station in MENU › Location.')
-    : ch.desc || 'This channel lives on another service. Switching input…';
+    : ch.drm ? `${ch.name} locks its shows with DRM, so it only plays in its own tab. Press OK to open it. Sign in once and that browser remembers you.`
+    : ch.desc || (inApp ? 'Press OK to watch on the TV. Sign in once and the app remembers you.' : 'This channel lives on another service. Switching input…');
   scene(`<div class="card ${ppv ? 'ppv' : station ? 'station' : ''}">
     ${ppv ? '<div class="ppv-head">PAY-PER-VIEW · PRESS OK TO ORDER · $0.00</div>' : ''}
     <div class="card-icon">${iconSVG(ch)}</div><div class="card-name">${esc(ch.name)}</div>
     <div class="card-text">${esc(text)}</div>
-    ${ch.url ? `<div class="card-btns"><button type="button" class="card-go" data-tv>📺 WATCH ON THE TV</button><button type="button" class="card-go alt" data-tab>↗ NEW TAB — ${esc(new URL(ch.url).hostname.replace(/^www\./, ''))}</button></div>` : ''}
-    ${ch.url ? '<div class="ppv-fine">OK = watch on the TV · press OK again for a new tab</div>' : ''}</div>`, 'cardscene');
+    ${ch.url ? `<div class="card-btns">${ch.drm ? '' : '<button type="button" class="card-go" data-tv>📺 WATCH ON THE TV</button>'}<button type="button" class="card-go alt" data-tab>↗ NEW TAB — ${esc(new URL(ch.url).hostname.replace(/^www\./, ''))}</button></div>` : ''}
+    ${ch.url ? `<div class="ppv-fine">${ch.drm ? 'OK = open in a new tab' : 'OK = watch on the TV · press OK again for a new tab'}</div>` : ''}</div>`, 'cardscene');
   document.querySelector('.card-btns [data-tv]')?.addEventListener('click', () => watchOnTV(ch));
   document.querySelector('.card-btns [data-tab]')?.addEventListener('click', () => openExternal(ch));
 }

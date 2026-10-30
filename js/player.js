@@ -2,6 +2,7 @@
 // list-based channel (archive.org, your drives, Jellyfin, custom streams) airs through.
 import { $, esc, one, hash, daySeed, slotNow, loadScript } from './util.js';
 import { settings, state } from './store.js';
+import { toEnglish } from './translate.js';
 import { staticOn, staticOff, msg, hideMsg, banner, scene, clearScene, bars } from './osd.js';
 
 export const v = $('#vid');
@@ -36,8 +37,36 @@ export function stopVideo() {
   clearTimeout(watchdog);
   session = null;
   if (hls) { try { hls.destroy(); } catch {} hls = null; }
+  clearSubs();
   v.pause(); v.removeAttribute('src'); v.load();
 }
+
+/* ---------- subtitles (CC button): .srt/.vtt from archive.org, the Bridge or Jellyfin ---------- */
+let subUrl = '';
+function clearSubs() {
+  v.querySelectorAll('track').forEach(t => t.remove());
+  if (subUrl) { URL.revokeObjectURL(subUrl); subUrl = ''; }
+}
+const srtToVtt = t => 'WEBVTT\n\n' + t.replace(/\r/g, '').replace(/^\uFEFF/, '').replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, '$1.$2');
+// Shows or hides the current program's subtitles; returns whether it has any.
+export async function applySubs() {
+  const c = cur; clearSubs();
+  const s = c && (c.p.groups[c.g][c.fi].sub || (c.p.subs && c.p.subs[0]));
+  if (!s) return false;
+  if (!settings.cc) return true;
+  try {
+    let txt = await (await fetch(s.url)).text();
+    if (!/^\s*WEBVTT/.test(txt.replace(/^\uFEFF/, ''))) txt = srtToVtt(txt);
+    if (cur !== c || !settings.cc) return true;
+    subUrl = URL.createObjectURL(new Blob([txt], { type: 'text/vtt' }));
+    const tr = document.createElement('track');
+    Object.assign(tr, { kind: 'subtitles', label: 'CC', srclang: s.lang || 'en', src: subUrl, default: true });
+    v.appendChild(tr);
+    tr.track.mode = 'showing';
+  } catch {}
+  return true;
+}
+export const hasSubs = () => !!(cur && (cur.p.groups[cur.g][cur.fi].sub || (cur.p.subs && cur.p.subs.length)));
 export const currentSession = () => session;
 
 v.addEventListener('loadedmetadata', () => {
@@ -142,6 +171,7 @@ function loadFile() {
     },
     onBlocked: blockedPrompt,
   });
+  applySubs();
 }
 export function skip() {
   const c = cur; if (!c || c.token !== state.token) return;
@@ -167,6 +197,8 @@ export function programInfo() {
 export function showProgramBanner(ms) {
   const i = programInfo(); if (!i) return;
   banner({ ch: cur.ch, title: i.title, sub: i.sub }, ms);
+  const c = cur;
+  toEnglish(i.title).then(t => { const el = $('#banner .b-title'); if (t.from && cur === c && el) el.textContent = t.text; });
 }
 
 // Commercial-break support: freeze the program and hand back a resume function.

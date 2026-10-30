@@ -216,7 +216,14 @@ class Handler(BaseHTTPRequestHandler):
                     if r not in DURATIONS and FFPROBE:
                         with _probe_lock:
                             _probe_q.append((r, p))
-                    files.append({'path': r, 'name': p.name, 'kind': 'audio' if p.suffix.lower() in AUDIO else 'video', 'dur': DURATIONS.get(r)})
+                    item = {'path': r, 'name': p.name, 'kind': 'audio' if p.suffix.lower() in AUDIO else 'video', 'dur': DURATIONS.get(r)}
+                    # subtitles next to the video: Movie.srt, Movie.en.srt, Movie.vtt ...
+                    if p.suffix.lower() in VIDEO:
+                        for cand in (p.stem + '.en.srt', p.stem + '.eng.srt', p.stem + '.srt', p.stem + '.en.vtt', p.stem + '.vtt'):
+                            if (p.parent / cand).is_file():
+                                item['subs'] = r.rsplit('/', 1)[0] + '/' + cand
+                                break
+                    files.append(item)
                 return self.send_json({'files': files})
             if path == '/api/roms':
                 base = CFG['_roots'].get('ROMs')
