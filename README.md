@@ -19,10 +19,10 @@
 | 420–499 | **Bring your own.** Stream links, M3U playlists, anything |
 | 500–599 | **Pay-Per-View.** PPV events that play on the TV, plus shortcuts to Netflix, Max, Pluto TV, Tubi… |
 | 600–699 | **My Playlists.** Your YouTube playlists, named after their real titles |
-| 800–899 | **Shows A–Z.** Kids’ WB!, The WB, Animaniacs, Pinky and the Brain, Tiny Toons, Freakazoid, Batman TAS, Pokémon, Scooby-Doo, Dexter, Powerpuff, Rugrats, DuckTales, X-Men, ThunderCats, Fresh Prince, Saved by the Bell, Friends, X-Files, Buffy, Toonami, SNICK, TGIF, Fox Kids… |
+| 800–899 | **Shows A–Z.** Kids’ WB!, The WB, Animaniacs, Pinky and the Brain, Tiny Toons, Freakazoid, Batman TAS, Pokémon, Scooby-Doo, Dexter, Powerpuff, Rugrats, DuckTales, X-Men, ThunderCats, Fresh Prince, Saved by the Bell, Friends, X-Files, Buffy, Toonami, SNICK, TGIF, Fox Kids, Mork & Mindy, NewsRadio, Joe Rogan’s Early TV, a Robin Williams marathon… |
 | 700–799 | **LIVE.** Every YouTube channel’s live stream (OK jumps to its regular channel), plus 24/7 live news, NASA, ISS, animal cams, lo-fi radio… |
 
-More than 530 channels out of the box. Every channel, including ones you add, gets a generated station logo. The full list is in [docs/Channel-Lineup.md](docs/Channel-Lineup.md).
+More than 540 channels out of the box. Every channel, including ones you add, gets a generated station logo. The full list is in [docs/Channel-Lineup.md](docs/Channel-Lineup.md).
 
 ## Features
 - Nine TV sets, three per decade. **1980s:** Space Commander 25" wood console, Portavision 13" portable, Monitor/Receiver 27". **1990s:** TrinoTube KV-27, VCR Combo 13", BigVue 32" Surround. **2000s:** FlatFace Pro 32", WideTube 30" HD, PlasmaVue 42" (widescreen sets pillarbox the 4:3 picture). Each decade has its own remote, on-screen display, menu style and sounds: 80s dials click once per detent, 90s tuners tick, 2000s sets beep.
