@@ -6,7 +6,7 @@ import { iconSVG } from './icons.js';
 import { SETS, setId, era } from './sets.js';
 import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
-import { parseYouTube, resolveHandle } from './sources/youtube.js';
+import { parseYouTube, resolveHandle, testYouTube, explainYtError } from './sources/youtube.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
 import { pinSet, setPin, confirmPin } from './parental.js';
@@ -71,6 +71,7 @@ function body() {
       <div class="m-row"><span></span><button type="button" class="m-btn" data-do="jellyfin">Test & load libraries</button><em id="mJelly"></em></div>
       <h4>YouTube <small>(the site’s own key is used automatically; set one here only to use your own quota)</small></h4>
       ${text('ytKey', 'API key', 'optional · AIza…', 'password')}
+      <div class="m-row"><span></span><button type="button" class="m-btn" data-do="ytkey">Save & test</button><em id="mYT"></em></div>
       <p class="m-note">Unlocks ON DEMAND lists, Movie Night genres, the Elon Channel, seasonal fireplaces, and adding channels by @handle.</p>
       <h4>Local channels</h4>
       <div class="m-table">${local.map(n => {
@@ -224,6 +225,12 @@ async function act(what, el) {
     }
     return;
   }
+  if (what === 'ytkey') {
+    const out = $('#mYT'); out.textContent = 'Asking YouTube…';
+    try { const via = await testYouTube(); out.textContent = `✓ Saved. YouTube is working with ${via}.`; }
+    catch (e) { out.textContent = '✗ ' + explainYtError(e.message); }
+    return;
+  }
   if (what === 'jellyfin') {
     const out = $('#mJelly'); out.textContent = 'Calling Jellyfin…';
     try { libs = await jellyfinLibraries(); const t = `✓ ${libs.length} libraries`; renderMenu(); $('#mJelly').textContent = t; }
@@ -277,6 +284,11 @@ export function bindMenu() {
       settings[el.dataset.k] = +el.value; el.nextElementSibling.textContent = el.value; changed();
     }
     if (['aName', 'aNum'].includes(el.id)) previewIcon();
+  });
+  // keys, tokens and addresses save as you type, so nothing is lost if the menu closes first
+  m.addEventListener('input', e => {
+    const el = e.target, k = el.dataset.k;
+    if (k && (el.type === 'text' || el.type === 'password') && typeof settings[k] === 'string') { settings[k] = el.value.trim(); save(); }
   });
   m.addEventListener('change', e => {
     const el = e.target, k = el.dataset.k;

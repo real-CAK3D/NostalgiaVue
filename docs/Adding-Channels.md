@@ -30,6 +30,15 @@ The key stays private on Vercel; it is never in the code or the page.
 
 The site's `/api/yt` function then makes the YouTube lookups for every viewer, and results are cached for 6 hours to save quota. You can still put a personal key in **MENU › Sources › YouTube** to use your own quota instead.
 
+**Check it:** **MENU › Sources › YouTube › Save & test** makes one cheap lookup and says exactly what Google answered. Keys, tokens and addresses in the menu save as you type and stay on that device. With *Sync settings* on, they also reach your other devices through the Bridge.
+
+| The TV says | Fix |
+|---|---|
+| Google is blocking this key for YouTube | Google Cloud › Credentials › your key › *API restrictions*: tick **YouTube Data API v3** (or *Don't restrict key*). Save, wait a few minutes. |
+| YouTube Data API v3 isn't turned on | *APIs & Services › Library › YouTube Data API v3 › Enable* in the same project as the key. |
+| The key only allows certain websites or IPs | *Application restrictions*: **None** (the Vercel server has no fixed IP or referrer). |
+| Today's free YouTube quota is used up | Wait for midnight Pacific, or ask for more under *Quotas*. |
+
 This turns on:
 - **ON DEMAND:** press OK on Movie Night (240–249), the Elon Channel (232), Stand-Up Legends (234), Fireside (230) and Lo-Fi Coffeehouse (231) to pick from a list of titles.
 - **Seasonal fireplaces** that change with the month.

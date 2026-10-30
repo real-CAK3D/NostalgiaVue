@@ -697,3 +697,31 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 969 | PBAD | Playboy After Dark | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 970 | GRND | Grindhouse After Dark | archive.org |
 | 971 | BRLQ | Burlesque & Pin-Up | archive.org |
+| 972 | KITT | Knight Rider | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 973 | MACG | MacGyver | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 974 | DUKE | The Dukes of Hazzard | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 975 | MGPI | Magnum, P.I. | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 976 | AIRW | Airwolf | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 977 | WTXR | Walker, Texas Ranger | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 978 | WHEL | Wheel & Jeopardy! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 979 | DARE | Double Dare & Hidden Temple | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 980 | GLAD | American Gladiators | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 981 | NITR | Monday Night Wars | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 982 | FRAG | Fraggle Rock | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 983 | MUPS | The Muppet Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 984 | EATS | Good Eats | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 985 | MYTH | MythBusters | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 986 | DJOB | Dirty Jobs | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 987 | FFAC | Fear Factor | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 988 | SURV | Survivor (the early years) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 989 | TRSP | Trading Spaces | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 990 | AVGN | Angry Video Game Nerd | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 991 | MQST | MonsterQuest | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 992 | AEON | Aeon Flux & Liquid TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 993 | SJCK | Samurai Jack | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 994 | ZIM | Invader Zim | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 995 | C&C | Cow and Chicken | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 996 | SBRN | Sabrina the Teenage Witch | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 997 | LVSG | Living Single | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 998 | DEFJ | Def Comedy Jam | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 999 | TICK | The Tick | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

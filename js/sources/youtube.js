@@ -40,14 +40,40 @@ const keep = () => { try { localStorage.setItem(DAY_KEY, JSON.stringify(cache));
 let serverKey = null;
 const serverReady = () => serverKey ?? (serverKey = fetch('api/yt?op=ping').then(r => r.ok).catch(() => false));
 export const hasKey = () => !!settings.ytKey || serverKey === true;
+// Like fetchJSON, but keeps Google's own error text so the TV can say what's actually wrong.
+async function ytFetch(url) {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 15000);
+  try {
+    const r = await fetch(url, { signal: ctl.signal });
+    let j = null; try { j = await r.json(); } catch {}
+    if (!r.ok) throw new Error((typeof j?.error === 'string' ? j.error : j?.error?.message) || `error ${r.status}`);
+    return j;
+  } finally { clearTimeout(t); }
+}
 async function ytApi(op, params) {
   if (settings.ytKey) {
-    const path = op;
     const p = new URLSearchParams({ ...params, key: settings.ytKey });
-    return fetchJSON(`https://www.googleapis.com/youtube/v3/${path}?${p}`);
+    return ytFetch(`https://www.googleapis.com/youtube/v3/${op}?${p}`);
   }
   if (!(await serverReady())) throw new Error('no YouTube key');
-  return fetchJSON(`api/yt?${new URLSearchParams({ op, ...params })}`);
+  return ytFetch(`api/yt?${new URLSearchParams({ op, ...params })}`);
+}
+// Google's error -> what to do about it
+let lastErr = '';
+export function explainYtError(m) {
+  m = String(m || '');
+  if (/no YouTube key/.test(m)) return 'No YouTube API key yet. Paste one in MENU › Sources › YouTube.';
+  if (/are blocked|API_KEY_SERVICE_BLOCKED/i.test(m)) return 'Google is blocking this key for YouTube. In Google Cloud › Credentials, edit the key and add “YouTube Data API v3” to its API restrictions (or set “Don’t restrict key”).';
+  if (/has not been used|is disabled|SERVICE_DISABLED/i.test(m)) return 'YouTube Data API v3 isn’t turned on for this Google Cloud project. Enable it under APIs & Services › Library.';
+  if (/referer|referrer|IP address|blocked from this/i.test(m)) return 'The key only allows certain websites or IPs. In Google Cloud › Credentials, set Application restrictions to None.';
+  if (/API key not valid|keyInvalid|invalid/i.test(m)) return 'Google says the key isn’t valid. Copy it again from Google Cloud › Credentials.';
+  if (/quota/i.test(m)) return 'Today’s free YouTube quota is used up. It resets at midnight Pacific.';
+  return 'YouTube said: ' + m;
+}
+// MENU › Sources › Save & test: one cheap lookup (1 quota unit) through whichever key is in use
+export async function testYouTube() {
+  await ytApi('channels', { part: 'id', id: 'UCuAXFkgsw1L7xaCfnd5JJOw' });
+  return settings.ytKey ? 'your key' : 'the site’s key on Vercel';
 }
 serverReady().then(ok => { serverKey = ok; });
 
@@ -88,7 +114,7 @@ async function searchItems(ch) {
   // walk through its results. Channel-restricted searches merge their results.
   const extra = s.live ? '' : eraWords();
   const q = qs[hash(daySeed(), ch.n) % qs.length] + (extra ? ' ' + extra : '');
-  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live }).catch(() => [])));
+  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live }).catch(e => { lastErr = e.message; return []; })));
   const seen = new Set(), out = [];
   for (const l of lists) for (const it of l) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }
   return out.length ? out : null;
@@ -99,11 +125,11 @@ export async function tuneYouTube(ch, token) {
   try { await api(); }
   catch { if (token === state.token) return fallback(ch, token, 'Can’t reach YouTube'); return; }
   if (token !== state.token) return;
-  let items = null;
+  let items = null; lastErr = '';
   try { items = await searchItems(ch); } catch {}
   if (token !== state.token) return;
   const ids = ch.yt || [];
-  if (!items && !ids.length) return fallback(ch, token, 'Add a YouTube API key in MENU › Sources to program this channel');
+  if (!items && !ids.length) return fallback(ch, token, lastErr ? explainYtError(lastErr) : 'YouTube found nothing for this channel today');
   const { slot } = slotNow();
   const start = ch.mix && ids.length ? hash(daySeed(), ch.n, slot) % ids.length : 0;
   Object.assign(yt, { ch, cands: ids.slice(start).concat(ids.slice(0, start)), cand: 0, errs: 0, token, playing: false, lastVid: '', items });
