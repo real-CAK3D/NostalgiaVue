@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NostalgiaVue Game Channel</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  #game{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<script>
+  // EmulatorJS host page. Opened inside the TV by channel 3 with ?rom=&core=&name=
+  const p = new URLSearchParams(location.search);
+  window.EJS_player = '#game';
+  window.EJS_core = p.get('core') || 'nes';
+  window.EJS_gameUrl = p.get('rom');
+  window.EJS_gameName = p.get('name') || 'Game';
+  window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+  window.EJS_startOnLoaded = true;
+  window.EJS_color = '#ff3b30';
+  window.EJS_backgroundColor = '#000';
+</script>
+<script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+</body>
+</html>

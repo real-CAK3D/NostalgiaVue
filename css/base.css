@@ -1,0 +1,47 @@
+:root{
+  --osd:#63ff6e;--osd-glow:#1aff3a;
+  --guide-bg:#081a6e;--guide-cell:#1636a3;--guide-line:#5e7dff;--guide-now:#2347c4;--sel:#ffd23f;
+  --room-1:#4a3424;--room-2:#21160f;--room-3:#0b0806;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--room-3) radial-gradient(ellipse 80% 60% at 50% 18%,var(--room-1) 0%,var(--room-2) 55%,var(--room-3) 100%);
+  color:#d8d2c8;font-family:Oswald,"Arial Narrow",sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px 32px;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+/* wallpaper + floor change with the era */
+body[data-set="80s"]{--room-1:#6b4a2a;--room-2:#3a2614;--room-3:#140b05;
+  background-image:radial-gradient(ellipse 80% 60% at 50% 18%,rgba(255,200,120,.18),transparent 60%),repeating-linear-gradient(90deg,#4a3018 0 22px,#523519 22px 44px),linear-gradient(#3a2614,#140b05);}
+body[data-set="00s"]{--room-1:#3a4656;--room-2:#1a2028;--room-3:#07090c}
+button{font:inherit;color:inherit;cursor:pointer}
+[hidden]{display:none!important}
+.room{display:flex;gap:40px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;max-width:1400px}
+.hint{margin-top:22px;font:15px VT323,monospace;color:#9b8f80;text-align:center;max-width:760px;line-height:1.5}
+.hint kbd{border:1px solid #5b5045;border-radius:3px;padding:0 4px;color:#d8c9b4}
+body.no-remote .remote{display:none}
+
+/* brand lockup */
+.nv-lockup{display:inline-flex;align-items:center;gap:.25em;height:1.6em}
+.nv-lockup .nv-emblem{height:100%;width:auto}
+.nv-lockup .nv-word{height:78%;width:auto}
+
+/* ---------- zoom: just the glass ---------- */
+.zoombar{display:none}
+body.zoom{padding:0;overflow:hidden;background:#000}
+body.zoom .room{position:fixed;inset:0;max-width:none;gap:0}
+body.zoom .remote,body.zoom .hint,body.zoom .deco-top,body.zoom .side,body.zoom .panel,body.zoom .stand{display:none!important}
+body.zoom .set{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
+body.zoom .cabinet{background:none!important;box-shadow:none!important;padding:0!important;border:0!important;display:block!important;width:min(100vw,133.333vh)}
+body.zoom .bezel{background:none!important;padding:0!important;box-shadow:none!important;border:0!important}
+body.zoom .screen{border-radius:3%/4%}
+body.zoom .zoombar{display:flex;position:fixed;left:50%;bottom:14px;transform:translateX(-50%) translateY(140%);transition:transform .25s;z-index:50;gap:6px;
+  background:rgba(10,10,14,.85);padding:8px;border-radius:14px;border:1px solid #333;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 32px)}
+body.zoom.zoom-ui .zoombar{transform:translateX(-50%)}
+.zoombar button{background:#26262b;border:1px solid #444;border-radius:8px;padding:8px 10px;font-size:13px;color:#ddd}
+
+@media (max-width:760px){
+  body{padding:16px 12px 24px}
+  .room{gap:22px}
+}

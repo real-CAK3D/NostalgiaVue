@@ -1,0 +1,13 @@
+{
+  "name": "Living Room PC",
+  "port": 8787,
+  "token": "pick-a-long-random-word",
+  "media": {
+    "Videos": "E:/Videos",
+    "Movies": "E:/Movies",
+    "TV": "E:/TV Shows",
+    "Music": "E:/Music"
+  },
+  "roms": "E:/ROMs",
+  "allow_origins": ["https://nostalgiavue.vercel.app", "http://localhost:8080"]
+}

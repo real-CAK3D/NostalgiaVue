@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NostalgiaVue</title>
+<meta name="description" content="A 1980s–2000s TV set that channel-surfs archive.org, YouTube, your own drives and more.">
+<meta name="theme-color" content="#140e0a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Lobster&family=Monoton&family=Oswald:wght@400;500;700&family=Press+Start+2P&family=Righteous&family=Rubik+Mono+One&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/sets.css">
+<link rel="stylesheet" href="css/screen.css">
+<link rel="stylesheet" href="css/ui.css">
+</head>
+<body>
+<main class="room" id="room">
+  <div class="set" id="set">
+    <div class="deco-top" id="decoTop"></div>
+    <div class="cabinet" id="cabinet">
+      <div class="bezel">
+        <div class="screen" id="screen">
+          <div class="tube" id="tube">
+            <div id="guide">
+              <div class="g-top"><div class="g-side">
+                <div class="g-logo" id="gLogo"></div>
+                <div class="g-clock" id="gClock"></div>
+                <div class="g-desc" id="gDesc"></div>
+              </div></div>
+              <div class="g-grid" id="gGrid"></div>
+            </div>
+            <div id="prog">
+              <video id="vid" playsinline preload="auto"></video>
+              <div id="yt" hidden><div id="ytMount"></div></div>
+              <iframe id="gameFrame" hidden title="Game" allow="gamepad; fullscreen; autoplay"></iframe>
+              <div id="scene" hidden></div>
+              <div id="bars" hidden></div>
+              <canvas id="snow" width="160" height="120" hidden></canvas>
+              <div id="bug"></div>
+            </div>
+            <div class="osd" id="osdChan"></div>
+            <div class="osd" id="osdVol"></div>
+            <div id="banner"></div>
+            <div id="info"></div>
+            <div id="msg"></div>
+            <div id="menu" hidden></div>
+            <div id="splash" hidden></div>
+          </div>
+          <div class="glass mask"></div>
+          <div class="glass scan"></div>
+          <div class="glass vignette"></div>
+          <div class="glass glare"></div>
+        </div>
+      </div>
+      <div class="side" id="side"></div>
+      <div class="panel" id="panel"></div>
+    </div>
+    <div class="stand" id="stand"></div>
+  </div>
+  <div class="remote" id="remote"></div>
+</main>
+<div class="zoombar" id="zoomBar">
+  <button data-act="chdn" aria-label="Channel down">CH ▼</button><button data-act="chup" aria-label="Channel up">CH ▲</button>
+  <button data-act="voldn" aria-label="Volume down">VOL −</button><button data-act="volup" aria-label="Volume up">VOL +</button>
+  <button data-act="guide">GUIDE</button><button data-act="menu">MENU</button><button data-act="zoom">EXIT ZOOM</button><button data-act="power">⏻</button>
+</div>
+<p class="hint" id="hint">Press <kbd>P</kbd> or the power button · <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> volume · <kbd>0</kbd>–<kbd>9</kbd> tune · <kbd>G</kbd> guide · <kbd>I</kbd> info · <kbd>S</kbd> settings · <kbd>M</kbd> mute · <kbd>L</kbd> last · <kbd>Z</kbd> zoom · <kbd>F</kbd> find · swipe the screen on phones</p>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

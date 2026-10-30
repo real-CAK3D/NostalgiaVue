@@ -1,0 +1,155 @@
+/* ================= common cabinet ================= */
+.set{width:min(920px,100%);display:flex;flex-direction:column;align-items:center;position:relative}
+.cabinet{width:100%;position:relative}
+.bezel{position:relative}
+.stand{position:relative}
+.led{width:8px;height:8px;border-radius:50%;display:inline-block;background:#ff3b2f;box-shadow:0 0 6px #ff3b2f}
+.set.on .led{background:#4bff5a;box-shadow:0 0 8px #4bff5a}
+.pbtn{background:linear-gradient(180deg,#4a4a52,#26262b);border:1px solid #0b0b0d;border-radius:4px;padding:6px 9px;font-size:clamp(9px,1.2vw,11px);
+  letter-spacing:.08em;color:#c8c8d0;box-shadow:0 2px 0 #0a0a0c,inset 0 1px 0 rgba(255,255,255,.15)}
+.pbtn:active{transform:translateY(2px);box-shadow:none}
+
+/* ================= 1990s · TrinoTube KV-27 ================= */
+.set-90s .cabinet{
+  background:linear-gradient(180deg,#45454c,#2b2b30 22%,#2b2b30 70%,#141417);
+  border-radius:30px 30px 24px 24px;padding:clamp(12px,3vw,34px) clamp(12px,3vw,34px) 0;
+  box-shadow:0 40px 70px rgba(0,0,0,.75),0 0 0 1px #000,inset 0 2px 0 rgba(255,255,255,.14),inset 0 -6px 14px rgba(0,0,0,.55)}
+.set-90s .bezel{background:linear-gradient(180deg,#111114,#09090b);border-radius:24px;padding:clamp(8px,1.6vw,18px);
+  box-shadow:inset 0 0 0 2px #1d1d22,inset 0 8px 20px rgba(0,0,0,.95),0 1px 0 rgba(255,255,255,.09)}
+.set-90s .screen{border-radius:7%/9%}
+.set-90s .panel{display:flex;align-items:center;gap:clamp(8px,2vw,22px);padding:clamp(10px,2vw,18px) 4px clamp(12px,2.2vw,20px);flex-wrap:wrap}
+.brand90{display:flex;flex-direction:column;font-size:clamp(14px,2.4vw,24px)}
+.brand90 small{font:500 clamp(7px,.9vw,9px) Oswald;letter-spacing:.25em;color:#8a8a92;margin-top:2px}
+.set-90s .grille{flex:1;min-width:60px;height:clamp(22px,4vw,40px);border-radius:6px;background:repeating-linear-gradient(90deg,#0b0b0d 0 3px,#2f2f35 3px 6px);box-shadow:inset 0 2px 5px #000}
+.set-90s .btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* ================= 1980s · Space Commander console ================= */
+.set-80s{width:min(980px,100%)}
+.set-80s .cabinet{
+  display:grid;grid-template-columns:1fr clamp(96px,21%,200px);grid-template-areas:"bezel side" "panel panel";gap:clamp(8px,1.6vw,18px);
+  padding:clamp(12px,2.6vw,30px);border-radius:14px;
+  background:
+    repeating-linear-gradient(91deg,rgba(0,0,0,.10) 0 2px,transparent 2px 9px),
+    repeating-linear-gradient(89.3deg,rgba(255,220,170,.05) 0 1px,transparent 1px 17px),
+    repeating-linear-gradient(90.6deg,rgba(40,15,0,.12) 0 6px,transparent 6px 31px),
+    linear-gradient(180deg,#9a5f2c,#6b3f1d 55%,#45260e);
+  box-shadow:0 40px 70px rgba(0,0,0,.75),inset 0 0 0 3px #3a1f0b,inset 0 3px 0 rgba(255,220,170,.25),inset 0 -10px 20px rgba(0,0,0,.4)}
+.set-80s .bezel{grid-area:bezel;padding:clamp(10px,2vw,22px);border-radius:22px;
+  background:linear-gradient(145deg,#e8e4dc,#a39d92 40%,#d9d4ca 60%,#8f897e);box-shadow:inset 0 0 0 2px #6e685e,0 4px 10px rgba(0,0,0,.5)}
+.set-80s .bezel::before{content:"";position:absolute;inset:clamp(4px,.8vw,9px);border-radius:18px;background:#111;box-shadow:inset 0 6px 16px #000}
+.set-80s .screen{border-radius:14%/18%}
+.set-80s .side{grid-area:side;border-radius:10px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,16px);
+  background:linear-gradient(90deg,#2a2622,#3b3530 50%,#2a2622);box-shadow:inset 0 0 0 2px #1a1714,inset 0 2px 0 rgba(255,255,255,.08)}
+.badge80{font-size:clamp(9px,1.4vw,15px);color:#eee}
+.knob-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.knob-wrap small{font:500 clamp(7px,.9vw,10px) Oswald;letter-spacing:.2em;color:#b9b1a5}
+.knob-wrap::before{content:"▼";position:absolute;top:-12px;font-size:10px;color:#ffcc66}
+.knob{--turn:0deg;width:clamp(64px,13vw,120px);aspect-ratio:1;border-radius:50%;position:relative;cursor:pointer;transform:rotate(var(--turn));transition:transform .25s cubic-bezier(.3,1.6,.6,1);
+  background:repeating-conic-gradient(#1a1a1a 0 4deg,#2c2c2c 4deg 8deg);box-shadow:0 6px 10px rgba(0,0,0,.6),inset 0 0 0 3px #111}
+.knob::after{content:"";position:absolute;inset:22%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9d9d9,#7b7b7b 60%,#3c3c3c);box-shadow:0 2px 4px #000}
+.knob i{position:absolute;left:50%;top:6%;width:3px;height:16%;margin-left:-1.5px;background:#ffcc66;z-index:1;border-radius:2px}
+.knob span{position:absolute;left:50%;top:50%;font:700 clamp(7px,1.1vw,11px) Oswald;color:#f2e6cc;transform:rotate(var(--a)) translateY(-205%) translateX(-50%);transform-origin:0 0}
+.knob.small{width:clamp(44px,8vw,72px)}
+.side-btns{display:flex;align-items:center;gap:8px}
+.pbtn.pull{background:linear-gradient(180deg,#e8e2d6,#b8b0a2);color:#3a2a14;border-color:#6a5a40;font-weight:700}
+.side-model{font:500 clamp(8px,1vw,11px)/1.3 Oswald;letter-spacing:.12em;color:#d8cdb8;text-align:center;margin-top:auto}
+.side-model small{color:#9b9184;letter-spacing:.2em;font-size:.8em}
+.set-80s .panel{grid-area:panel}
+.fabric{height:clamp(40px,8vw,90px);border-radius:8px;border:3px solid #3a1f0b;
+  background:repeating-linear-gradient(45deg,rgba(0,0,0,.35) 0 2px,transparent 2px 4px),repeating-linear-gradient(-45deg,rgba(0,0,0,.3) 0 2px,transparent 2px 4px),#7b6650;
+  box-shadow:inset 0 4px 10px rgba(0,0,0,.6)}
+.set-80s .stand{width:86%;height:clamp(30px,6vw,60px);display:flex;justify-content:space-between;padding:0 4%}
+.leg{display:block;width:clamp(14px,2.4vw,26px);height:100%;background:linear-gradient(90deg,#3e230e,#7a4a22,#3e230e);clip-path:polygon(10% 0,90% 0,70% 100%,30% 100%);box-shadow:0 10px 20px #000}
+.deco-top{position:relative;width:100%;height:0}
+.ears{position:absolute;left:50%;bottom:-6px;width:160px;height:150px;transform:translateX(-50%);pointer-events:none;z-index:2}
+.ears b{position:absolute;bottom:0;left:50%;width:70px;height:22px;margin-left:-35px;border-radius:40px 40px 6px 6px;background:linear-gradient(#444,#111);box-shadow:0 2px 0 #000}
+.ear{position:absolute;bottom:14px;left:50%;width:3px;height:150px;background:linear-gradient(#f2f2f2,#8a8a8a);transform-origin:bottom center;border-radius:2px}
+.ear::before{content:"";position:absolute;top:-5px;left:-3px;width:9px;height:9px;border-radius:50%;background:#ddd}
+.ear.l{transform:rotate(-32deg)}.ear.r{transform:rotate(27deg)}
+.set-80s{margin-top:110px}
+
+/* ================= 2000s · FlatFace Pro 32" ================= */
+.set-00s{width:min(1000px,100%)}
+.set-00s .cabinet{border-radius:16px;padding:clamp(10px,2.2vw,26px) clamp(14px,6vw,80px) 0;
+  background:linear-gradient(180deg,#f3f5f8,#c9ced6 30%,#a9afb8 70%,#8d939c);
+  box-shadow:0 40px 70px rgba(0,0,0,.7),inset 0 2px 0 #fff,inset 0 -4px 10px rgba(0,0,0,.25),0 0 0 1px #5b6068}
+.set-00s .bezel{padding:clamp(6px,1vw,12px);border-radius:8px;background:linear-gradient(#3a3d42,#1d1f22);box-shadow:inset 0 0 0 1px #000,0 1px 0 #fff}
+.set-00s .screen{border-radius:1.6%/2.2%}
+.set-00s .panel{display:flex;align-items:center;gap:clamp(8px,2vw,24px);padding:clamp(8px,1.6vw,16px) 0 clamp(10px,1.8vw,18px)}
+.spk{flex:1;height:clamp(18px,3vw,30px);border-radius:10px;background:radial-gradient(circle,#4a4f57 1.2px,transparent 1.6px) 0 0/6px 6px,linear-gradient(#b7bcc4,#9ba1aa);box-shadow:inset 0 1px 3px rgba(0,0,0,.4)}
+.mid00{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mid00 .led{width:6px;height:6px;background:#2a6bff;box-shadow:0 0 8px #2a6bff}
+.set-00s.on .mid00 .led{background:#55a0ff;box-shadow:0 0 10px #55a0ff}
+.brand00 .nv-word{height:clamp(16px,2.2vw,24px);width:auto}
+.model00{font:500 clamp(7px,.85vw,9px) Oswald;letter-spacing:.2em;color:#4b5058}
+.btns00{display:flex;gap:4px}
+.btns00 .pbtn{background:linear-gradient(#f4f6f9,#c3c8cf);color:#3b4048;border-color:#8a9099;box-shadow:0 1px 0 #6b717a;padding:4px 7px}
+.set-00s .stand{display:flex;flex-direction:column;align-items:center}
+.neck{display:block;width:90px;height:22px;background:linear-gradient(90deg,#8d939c,#d9dde3,#8d939c)}
+.foot{display:block;width:340px;max-width:60vw;height:16px;border-radius:50%/100% 100% 0 0;background:linear-gradient(#d9dde3,#8d939c);box-shadow:0 16px 30px rgba(0,0,0,.6)}
+
+/* ================= remotes ================= */
+.remote{width:min(220px,100%);padding:22px 16px 26px;display:flex;flex-direction:column;gap:11px;user-select:none;-webkit-user-select:none}
+.remote button{border:0}
+.r-ir{width:24px;height:10px;margin:0 auto;border-radius:6px;background:#3a0c0c;box-shadow:inset 0 1px 3px #000}
+.r-ir.blink{background:#ff4040;box-shadow:0 0 10px #ff4040}
+.r-row{display:flex;justify-content:space-between;gap:8px;align-items:stretch}
+.r-col{display:flex;flex-direction:column;gap:6px;justify-content:center;flex:1}
+.r-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rb{border-radius:50%;aspect-ratio:1;font-size:15px}
+.rb.small{font-size:9px;letter-spacing:.05em}
+.rb.power{width:40px}
+.rpill{border-radius:14px;padding:7px 0;flex:1;font-size:11px;letter-spacing:.1em}
+.rocker{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;flex:1;max-width:60px}
+.rocker button{padding:8px 0;font-size:14px}
+.rocker label{font-size:9px;text-align:center;letter-spacing:.2em;padding:2px 0}
+.r-dpad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,34px);gap:3px;width:78%;margin:2px auto}
+.dp{border-radius:8px;font-size:12px}
+.dp.up{grid-area:1/2}.dp.left{grid-area:2/1}.dp.ok{grid-area:2/2;border-radius:50%;font-size:11px}.dp.right{grid-area:2/3}.dp.down{grid-area:3/2}
+.r-brand{display:flex;justify-content:center;font-size:12px;margin-top:4px}
+.r-brand .nv-word{height:16px;width:auto}
+.r-model{text-align:center;font:500 8px Oswald;letter-spacing:.3em;opacity:.6}
+.remote :active{transform:translateY(1px)}
+
+/* 90s: charcoal Remote Commander */
+.remote-90s{border-radius:44px 44px 70px 70px;transform:rotate(4deg);background:linear-gradient(100deg,#202024,#36363d 45%,#1a1a1e);
+  box-shadow:0 30px 50px rgba(0,0,0,.7),inset 0 2px 0 rgba(255,255,255,.12),inset 0 -4px 10px rgba(0,0,0,.6);color:#e8e8ee}
+.remote-90s .rb,.remote-90s .dp{background:radial-gradient(circle at 40% 30%,#5b5b64,#26262b 70%);box-shadow:0 3px 0 #0b0b0d,inset 0 1px 0 rgba(255,255,255,.2)}
+.remote-90s .rb.power{background:radial-gradient(circle at 40% 30%,#ff6a5e,#b3140b 70%)}
+.remote-90s .rpill,.remote-90s .rocker button{background:linear-gradient(180deg,#5a5a63,#2a2a30);box-shadow:0 3px 0 #0b0b0d,inset 0 1px 0 rgba(255,255,255,.2)}
+.remote-90s .rocker{box-shadow:0 3px 0 #0b0b0d}.remote-90s .rocker label{background:#26262b;color:#9a9aa3}
+.remote-90s .rpill.blue{background:linear-gradient(180deg,#4f73ff,#1b3bb3)}
+.remote-90s .rpill.red{background:linear-gradient(180deg,#ff5a4f,#a3150c)}
+.remote-90s .rpill.green{background:linear-gradient(180deg,#45d16a,#167a32)}
+.remote-90s .rpill.yel{background:linear-gradient(180deg,#ffd84a,#c79a00);color:#221a00}
+.remote-90s .r-model{color:#8a8a92}
+
+/* 80s: wood-trim Space Command clicker */
+.remote-80s{width:min(200px,100%);border-radius:18px;transform:rotate(-5deg);color:#2a1d0c;
+  background:linear-gradient(180deg,#e9e0cc,#cdbf9f);box-shadow:0 30px 50px rgba(0,0,0,.7),inset 0 0 0 3px #a8987a,inset 0 2px 0 #fff}
+.remote-80s .r-ir{background:#5a1010}
+.remote-80s .rb,.remote-80s .dp,.remote-80s .rpill,.remote-80s .rocker button{border-radius:5px;background:linear-gradient(#5b4128,#3a2714);color:#f0e4c8;box-shadow:0 3px 0 #1e1408;aspect-ratio:auto;padding:7px 0}
+.remote-80s .rb.power{background:linear-gradient(#c8321f,#7a160b);width:auto;flex:0 0 44px}
+.remote-80s .rocker{border-radius:6px}.remote-80s .rocker label{background:#a8987a;color:#3a2714}
+.remote-80s .rpill.yel{background:linear-gradient(#d9a520,#9b6f05)}
+.remote-80s .r-brand{background:#2a1d0c;border-radius:6px;padding:4px}
+
+/* 00s: silver universal */
+.remote-00s{width:min(190px,100%);border-radius:30px;color:#2b3038;
+  background:linear-gradient(90deg,#9aa0a8,#eef1f4 40%,#c7ccd3 70%,#8f959e);box-shadow:0 30px 50px rgba(0,0,0,.6),inset 0 0 0 1px #6b717a}
+.remote-00s .rb,.remote-00s .rpill,.remote-00s .rocker button{background:linear-gradient(#fbfcfd,#c9ced5);box-shadow:0 2px 0 #7d838c;color:#2b3038}
+.remote-00s .dp{background:linear-gradient(#5d8dff,#1f4fc7);color:#fff;box-shadow:0 2px 0 #12317e}
+.remote-00s .rb.power{background:linear-gradient(#ff7a6e,#c4261b);color:#fff}
+.remote-00s .rocker label{background:#b5bac2;color:#2b3038}
+.remote-00s .rpill.blue{background:linear-gradient(#5d8dff,#1f4fc7);color:#fff}
+.remote-00s .r-ir{background:#1a1a1a}
+
+@media (max-width:760px){
+  .remote{transform:none!important;width:100%;max-width:360px;border-radius:30px}
+  .r-grid{grid-template-columns:repeat(6,1fr)}
+  .set-80s .cabinet{grid-template-columns:1fr;grid-template-areas:"bezel" "side" "panel"}
+  .set-80s .side{flex-direction:row;flex-wrap:wrap;justify-content:center}
+  .set-80s .side-model{margin:0}
+  .set-80s{margin-top:80px}
+  .ears{width:110px;height:100px}.ear{height:100px}
+}
