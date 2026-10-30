@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v1.0.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package the app and the Bridge
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          mkdir -p dist
+          zip -r "dist/nostalgiavue-web-$TAG.zip" index.html games.html manifest.webmanifest sw.js vercel.json css js icons -x '*.DS_Store'
+          (cd bridge && zip -r "../dist/nostalgiavue-bridge-$TAG.zip" . -x 'config.json' '.durations.json')
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: NostalgiaVue ${{ env.TAG }}
+          body_path: RELEASE_NOTES.md
+          files: dist/*.zip
