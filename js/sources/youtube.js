@@ -75,9 +75,9 @@ async function searchItems(ch) {
   const s = ch.search; if (!s) return null;
   if (!settings.ytKey && !(await serverReady())) return null;
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
-  const { slot } = slotNow();
-  // rotate which query airs each half hour; channel-restricted searches merge their results
-  const q = qs[hash(daySeed(), ch.n, slot) % qs.length];
+  // one search per channel per day keeps the free API quota happy; the half-hour slots then
+  // walk through its results. Channel-restricted searches merge their results.
+  const q = qs[hash(daySeed(), ch.n) % qs.length];
   const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long }).catch(() => [])));
   const seen = new Set(), out = [];
   for (const l of lists) for (const it of l) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }
