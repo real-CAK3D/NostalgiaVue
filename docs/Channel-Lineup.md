@@ -609,8 +609,8 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 887 | WNDR | The Wonder Years | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 888 | CHRS | Cheers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 889 | TAXI | Taxi | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 890 | ODD | Odd VHS | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 891 | BABY | Talking Baby Animals | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 890 | DORF | Dorf · Tim Conway | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 891 | WACK | Wild America · Wacky Babies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 892 | FREE | Milton Friedman · Free to Choose | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 893 | EMC2 | Einstein & the Great Minds | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 894 | LECT | Lecture Hall | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
@@ -636,6 +636,10 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 909 | THRE | Three’s Company | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 910 | GILL | Gilligan’s Island | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 911 | MASH | M*A*S*H | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 912 | KLPY | Kaloopy TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 913 | RSHO | Red Shoe Diaries | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 914 | MAXX | Late Night Cable | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 915 | SWIM | Swimsuit Specials | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 950 | GOLF | Golf Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 951 | NFL | Pro Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 952 | NCAA | College Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

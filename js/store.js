@@ -49,7 +49,7 @@ export const DEFAULTS = {
   // parental controls (nothing is locked until a PIN is set)
   pin: '',
   kids: false,           // Kids profile: only kid-friendly categories
-  lockedCats: ['HALF BAKED'],
+  lockedCats: ['HALF BAKED', 'AFTER DARK'],
   lockedChannels: [34, 273, 274, 289, 290, 419, 846, 957],
   favorites: [],
   tapes: [],             // VCR tapes recorded with REC
@@ -69,6 +69,13 @@ function load() {
   catch { return { ...DEFAULTS }; }
 }
 export const settings = load();
+// categories added after a TV first saved its settings start out locked there too
+for (const cat of ['AFTER DARK']) {
+  const seen = settings.lockSeen || (settings.lockSeen = []);
+  if (seen.includes(cat)) continue;
+  seen.push(cat);
+  if (!settings.lockedCats.includes(cat)) settings.lockedCats = [...settings.lockedCats, cat];
+}
 export function save() {
   settings.savedAt = Date.now();
   try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch {}
