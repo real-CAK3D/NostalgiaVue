@@ -105,8 +105,34 @@ catch {
   if (Test-Path $log) { Get-Content $log | Select-Object -Last 5 | ForEach-Object { Write-Host "   $_" -ForegroundColor Red } }
 }
 
-# 7. Pair the TV: opens NostalgiaVue with the address + token filled in and channels assigned
-$pair = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((@{ u = $url; t = $token } | ConvertTo-Json -Compress)))
+# 7. Jellyfin (optional): if it's running here, make a NostalgiaVue API key and share it over Tailscale too
+$jf = @{}
+$jfLocal = 'http://127.0.0.1:8096'
+$jfInfo = $null; try { $jfInfo = Invoke-RestMethod "$jfLocal/System/Info/Public" -TimeoutSec 4 } catch {}
+if ($jfInfo) {
+  Say "Found Jellyfin ($($jfInfo.ServerName)). Connect it to NostalgiaVue? Enter your Jellyfin admin username (or press Enter to skip)"
+  $jfUser = Read-Host '   Jellyfin username'
+  if ($jfUser) {
+    $jfPass = Read-Host '   Jellyfin password' -AsSecureString
+    $plain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($jfPass))
+    $authHdr = @{ 'X-Emby-Authorization' = 'MediaBrowser Client="NostalgiaVue Installer", Device="Windows", DeviceId="nostalgiavue-installer", Version="1.0"' }
+    try {
+      $auth = Invoke-RestMethod "$jfLocal/Users/AuthenticateByName" -Method Post -Headers $authHdr -ContentType 'application/json' -Body (@{ Username = $jfUser; Pw = $plain } | ConvertTo-Json)
+      $h = @{ 'X-Emby-Token' = $auth.AccessToken }
+      $keys = (Invoke-RestMethod "$jfLocal/Auth/Keys" -Headers $h).Items | Where-Object { $_.AppName -eq 'NostalgiaVue' }
+      if (-not $keys) { Invoke-RestMethod "$jfLocal/Auth/Keys?App=NostalgiaVue" -Method Post -Headers $h | Out-Null; $keys = (Invoke-RestMethod "$jfLocal/Auth/Keys" -Headers $h).Items | Where-Object { $_.AppName -eq 'NostalgiaVue' } }
+      $jfKey = @($keys)[0].AccessToken
+      tailscale serve --bg --https=8096 http://127.0.0.1:8096 | Out-Null
+      $jf = @{ ju = "https://${dns}:8096"; jk = $jfKey }
+      Write-Host "   Jellyfin connected: https://${dns}:8096" -ForegroundColor Green
+    } catch { Write-Host "   Couldn't sign in to Jellyfin ($($_.Exception.Message)). You can add it later in MENU > Sources." -ForegroundColor DarkYellow }
+    $plain = $null
+  }
+}
+
+# 8. Pair the TV: opens NostalgiaVue with the address + token filled in and channels assigned
+$pairData = @{ u = $url; t = $token } + $jf
+$pair = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes(($pairData | ConvertTo-Json -Compress)))
 Say 'Opening NostalgiaVue, already connected...'
 Start-Process "$site/#pair=$pair"
 

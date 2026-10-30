@@ -15,6 +15,15 @@ It runs full screen like a native app. Turn the phone sideways and hit **ZOOM** 
 - Guide, Guide Channel, commercial breaks, generated station logos, power-on logo animation
 - Local media (channels 1, 2, 4, 5, 7, 11, 14–20) and the Game Channel (3) over Tailscale
 
+### New in 1.2
+- Era selector, Shows A–Z (800s), Classic TV block (250s), LIVE section (700s), My Playlists (600s), color-coded guide in four styles
+- Parental PIN locks and Kids profile
+- SLEEP, CC, PIP/SWAP, FAV/FAV+, REC + VCR tape shelf (880)
+- Era channel changes, power-off dot, hum bar, wall glow, rabbit-ear reception, overnight sign-off
+- Library with resume for local media, Jellyfin auto-setup, settings sync through the Bridge
+- Nightly YouTube pre-fetch, Windows app (NostalgiaVue-Setup.exe)
+
 ### Downloads
 - `nostalgiavue-web-*.zip`: the whole app, to host yourself (`python3 -m http.server`)
+- `NostalgiaVue-Setup-*.exe`: the Windows app (shows streaming sites inside the TV)
 - `nostalgiavue-bridge-*.zip`: the NostalgiaVue Bridge for your PC (E: drive folders and ROMs over Tailscale). Setup guide: https://github.com/real-CAK3D/NostalgiaVue/wiki/Local-Media-and-the-Bridge

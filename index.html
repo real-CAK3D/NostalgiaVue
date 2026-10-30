@@ -13,7 +13,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Lobster&family=Monoton&family=Oswald:wght@400;500;700&family=Press+Start+2P&family=Righteous&family=Rubik+Mono+One&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Lobster&family=Monoton&family=Permanent+Marker&family=Oswald:wght@400;500;700&family=Press+Start+2P&family=Righteous&family=Rubik+Mono+One&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/sets.css">
 <link rel="stylesheet" href="css/screen.css">
@@ -22,6 +22,7 @@
 <body>
 <main class="room" id="room">
   <div class="set" id="set">
+    <div id="glow"></div>
     <div class="deco-top" id="decoTop"></div>
     <div class="cabinet" id="cabinet">
       <div class="bezel">
@@ -45,16 +46,22 @@
               <div id="scene" hidden></div>
               <div id="bars" hidden></div>
               <canvas id="snow" width="160" height="120" hidden></canvas>
+              <div id="mute" hidden></div>
+              <div id="rx" hidden></div>
               <div id="bug"></div>
             </div>
             <div class="osd" id="osdChan"></div>
             <div class="osd" id="osdVol"></div>
+            <div id="pip" hidden></div>
+            <div id="recDot" hidden>● REC</div>
             <div id="banner"></div>
             <div id="info"></div>
             <div id="msg"></div>
             <div id="menu" hidden></div>
             <div id="splash" hidden></div>
           </div>
+          <div id="dot"></div>
+          <div class="glass hum"></div>
           <div class="glass mask"></div>
           <div class="glass scan"></div>
           <div class="glass vignette"></div>
@@ -73,7 +80,7 @@
   <button data-act="voldn" aria-label="Volume down">VOL −</button><button data-act="volup" aria-label="Volume up">VOL +</button>
   <button data-act="guide">GUIDE</button><button data-act="menu">MENU</button><button data-act="zoom">EXIT ZOOM</button><button data-act="power">⏻</button>
 </div>
-<p class="hint" id="hint">Press <kbd>P</kbd> or the power button · <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> volume · <kbd>0</kbd>–<kbd>9</kbd> tune · <kbd>G</kbd> guide · <kbd>I</kbd> info · <kbd>S</kbd> settings · <kbd>M</kbd> mute · <kbd>L</kbd> last · <kbd>Z</kbd> zoom · <kbd>F</kbd> find · swipe the screen on phones</p>
+<p class="hint" id="hint">Press <kbd>P</kbd> or the power button · <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> volume · <kbd>0</kbd>–<kbd>9</kbd> tune · <kbd>G</kbd> guide · <kbd>I</kbd> info · <kbd>S</kbd> settings · <kbd>M</kbd> mute · <kbd>L</kbd> last · <kbd>Z</kbd> zoom · <kbd>F</kbd> find · <kbd>X</kbd> sleep · <kbd>C</kbd> CC · <kbd>N</kbd> PIP · <kbd>W</kbd> swap · <kbd>V</kbd> fav · <kbd>B</kbd> fav+ · <kbd>R</kbd> rec · swipe the screen on phones</p>
 <script type="module" src="js/app.js"></script>
 </body>
 </html>

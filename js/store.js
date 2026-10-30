@@ -14,6 +14,12 @@ export const DEFAULTS = {
   brightness: 100,       // %
   logoIntro: true,       // NostalgiaVue splash on power-on
   guideStyle: 'prevue',  // see GUIDE_STYLES in guide.js
+  changeFx: 'era',       // channel-change look: era | snow | blue | black | roll
+  humBar: true,          // slow rolling hum bar on CRT sets
+  glow: true,            // wall glow behind the set + darker room at night
+  reception: true,       // 80s sets: weak channels get snow until you aim the rabbit ears
+  antenna: 0,            // rabbit-ear angle (-60..60)
+  warp: false,           // curved-glass picture (experimental)
   clock24: false,
   // sound
   vol: 0.7,
@@ -40,11 +46,22 @@ export const DEFAULTS = {
   userChannels: [],      // channels added by the user (any section)
   hidden: [],            // channel numbers hidden from surfing + guide
   custom: '',            // search for the "your channel" slot
+  // parental controls (nothing is locked until a PIN is set)
+  pin: '',
+  kids: false,           // Kids profile: only kid-friendly categories
+  lockedCats: ['HALF BAKED'],
+  lockedChannels: [34, 273, 274, 289, 290, 419, 846],
+  favorites: [],
+  tapes: [],             // VCR tapes recorded with REC
+  cc: false,
+  signOff: true,         // 3–5 AM: classic cable channels air vintage sign-offs
   yearFrom: null,        // era selector: only air content from yearFrom..yearTo (null = any)
   yearTo: null,
   eraYouTube: true,      // also add the decade to YouTube searches
   // last state
   num: 31,
+  sync: true,            // share settings with your other devices through the Bridge
+  savedAt: 0,
 };
 
 function load() {
@@ -52,7 +69,13 @@ function load() {
   catch { return { ...DEFAULTS }; }
 }
 export const settings = load();
-export function save() { try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch {} }
+export function save() {
+  settings.savedAt = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch {}
+  state.hooks?.onSave?.();
+}
+// store without bumping the timestamp (used when pulling synced settings)
+export function saveQuiet() { try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch {} }
 export function resetAll() { try { localStorage.removeItem(KEY); } catch {} location.reload(); }
 export function exportSettings() { return JSON.stringify(settings, null, 2); }
 export function importSettings(text) {

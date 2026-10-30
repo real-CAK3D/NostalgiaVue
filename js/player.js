@@ -50,10 +50,27 @@ v.addEventListener('loadedmetadata', () => {
   s.seek = 0;
 });
 v.addEventListener('playing', () => { const s = session; if (!s) return; s.started = true; clearTimeout(watchdog); s.onPlaying?.(); });
-v.addEventListener('ended', () => session?.onEnded?.());
+v.addEventListener('ended', () => { if (session?.resumeKey) setResume(session.resumeKey, 0); session?.onEnded?.(); });
 v.addEventListener('error', () => { if (session && v.getAttribute('src')) session.onError?.(); });
+// Resume: local media picked from the library remembers where you stopped.
+const RKEY = 'nv.resume';
+export function resumeAt(key) { try { return (JSON.parse(localStorage.getItem(RKEY) || '{}')[key] || 0); } catch { return 0; } }
+function setResume(key, t) {
+  try {
+    const m = JSON.parse(localStorage.getItem(RKEY) || '{}');
+    if (t) m[key] = Math.floor(t); else delete m[key];
+    const keys = Object.keys(m); if (keys.length > 500) delete m[keys[0]];
+    localStorage.setItem(RKEY, JSON.stringify(m));
+  } catch {}
+}
+let lastResumeSave = 0;
 v.addEventListener('timeupdate', () => {
-  const s = session; if (!s || !s.clipLen) return;
+  const s = session; if (!s) return;
+  if (s.resumeKey && Date.now() - lastResumeSave > 5000 && v.currentTime > 10) {
+    lastResumeSave = Date.now();
+    setResume(s.resumeKey, isFinite(v.duration) && v.duration - v.currentTime < 60 ? 0 : v.currentTime);
+  }
+  if (!s.clipLen) return;
   if (s.clipStart == null) s.clipStart = v.currentTime;
   if (v.currentTime - s.clipStart >= s.clipLen) { const f = s.onEnded; s.onEnded = null; f?.(); }
 });
@@ -73,7 +90,8 @@ export const setBreakHook = f => { breakHook = f; };
 
 export async function airList(ch, list, resolve, token, opts = {}) {
   const { slot, elapsed } = slotNow();
-  return airFrom(ch, list, resolve, slot, elapsed, token, opts);
+  // fromStart: tapes and on-demand picks play from the top instead of joining the schedule mid-show
+  return airFrom(ch, list, resolve, opts.fromStart ? 0 : slot, opts.fromStart ? 0 : elapsed, token, opts);
 }
 async function airFrom(ch, list, resolve, idx, offset, token, opts) {
   for (let a = 0; a < 8; a++) {
@@ -109,7 +127,8 @@ function loadFile() {
   if (c.p.kind === 'audio' && !c.opts.bg) { v.hidden = true; showAudioScene(); }
   else if (!c.opts.bg) clearScene();
   playUrl({
-    url: f.url, hls: f.hls, seek: c.startOff,
+    url: f.url, hls: f.hls, seek: c.opts.resume ? (c.startOff || resumeAt(f.url.replace(/[?&](t|api_key)=[^&]*/g, ''))) : c.startOff,
+    resumeKey: c.opts.resume ? f.url.replace(/[?&](t|api_key)=[^&]*/g, '') : null,
     onPlaying: () => {
       if (cur !== c) return;
       c.startOff = 0; staticOff(); hideMsg();
@@ -131,6 +150,12 @@ export function skip() {
 }
 export function stopProgram() { cur = null; stopVideo(); v.hidden = false; }
 
+// What's on right now, in a form that can be saved to a VCR tape.
+export function currentEntry() {
+  if (!cur) return null;
+  const e = cur.list[((cur.listIdx % cur.list.length) + cur.list.length) % cur.list.length];
+  return { entry: e, title: cur.p.title, url: cur.p.groups[cur.g][cur.fi].url, kind: cur.p.kind, at: v.currentTime || 0 };
+}
 export function programInfo() {
   if (!cur) return null;
   const files = cur.p.groups[cur.g];

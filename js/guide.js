@@ -4,6 +4,7 @@ import { settings, state, save, eraOn, eraLabel } from './store.js';
 import { CHANNELS, isHidden } from './lineup.js';
 import { getList, listsDone, listKey } from './sources/archive.js';
 import { iconSVG, CAT_HUE } from './icons.js';
+import { isLocked } from './parental.js';
 
 export const GUIDE_STYLES = [['prevue', 'Prevue (1990s blue grid)'], ['tvguide', 'TV Guide Channel (2000s)'], ['cable', 'Cable Box (green screen)'], ['teletext', 'Teletext (1980s blocks)']];
 const hueOf = cat => CAT_HUE[cat] ?? 225;
@@ -43,7 +44,7 @@ export function guideGridHTML({ start = 0, count = CHANNELS.length, auto = false
     if (!auto && ch.cat !== lastCat) html += `<div class="g-cat" style="--h:${hueOf(ch.cat)}">${esc(lastCat = ch.cat)}</div>`;
     // every category has its own color, like the old printed TV Guide grids
     const cells = [0, 1, 2].map(k => { const t = programTitle(ch, slot + k); return `<div class="g-cell${k ? '' : ' now'}${dim(t) ? ' dim' : ''}" style="--h:${hueOf(ch.cat)}">${esc(t)}</div>`; }).join('');
-    html += `<div class="g-row${i === sel ? ' sel' : ''}${ch.n === state.num ? ' tuned' : ''}" data-i="${i}"><div class="g-cell g-ch"><span class="g-ico">${iconSVG(ch)}</span><em>${ch.n}</em><span class="g-call">${esc(ch.call)}</span></div>${cells}</div>`;
+    html += `<div class="g-row${i === sel ? ' sel' : ''}${ch.n === state.num ? ' tuned' : ''}" data-i="${i}"><div class="g-cell g-ch"><span class="g-ico">${iconSVG(ch)}</span><em>${ch.n}</em><span class="g-call">${(settings.favorites || []).includes(ch.n) ? '★' : ''}${isLocked(ch) ? '🔒' : ''}${esc(ch.call)}</span></div>${cells}</div>`;
   }
   return html + '</div>';
 }

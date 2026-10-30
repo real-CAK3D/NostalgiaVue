@@ -2,8 +2,9 @@
 // and Jellyfin libraries. Both become scheduled channels like any other.
 import { shuffle, hash, daySeed, fetchJSON } from '../util.js';
 import { settings, state } from '../store.js';
-import { airList } from '../player.js';
-import { staticOn, msg } from '../osd.js';
+import { airList, resumeAt } from '../player.js';
+import { staticOn, msg, scene } from '../osd.js';
+import { esc } from '../util.js';
 
 /* ---------- NostalgiaVue Bridge ---------- */
 const bridgeBase = () => settings.bridgeUrl.replace(/\/+$/, '');
@@ -69,7 +70,39 @@ async function resolveJellyfin(it) {
 }
 
 /* ---------- tuning ---------- */
+/* ---------- library: OK on a local channel lists everything in it, with resume points ---------- */
+const lib = { open: false, items: [], sel: 0, ch: null, resolve: null };
+export const libraryOpen = () => lib.open;
+const fmtT = s => `${Math.floor(s / 3600) ? Math.floor(s / 3600) + ':' : ''}${String(Math.floor(s / 60) % 60).padStart(Math.floor(s / 3600) ? 2 : 1, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+export async function openLibrary(ch) {
+  const m = ch.map; if (!m) return false;
+  try {
+    lib.items = m.type === 'jellyfin' ? await jellyfinList(m.parentId) : await bridgeList(m.path);
+    lib.resolve = m.type === 'jellyfin' ? resolveJellyfin : resolveBridge;
+  } catch { return false; }
+  lib.items = [...lib.items].sort((a, b) => libName(a).localeCompare(libName(b), undefined, { numeric: true }));
+  lib.open = true; lib.ch = ch; lib.sel = 0; renderLibrary(); return true;
+}
+const libName = it => it.path ? it.path.split('/').slice(1).join(' › ').replace(/\.[^.]+$/, '') : (it.SeriesName ? `${it.SeriesName} › ${it.Name}` : it.Name);
+const libKey = it => it.path ? bridgeFile(it.path).replace(/[?&]t=[^&]*/g, '') : `${jfBase()}/Videos/${it.Id}`;
+function renderLibrary() {
+  scene(`<div class="ondemand"><div class="od-head">LIBRARY · ${esc(lib.ch.name)}<small>▲▼ choose · OK play (resumes where you stopped) · BACK close</small></div>
+    <div class="od-list">${lib.items.map((it, i) => { const r = resumeAt(libKey(it)); return `<div class="od-item${i === lib.sel ? ' sel' : ''}" data-i="${i}"><b>${esc(libName(it))}</b><small>${r ? '▶ resume at ' + fmtT(r) : ''}</small></div>`; }).join('')}</div></div>`, 'odscene');
+  const list = document.querySelector('.od-list');
+  list.onclick = e => { const it = e.target.closest('.od-item'); if (it) { lib.sel = +it.dataset.i; libraryOK(); } };
+  list.querySelector('.sel')?.scrollIntoView({ block: 'nearest' });
+}
+export function libraryNav(d) { if (!lib.open) return false; lib.sel = (lib.sel + d + lib.items.length) % lib.items.length; renderLibrary(); return true; }
+export function libraryOK() {
+  if (!lib.open) return false;
+  const it = lib.items[lib.sel]; lib.open = false; staticOn();
+  airList(lib.ch, [it], lib.resolve, state.token, { fromStart: true, resume: true });
+  return true;
+}
+export function closeLibrary() { if (!lib.open) return false; lib.open = false; scene(''); return true; }
+
 export async function tuneLocal(ch, token) {
+  lib.open = false;
   const m = ch.map;
   if (!m) { staticOn(); msg(`LOCAL ${ch.n}`, 'Not set up yet — MENU › Sources to pick a folder or Jellyfin library'); return; }
   let list, resolve;

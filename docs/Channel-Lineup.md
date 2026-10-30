@@ -599,3 +599,4 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 877 | RDRB | Reading Rainbow | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 878 | WSHB | Wishbone | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 879 | CRMN | Where in the World Is Carmen Sandiego? | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 880 | VCR | VCR · Tape Shelf | vcr |

@@ -45,3 +45,14 @@ body.zoom.zoom-ui .zoombar{transform:translateX(-50%)}
   body{padding:16px 12px 24px}
   .room{gap:22px}
 }
+
+/* the set lights up the wall behind it, tinted by what's on */
+#glow{position:absolute;inset:-12% -18%;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1.2s,background 1.5s;
+  background:radial-gradient(ellipse 55% 50% at 50% 45%,hsl(var(--gh,220) 80% 55% / .45),transparent 70%);filter:blur(30px)}
+.set.on #glow{opacity:1;animation:glowflick 4s ease-in-out infinite}
+@keyframes glowflick{0%,100%{opacity:.9}50%{opacity:1}}
+body.night{--room-1:#21170f;--room-2:#0f0a06;--room-3:#040302}
+body.night .hint{opacity:.5}
+body.no-glow #glow{display:none}
+.ear,.whip{pointer-events:auto;cursor:grab}
+.ears{pointer-events:none}

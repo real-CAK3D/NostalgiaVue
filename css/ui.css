@@ -54,3 +54,6 @@
 .m-eras{gap:calc(var(--u)*.6)}
 .m-eras .m-btn{flex:1;padding:calc(var(--u)*.5) 0}
 .m-eras .m-btn.on{background:var(--sel);color:#111}
+.m-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*.4) calc(var(--u)*1.4)}
+.m-cat{font-size:calc(var(--u)*2.1);display:flex;gap:calc(var(--u)*.6);align-items:center}
+#menu.mobile .m-cats{grid-template-columns:repeat(2,1fr)}

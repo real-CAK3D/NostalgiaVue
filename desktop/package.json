@@ -1,0 +1,23 @@
+{
+  "name": "nostalgiavue-desktop",
+  "version": "1.2.0",
+  "description": "NostalgiaVue for Windows",
+  "author": "real-CAK3D",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --publish never"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "app.nostalgiavue.desktop",
+    "productName": "NostalgiaVue",
+    "files": ["main.js", "package.json"],
+    "win": { "target": "nsis", "icon": "icon.png" },
+    "nsis": { "oneClick": true, "shortcutName": "NostalgiaVue" }
+  }
+}

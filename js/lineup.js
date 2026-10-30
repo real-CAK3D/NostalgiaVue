@@ -739,6 +739,7 @@ const SHOWS = [
   show(877, 'KIDS', 'RDRB', 'Reading Rainbow', ep('Reading Rainbow')),
   show(878, 'KIDS', 'WSHB', 'Wishbone', ep('Wishbone')),
   show(879, 'KIDS', 'CRMN', 'Where in the World Is Carmen Sandiego?', ep('Where in the World is Carmen Sandiego game show')),
+  { n: 880, cat: 'VCR', call: 'VCR', name: 'VCR · Tape Shelf', kind: 'vcr', desc: 'Everything you taped with REC. OK plays a tape.' },
 ];
 
 export let CHANNELS = [];
@@ -780,7 +781,11 @@ export function buildLineup() {
   return all;
 }
 export const chanByNum = n => CHANNELS.find(c => c.n === n);
-export const isHidden = n => settings.hidden.includes(n);
+// Kids profile: only these categories (and the weather, guide and game channels) are shown.
+export const KIDS_CATS = new Set(['KIDS', 'CARTOONS', 'LEARNING', 'NATURE', 'SCIENCE', 'GAMES', 'GUIDE', 'SEASONAL', 'COZY']);
+const KIDS_KINDS = new Set(['weather', 'guidech', 'games']);
+export const kidsHidden = ch => !!(ch && settings.kids && !KIDS_CATS.has(ch.cat) && !KIDS_KINDS.has(ch.kind));
+export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n));
 export const surfable = () => CHANNELS.filter(c => !isHidden(c.n));
 
 export function nextFree(sectionId) {

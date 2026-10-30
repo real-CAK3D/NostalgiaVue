@@ -250,3 +250,4 @@
   .skin-big90 .cabinet::before,.skin-big90 .side{display:none}
   .skin-combo .panel{grid-template-columns:1fr}
 }
+.r-row.small .rpill{font-size:9px;padding:6px 0;letter-spacing:.05em}

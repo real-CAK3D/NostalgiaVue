@@ -6,4 +6,6 @@
 - [Local TV](Local-TV)
 - [Local Media & the Bridge](Local-Media-and-the-Bridge)
 - [Game Channel](Game-Channel)
+- [Parental Controls](Parental-Controls)
+- [Desktop & TV Apps](Desktop-and-TV-Apps)
 - [Install on Mobile](Install-on-Mobile)

@@ -315,3 +315,52 @@
 [data-gstyle="teletext"] .g-logo,[data-gstyle="teletext"] .g-clock,[data-gstyle="teletext"] .gch-clock{font-family:'Press Start 2P',monospace;font-size:2.4cqw;color:#ff0}
 [data-gstyle="teletext"] .g-row.sel .g-cell{background:#ff0!important;color:#000}
 [data-gstyle] .g-row.sel .g-cell:not(.g-ch){background:#ffd23f!important;color:#111!important;border-left-color:#111}
+.card.lock{background:radial-gradient(circle at 50% 35%,#3a2a00,#0a0700)}
+.pin{display:flex;gap:2cqw}.pin i{width:4cqw;height:4cqw;border-radius:50%;border:.4cqw solid #ffd23f}.pin i.on{background:#ffd23f}
+.card-text.bad{color:#ff6a5e}
+
+/* ---------- era channel-change looks ---------- */
+#mute{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-start;justify-content:flex-end;padding:6% 7%}
+#mute.blue{background:#0a2bd6}
+#mute.blue span{font:7cqw VT323,monospace;color:#fff;text-shadow:.3cqw .3cqw 0 #000}
+#mute.black{background:#000}
+.tube.roll{animation:roll .55s cubic-bezier(.3,.1,.3,1)}
+@keyframes roll{0%{transform:translateY(0)}35%{transform:translateY(-38%);filter:brightness(1.3)}36%{transform:translateY(38%)}100%{transform:none}}
+/* ---------- reception (80s sets with antennas) ---------- */
+#rx{position:absolute;inset:0;z-index:4;pointer-events:none;background-size:128px 128px;mix-blend-mode:screen;animation:rxshift .12s steps(4) infinite}
+@keyframes rxshift{0%{background-position:0 0}25%{background-position:-37px 21px}50%{background-position:53px -11px}75%{background-position:-17px -43px}}
+#prog{--ghost:0}
+#prog>#vid,#prog>#yt,#prog>#liveFrame{filter:drop-shadow(var(--ghost) 0 0 rgba(255,255,255,.28))}
+/* ---------- power-off dot ---------- */
+#dot{position:absolute;left:50%;top:50%;width:1.6%;aspect-ratio:1;margin:-.8% 0 0 -.8%;border-radius:50%;z-index:21;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#fff 0 35%,rgba(200,230,255,.7) 60%,transparent 72%);box-shadow:0 0 2cqw 1cqw rgba(200,230,255,.5)}
+#dot.go{animation:dot 2.2s ease-out forwards}
+@keyframes dot{0%{opacity:1;transform:scale(1.4)}20%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.2)}}
+/* ---------- rolling hum bar ---------- */
+.hum{opacity:0;background:linear-gradient(180deg,transparent 0,rgba(255,255,255,.035) 45%,rgba(0,0,0,.05) 55%,transparent 100%) 0 0/100% 35% no-repeat}
+.set.on .hum{opacity:1;animation:hum 9s linear infinite}
+@keyframes hum{from{background-position:0 -40%}to{background-position:0 140%}}
+body.no-hum .hum,.skin-plasma .hum,.skin-flat .hum{display:none}
+/* ---------- curved glass (experimental) ---------- */
+body.warp .tube{filter:url(#crtWarp)}
+
+/* ---------- PIP, REC, VCR ---------- */
+#pip{position:absolute;right:4%;top:5%;width:32%;aspect-ratio:4/3;z-index:9;border:.4cqw solid #ddd;box-shadow:0 0 0 .3cqw #000,0 1cqw 2cqw rgba(0,0,0,.6);background:#000;overflow:hidden}
+#pip iframe,#pip video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;pointer-events:none}
+#pip .pip-n{position:absolute;left:0;top:0;font:2.6cqw VT323,monospace;color:var(--osd);background:rgba(0,0,0,.6);padding:0 .8cqw;font-weight:400}
+.pip-card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6cqw;color:#ccc;font:3cqw VT323,monospace;text-align:center;padding:1cqw}
+.pip-card svg{width:40%}.pip-card small{font-size:2cqw}
+#recDot{position:absolute;left:6%;top:6%;z-index:12;font:4cqw VT323,monospace;color:#ff3b30;text-shadow:0 0 1cqw #f00;animation:blink 1s steps(2) infinite}
+.vcrscene .vcr-shelf{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#1a1410,#060403);color:#fff}
+.vcr-head{padding:2cqw 3cqw;font:700 3.2cqw Oswald;color:#ffd23f;border-bottom:.4cqw solid #5a3a1a}
+.vcr-head small{display:block;font:2.4cqw VT323,monospace;color:#d9c4a0}
+.tapes{flex:1;overflow-y:auto;padding:1.4cqw 3cqw;display:flex;flex-direction:column;gap:.8cqw;scrollbar-width:none;pointer-events:auto}
+.tape{display:flex;justify-content:space-between;gap:2cqw;align-items:center;padding:.8cqw 1.6cqw;border-radius:.4cqw;cursor:pointer;
+  background:linear-gradient(90deg,#111 0 4%,#f4efe2 4% 96%,#111 96%);color:#222;font:3cqw 'Permanent Marker','Comic Sans MS',cursive}
+.tape-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tape-meta{font:2cqw VT323,monospace;color:#7a6a50;flex:none}
+.tape.sel{outline:.5cqw solid #ffd23f;transform:translateX(1.5cqw)}
+#prog.vhs>#vid,#prog.vhs>#yt{filter:saturate(1.35) contrast(1.08) blur(.35px)}
+#prog.vhs::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0 88%,rgba(255,255,255,.18) 89%,rgba(0,0,0,.25) 91%,transparent 93%) 0 0/100% 200%;animation:tracking 7s linear infinite;mix-blend-mode:screen}
+@keyframes tracking{0%{background-position:0 0}12%{background-position:0 100%}100%{background-position:0 100%}}

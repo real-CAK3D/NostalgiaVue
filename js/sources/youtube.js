@@ -8,6 +8,7 @@ import { $, esc, hash, daySeed, slotNow, loadScript, fetchJSON } from '../util.j
 import { settings, save, state, eraWords } from '../store.js';
 import { staticOn, staticOff, hideMsg, msg, banner, scene, clearScene } from '../osd.js';
 import { tuneArchive } from './archive.js';
+import { ytCacheKey } from '../ytcache.js';
 
 const yt = { player: null, ready: false, ch: null, cands: [], cand: 0, errs: 0, token: 0, playing: false, lastVid: '', watchdog: 0, items: null, picker: null };
 
@@ -50,9 +51,17 @@ async function ytApi(op, params) {
 }
 serverReady().then(ok => { serverKey = ok; });
 
+// Results pre-fetched nightly by the GitHub Action (data/yt/) cost no quota, so they're tried first.
+let staticIndex = null;
+async function staticSearch(k) {
+  staticIndex = staticIndex || fetch('data/yt/_index.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const e = (await staticIndex)[k]; if (!e || !e.n) return null;
+  try { const rows = await fetchJSON('data/yt/' + e.f); return rows.map(([id, title, by]) => ({ id, title: decode(title), by: decode(by) })); } catch { return null; }
+}
 async function apiSearch(q, { channelId, long, live } = {}) {
-  const k = `s|${q}|${channelId || ''}|${long ? 1 : 0}|${live ? 1 : 0}`;
+  const k = ytCacheKey(q, { channelId, long, live });
   if (cache[k]) return cache[k];
+  if (!live) { const pre = await staticSearch(k); if (pre && pre.length) { cache[k] = pre; keep(); return pre; } }
   const p = { part: 'snippet', type: 'video', maxResults: '50', q, videoEmbeddable: 'true' };
   if (channelId) p.channelId = channelId;
   if (long) p.videoDuration = 'long';
@@ -74,7 +83,6 @@ export async function resolveHandle(handle) {
 
 async function searchItems(ch) {
   const s = ch.search; if (!s) return null;
-  if (!settings.ytKey && !(await serverReady())) return null;
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
   // one search per channel per day keeps the free API quota happy; the half-hour slots then
   // walk through its results. Channel-restricted searches merge their results.
@@ -103,7 +111,7 @@ export async function tuneYouTube(ch, token) {
   if (!yt.player) {
     yt.player = new YT.Player('ytMount', {
       width: '100%', height: '100%',
-      playerVars: { autoplay: 1, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1, iv_load_policy: 3, fs: 0 },
+      playerVars: { autoplay: 1, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1, iv_load_policy: 3, fs: 0, cc_load_policy: settings.cc ? 1 : 0, cc_lang_pref: 'en' },
       events: { onReady: () => { yt.ready = true; ytVolume(); if (yt.token === state.token && yt.ch) load(); }, onStateChange, onError },
     });
   } else if (yt.ready) load();
@@ -130,6 +138,7 @@ function load(pick) {
 function onStateChange(e) {
   if (yt.token !== state.token || !yt.ch) return;
   if (e.data === YT.PlayerState.PLAYING) {
+    ytCaptions();
     yt.errs = 0; clearTimeout(yt.watchdog); staticOff(); hideMsg();
     const d = yt.player.getVideoData();
     learnName(d.author);
@@ -189,6 +198,16 @@ export function stopYouTube() {
   yt.ch = null; yt.items = null; $('#yt').hidden = true;
   if (yt.player && yt.ready) try { yt.player.stopVideo(); } catch {}
 }
+// CC button: YouTube's own captions module
+export function ytCaptions() {
+  if (!yt.player || !yt.ready) return false;
+  try {
+    if (settings.cc) { yt.player.loadModule('captions'); yt.player.setOption('captions', 'track', { languageCode: 'en' }); }
+    else yt.player.unloadModule('captions');
+  } catch {}
+  return true;
+}
+export function ytNow() { try { const d = yt.player.getVideoData(); return d && d.video_id ? { id: d.video_id, title: d.title } : null; } catch { return null; } }
 export function title() { try { return yt.player.getVideoData().title; } catch { return ''; } }
 export function ytUrl() { try { return yt.player.getVideoUrl(); } catch { return ''; } }
 export const ytActive = () => !!yt.ch;

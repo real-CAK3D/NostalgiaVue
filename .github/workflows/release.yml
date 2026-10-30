@@ -22,7 +22,7 @@ jobs:
           TAG="${{ github.event.inputs.tag || github.ref_name }}"
           echo "TAG=$TAG" >> "$GITHUB_ENV"
           mkdir -p dist
-          zip -r "dist/nostalgiavue-web-$TAG.zip" index.html games.html manifest.webmanifest sw.js vercel.json css js icons -x '*.DS_Store'
+          zip -r "dist/nostalgiavue-web-$TAG.zip" index.html games.html manifest.webmanifest sw.js vercel.json css js icons data -x '*.DS_Store'
           (cd bridge && zip -r "../dist/nostalgiavue-bridge-$TAG.zip" . -x 'config.json' '.durations.json')
       - name: Publish release
         uses: softprops/action-gh-release@v2

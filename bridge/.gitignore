@@ -1,2 +1,5 @@
 config.json
 .durations.json
+nv-settings.json
+bridge.log
+bridge-error.log

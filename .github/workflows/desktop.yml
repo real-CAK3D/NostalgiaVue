@@ -1,0 +1,32 @@
+name: Windows app
+
+# Builds the NostalgiaVue Windows installer and attaches it to a release.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to attach the installer to (e.g. v1.2.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build installer
+        working-directory: desktop
+        run: |
+          copy ..\icons\icon-512.png icon.png
+          npm install
+          npx electron-builder --win nsis --publish never
+      - name: Attach to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          files: desktop/dist/*.exe

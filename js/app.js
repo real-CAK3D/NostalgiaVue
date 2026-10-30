@@ -1,19 +1,23 @@
 // NostalgiaVue — main wiring: power, tuning, remote, keyboard, touch, zoom.
 import { $, $$, esc, sleep } from './util.js';
-import { settings, save, state } from './store.js';
-import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS } from './lineup.js';
+import { settings, save, saveQuiet, state } from './store.js';
+import { pullSettings, pushSoon } from './sync.js';
+import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS, TS } from './lineup.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
 import { tuneArchive } from './sources/archive.js';
 import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker, tuneLive, stopLive, learnPlaylistNames } from './sources/youtube.js';
-import { tuneLocal, tuneStream, bridgeApi } from './sources/local.js';
+import { tuneLocal, tuneStream, bridgeApi, openLibrary, libraryOpen, libraryNav, libraryOK, closeLibrary } from './sources/local.js';
 import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal, watchOnTV, webActive, stopWeb } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
 import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide, cycleGuideStyle } from './guide.js';
 import { openMenu, closeMenu, bindMenu, menuNav, renderMenu } from './menu.js';
 import { renderSet, turnDial, irBlink, era, setId, SETS } from './sets.js';
 import { runBreak } from './ads.js';
+import { sleepButton, ccButton, favToggle, favNext, pipButton, pipSwap, pipRender, pipClose, recButton, tuneVCR, vcrNav, vcrOK, vcrBack, leaveVCR, vcrState } from './extras.js';
+import { roomFor, updateReception, bindAntenna, reaimEars, installWarp } from './look.js';
+import { isLocked, showLock, pinDigit, cancelPin, clearUnlocks, kidsHidden } from './parental.js';
 import { iconSVG } from './icons.js';
 import './ads.js';
 
@@ -22,9 +26,11 @@ async function pairFromLink() {
   const m = location.hash.match(/pair=([A-Za-z0-9+/=_-]+)/); if (!m) return;
   history.replaceState(null, '', location.pathname + location.search);
   try {
-    const { u, t } = JSON.parse(atob(m[1].replace(/-/g, '+').replace(/_/g, '/')));
+    const { u, t, ju, jk } = JSON.parse(atob(m[1].replace(/-/g, '+').replace(/_/g, '/')));
     if (!/^https:\/\//.test(u)) return;
-    settings.bridgeUrl = u; settings.bridgeToken = t || ''; save();
+    settings.bridgeUrl = u; settings.bridgeToken = t || '';
+    if (ju && jk && /^https:\/\//.test(ju)) { settings.jellyfinUrl = ju; settings.jellyfinKey = jk; }
+    save();
     // first pairing: fill the local channels with Movies, the whole TV library, then one show per channel
     if (!Object.keys(settings.localMap).length) {
       const { dirs = [] } = await bridgeApi('/api/browse', { depth: 2 });
@@ -39,6 +45,10 @@ async function pairFromLink() {
 }
 let pairedNote = '';
 await pairFromLink();
+state.hooks.onSave = () => pushSoon();
+state.hooks.saveQuiet = () => saveQuiet();
+// shared setup from the Bridge (if this device was set up longer ago than another one)
+if (await Promise.race([pullSettings(), sleep(2500).then(() => false)])) { /* applied below */ }
 buildLineup();
 if (!chanByNum(state.num)) state.num = 31;
 // name playlist channels after their real YouTube titles
@@ -56,6 +66,10 @@ function apply() {
   document.body.classList.toggle('zoom', !!settings.zoom);
   if (renderedSet !== setId()) { renderedSet = setId(); renderSet(); }
   applyVolume(); whine(state.on);
+  document.body.classList.toggle('no-hum', !settings.humBar);
+  document.body.classList.toggle('warp', !!settings.warp);
+  if (settings.warp) installWarp();
+  roomFor(chanByNum(state.num)); reaimEars(); updateReception();
   turnDial();
 }
 state.hooks.apply = apply;
@@ -65,11 +79,13 @@ state.hooks.breakNow = () => runBreak(true);
 state.hooks.eraChanged = () => { const ch = chanByNum(state.num); if (state.on && ch && (ch.kind === 'archive' || ch.kind === 'yt')) tune(state.num); };
 state.hooks.fullscreen = fullscreen;
 state.hooks.card = ch => tuneCard(ch);
+state.hooks.power = () => { if (state.on) power(); };
 state.hooks.namesLearned = () => buildLineup();
 
 /* ---------- tuning ---------- */
 function stopAll() {
-  stopProgram(); stopYouTube(); stopLive(); leaveGames(); stopWeb(); barsOff();
+  stopProgram(); stopYouTube(); stopLive(); leaveGames(); leaveVCR(); closeLibrary(); stopWeb(); barsOff();
+  document.getElementById('prog').classList.remove('vhs');
   v.hidden = false;
 }
 export async function tune(n, { silent } = {}) {
@@ -83,11 +99,18 @@ export async function tune(n, { silent } = {}) {
   if (silent !== 'power') { if (era() === '80s') knobClicks(Math.abs(n - from) || 1); else if (era() === '90s') tunerTick(); else relay(); }
   const ch = chanByNum(n);
   osdChan(ch);
-  bug(ch); turnDial();
+  bug(ch); turnDial(); roomFor(ch); updateReception(); pipRender();
   if (state.guide) closeGuide();
   if (!ch) { msg('NO SIGNAL'); return; }
+  cancelPin();
+  if (kidsHidden(ch) || isLocked(ch)) { showLock(ch, () => tune(n, { silent })); return; }
   await sleep(250 + Math.random() * 250); // the tuner hunting for a signal
   if (token !== state.token) return;
+  // 3–5 AM: the classic cable channels sign off with vintage sign-offs and anthems, like old TV
+  const hr = new Date().getHours();
+  if (settings.signOff && (hr === 3 || hr === 4) && ch.kind === 'archive' && ch.n >= 31 && ch.n <= 200 && !ch.custom) {
+    return tuneArchive({ ...ch, q: [TS('sign off', 'sign-off', 'station sign off', 'national anthem', 'end of broadcast day')], audio: false, rows: 120 }, token);
+  }
   switch (ch.kind) {
     case 'archive': return tuneArchive(ch, token);
     case 'yt':
@@ -107,6 +130,7 @@ export async function tune(n, { silent } = {}) {
     case 'games': return tuneGames(ch, token);
     case 'bars': return tuneBars();
     case 'ytlive': return tuneLive(ch, token);
+    case 'vcr': return tuneVCR(ch, token);
     case 'station': case 'external': return tuneCard(ch);
   }
   msg('NO SIGNAL');
@@ -127,6 +151,7 @@ function mute() { settings.muted = !settings.muted; applyVolume(); osdVol(); sav
 let digitTimer = 0;
 function digit(d) {
   if (!state.on || state.menu) return;
+  if (pinDigit(d)) return;
   state.digits += d;
   osdChan(null, state.digits + '-'.repeat(3 - state.digits.length));
   clearTimeout(digitTimer);
@@ -160,9 +185,10 @@ async function power() {
     if (state.on) tune(state.num, { silent: 'power' });
     if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
-    state.on = false; state.token++;
+    state.on = false; state.token++; clearUnlocks(); cancelPin(); pipClose(); state.sleepAt = 0;
     closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
-    set.classList.remove('on'); set.classList.add('off-anim');
+    set.classList.remove('on'); set.classList.add('off-anim'); updateReception();
+    if (era() !== '00s') { const d = $('#dot'); d.classList.remove('go'); void d.offsetWidth; d.classList.add('go'); }
     setTimeout(() => set.classList.remove('off-anim'), 600);
   }
 }
@@ -183,7 +209,7 @@ function fullscreen() {
 }
 
 /* ---------- remote actions ---------- */
-function act(a) {
+async function act(a) {
   irBlink(); initSound(); remoteClick(era());
   if (a === 'power') return power();
   if (a === 'zoom') return toggleZoom();
@@ -208,6 +234,18 @@ function act(a) {
     if (a === 'ok') return pickerOK();
     if (a === 'back' || a === 'guide') return closePicker();
   }
+  if (libraryOpen()) {
+    if (a === 'up' || a === 'chup') return libraryNav(-1);
+    if (a === 'down' || a === 'chdn') return libraryNav(1);
+    if (a === 'ok') return libraryOK();
+    if (a === 'back') return closeLibrary();
+  }
+  if (vcrState.open) {
+    if ((a === 'up' || a === 'chup') && vcrNav(-1)) return;
+    if ((a === 'down' || a === 'chdn') && vcrNav(1)) return;
+    if (a === 'ok' && vcrOK()) return;
+    if (a === 'back' && vcrBack()) return;
+  }
   if (gameState.open) {
     if (a === 'up' && gameNav(-1)) return;
     if (a === 'down' && gameNav(1)) return;
@@ -226,12 +264,21 @@ function act(a) {
     case 'menu': return openMenu();
     case 'last': if (state.prev != null) tune(state.prev); return;
     case 'ppv': return tune(500);
+    case 'sleep': return sleepButton();
+    case 'cc': return ccButton();
+    case 'pip': return pipButton();
+    case 'swap': return pipSwap();
+    case 'fav': return favNext();
+    case 'favadd': return favToggle();
+    case 'rec': return recButton();
+    case 'vcr': return tune(880);
     case 'games': return tune(3);
     case 'find': return openMenu('channels');
     case 'back': if (webActive()) { stopWeb(); return tuneCard(ch); } clearOverlays(); return;
     case 'ok':
       if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() ? openExternal(ch) : watchOnTV(ch);
       if (ch && ch.kind === 'ytlive') return tune(ch.from);
+      if (ch && ch.kind === 'local' && await openLibrary(ch)) return;
       if (ytActive() && openPicker()) return;
       if (programInfo() && !$('#msg').classList.contains('tap')) return showProgramBanner();
       if ($('#msg').classList.contains('tap')) return $('#msg').click();
@@ -255,6 +302,10 @@ document.addEventListener('keydown', e => {
     ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', Enter: 'ok', ' ': 'ok',
     PageUp: 'chup', PageDown: 'chdn', '+': 'volup', '=': 'volup', '-': 'voldn',
     g: 'guide', i: 'info', m: 'mute', l: 'last', p: 'power', s: 'menu', z: 'zoom', f: 'find', Escape: 'back', Backspace: 'back',
+    x: 'sleep', c: 'cc', n: 'pip', w: 'swap', v: 'fav', b: 'favadd', r: 'rec',
+    // TV remotes (Android TV / Fire TV / smart-TV browsers)
+    ChannelUp: 'chup', ChannelDown: 'chdn', MediaPlayPause: 'ok', GoBack: 'back', BrowserBack: 'back', Info: 'info', Guide: 'guide',
+    ColorF0Red: 'rec', ColorF1Green: 'games', ColorF2Yellow: 'find', ColorF3Blue: 'guide', MediaRecord: 'rec', Subtitle: 'cc', ClosedCaptionToggle: 'cc',
   };
   const a = map[k] || map[k.toLowerCase()];
   if (a) { e.preventDefault(); act(a); }
@@ -281,6 +332,7 @@ let zoomTimer = 0;
 bindGuide(ch => { closeGuide(); tune(ch.n); });
 bindMenu();
 renderSet();
+bindAntenna();
 apply();
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});

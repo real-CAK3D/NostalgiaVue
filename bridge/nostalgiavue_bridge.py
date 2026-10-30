@@ -139,7 +139,7 @@ class Handler(BaseHTTPRequestHandler):
         if origin and ('*' in allowed or origin in allowed or preview):
             self.send_header('Access-Control-Allow-Origin', origin)
             self.send_header('Vary', 'Origin')
-        self.send_header('Access-Control-Allow-Headers', 'Range, X-NV-Token')
+        self.send_header('Access-Control-Allow-Headers', 'Range, X-NV-Token, Content-Type')
         # Chrome asks before a public site (vercel.app) reaches a private address like a tailnet one
         if self.headers.get('Access-Control-Request-Private-Network'):
             self.send_header('Access-Control-Allow-Private-Network', 'true')
@@ -157,7 +157,26 @@ class Handler(BaseHTTPRequestHandler):
         return not want or got == want
 
     def do_OPTIONS(self):
-        self.send_response(204); self.cors(); self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS'); self.end_headers()
+        self.send_response(204); self.cors(); self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, OPTIONS'); self.end_headers()
+
+    def do_PUT(self):
+        # settings sync: every device on your tailnet shares one NostalgiaVue setup, kept on this PC
+        url = urllib.parse.urlsplit(self.path)
+        q = urllib.parse.parse_qs(url.query)
+        if not self.authed(q):
+            return self.send_json({'error': 'bad token'}, 401)
+        if url.path != '/api/settings':
+            return self.send_json({'error': 'not found'}, 404)
+        n = int(self.headers.get('Content-Length') or 0)
+        if n <= 0 or n > 2_000_000:
+            return self.send_json({'error': 'bad size'}, 400)
+        try:
+            data = json.loads(self.rfile.read(n).decode('utf-8'))
+            assert isinstance(data, dict)
+        except Exception:
+            return self.send_json({'error': 'bad json'}, 400)
+        (HERE / 'nv-settings.json').write_text(json.dumps(data), encoding='utf-8')
+        return self.send_json({'ok': True})
 
     def do_HEAD(self):
         self.do_GET(head=True)
@@ -215,6 +234,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_json({'games': games})
             if path.startswith('/f/'):
                 return self.send_file(path[3:], head)
+            if path == '/api/settings':
+                f = HERE / 'nv-settings.json'
+                return self.send_json(json.loads(f.read_text(encoding='utf-8')) if f.exists() else {})
             if path in ('/', '/health'):
                 return self.send_json({'ok': True, 'name': CFG.get('name'), 'version': VERSION})
             return self.send_json({'error': 'not found'}, 404)

@@ -19,13 +19,44 @@ function drawSnow() {
   sctx.putImageData(simg, 0, 0);
   if (snowOn) raf = requestAnimationFrame(drawSnow);
 }
-export function staticOn(sound = true) {
-  snow.hidden = false; if (sound) staticHiss(true);
-  if (!snowOn) { snowOn = true; drawSnow(); }
-  const t = $('#tube'); t.classList.remove('jolt'); void t.offsetWidth; t.classList.add('jolt');
+// Between channels each era looked different: 80s sets showed snow and the picture rolled,
+// 90s sets muted to a blue screen, 2000s sets just went black. (MENU › Picture › Channel change.)
+function changeLook() {
+  const m = settings.changeFx || 'era';
+  if (m !== 'era') return m;
+  return { '80s': 'roll', '90s': 'blue', '00s': 'black' }[era()] || 'snow';
 }
-export function staticOff() { snowOn = false; cancelAnimationFrame(raf); snow.hidden = true; staticHiss(false); }
+export function staticOn(sound = true) {
+  const look = changeLook(), mute = $('#mute');
+  snowOn = true;
+  if (look === 'blue' || look === 'black') {
+    mute.className = look; mute.hidden = false; snow.hidden = true; staticHiss(false);
+    if (look === 'blue') mute.innerHTML = `<span>${era() === '90s' ? 'CH ' + state.num : ''}</span>`; else mute.innerHTML = '';
+  } else {
+    mute.hidden = true; snow.hidden = false; if (sound) staticHiss(true);
+    cancelAnimationFrame(raf); drawSnow();
+  }
+  const t = $('#tube'), cls = look === 'roll' ? 'roll' : 'jolt';
+  t.classList.remove('jolt', 'roll'); void t.offsetWidth; t.classList.add(cls);
+}
+export function staticOff() { snowOn = false; cancelAnimationFrame(raf); snow.hidden = true; $('#mute').hidden = true; staticHiss(false); }
 export const isStatic = () => snowOn;
+
+/* ---------- reception: weak channels get snow and ghosts until you aim the rabbit ears ---------- */
+let noiseURL = '';
+function noiseTile() {
+  if (noiseURL) return noiseURL;
+  const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'), d = x.createImageData(128, 128);
+  for (let i = 0; i < d.data.length; i += 4) { const g = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = g; d.data[i + 3] = 255; }
+  x.putImageData(d, 0, 0); return noiseURL = c.toDataURL();
+}
+export function reception(q) {
+  // q: 1 = perfect picture, 0 = barely there
+  const r = $('#rx'), prog = $('#prog');
+  if (q >= .97) { r.hidden = true; prog.style.removeProperty('--ghost'); return; }
+  r.style.backgroundImage = `url(${noiseTile()})`; r.style.opacity = ((1 - q) * .55).toFixed(2); r.hidden = false;
+  prog.style.setProperty('--ghost', `${(1 - q) * 1.6}cqw`);
+}
 
 /* ---------- bars & tone ---------- */
 export function bars(big, small, withTone = false) {
@@ -73,7 +104,7 @@ export function banner({ ch, title, sub, extra }, ms = 5000) {
   flash($('#banner'), ms);
 }
 export function infoPanel(html, ms = 12000) { const b = $('#info'); b.innerHTML = html; flash(b, ms); }
-const NOBUG = new Set(['guidech', 'weather', 'games', 'station', 'external', 'bars']);
+const NOBUG = new Set(['guidech', 'weather', 'games', 'station', 'external', 'bars', 'vcr']);
 export function bug(ch) {
   const b = $('#bug');
   b.innerHTML = ch && !NOBUG.has(ch.kind) ? iconSVG(ch) : '';

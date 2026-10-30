@@ -42,6 +42,8 @@ function remoteHTML(e) {
     </div>
     <div class="r-row"><button type="button" class="rpill blue" data-act="guide">GUIDE</button><button type="button" class="rpill" data-act="menu">MENU</button></div>
     <div class="r-row"><button type="button" class="rpill red" data-act="ppv">PPV</button><button type="button" class="rpill green" data-act="games">GAME</button><button type="button" class="rpill yel" data-act="find">★ FIND</button></div>
+    <div class="r-row small"><button type="button" class="rpill" data-act="sleep">SLEEP</button><button type="button" class="rpill" data-act="cc">CC</button><button type="button" class="rpill" data-act="pip">PIP</button><button type="button" class="rpill" data-act="swap">SWAP</button></div>
+    <div class="r-row small"><button type="button" class="rpill" data-act="fav">FAV</button><button type="button" class="rpill" data-act="favadd">FAV+</button><button type="button" class="rpill red" data-act="rec">● REC</button><button type="button" class="rpill" data-act="vcr">VCR</button></div>
     <div class="r-brand">${e === '00s' ? wordmark('dark', 'rw') : lockup(e === '80s' ? 'white' : 'chrome', 'rl')}</div>
     <div class="r-model">${e === '80s' ? 'SPACE COMMAND' : e === '00s' ? 'UNIVERSAL RC-2000' : 'REMOTE COMMANDER'}</div>`;
 }

@@ -9,6 +9,12 @@ irm https://raw.githubusercontent.com/real-CAK3D/NostalgiaVue/main/bridge/instal
 ```
 It installs Python, Tailscale and FFmpeg if they're missing, and sets up the Bridge in `E:\CAK3D-TV\bridge`, sharing `E:\CAK3D-TV\Movies` and `E:\CAK3D-TV\TV Shows`. It makes a token, starts the Bridge now and at every sign-in, and shares it over Tailscale HTTPS. Then it opens NostalgiaVue already connected, with Movies on 1, all TV on 2, and one show per channel on 4, 5, 7, 11 and 14–20. It also prints a pairing link to open on your phone.
 
+If Jellyfin runs on the same PC, the installer offers to connect it: type your Jellyfin username and password once. It creates a *NostalgiaVue* API key and shares Jellyfin at `https://<pc>.<tailnet>.ts.net:8096`.
+
+**Library & resume:** press OK on any local channel to see everything in it. Pick a movie or episode and it resumes where you stopped.
+
+**Settings sync:** with the Bridge set up, your channels, favorites, tapes, locks and picture settings follow you between your phone, PC and TV (MENU › Sources › Sync). They're stored on your PC in `bridge/nv-settings.json`.
+
 Different folders? Run e.g. `$NVMovies='D:\Films'; $NVTV='D:\Shows'` first, in the same PowerShell window.
 
 ## Not connecting? Run the checkup

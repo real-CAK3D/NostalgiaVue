@@ -9,8 +9,9 @@ import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle } from './sources/youtube.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
+import { pinSet, setPin, confirmPin } from './parental.js';
 
-const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['system', 'System']];
+const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
 
@@ -30,6 +31,9 @@ function body() {
       ${range('scanlines', 'Scanlines')}${range('mask', 'Phosphor mask')}${range('curvature', 'Glass & curve')}
       ${range('color', 'Color', 0, 160)}${range('brightness', 'Brightness', 50, 150)}
       ${select('guideStyle', 'Guide style', GUIDE_STYLES)}
+      ${select('changeFx', 'Channel change', [['era', 'Like the era (snow & roll / blue / black)'], ['snow', 'Snow'], ['roll', 'Snow + vertical roll'], ['blue', 'Blue screen'], ['black', 'Black']])}
+      ${check('humBar', 'Rolling hum bar')}${check('glow', 'Wall glow & night room')}
+      ${check('reception', 'Rabbit-ear reception (80s sets: drag the antenna)')}${check('signOff', 'Overnight sign-off (3–5 AM on classic cable)')}${check('warp', 'Curved glass (experimental)')}
       ${check('logoIntro', 'NostalgiaVue logo at power-on')}${check('clock24', '24-hour clock')}
       <div class="m-row"><span>Full screen</span><button type="button" class="m-btn" data-do="fullscreen">Go full screen</button></div>`;
     case 'sound': return `
@@ -61,6 +65,7 @@ function body() {
       <h4>NostalgiaVue Bridge <small>(your PC’s drives over Tailscale)</small></h4>
       ${text('bridgeUrl', 'Bridge address', 'https://my-pc.tail1234.ts.net')}${text('bridgeToken', 'Bridge token', 'from bridge config.json', 'password')}
       <div class="m-row"><span></span><button type="button" class="m-btn" data-do="bridge">Test & load folders</button><em id="mBridge"></em></div>
+      ${check('sync', 'Sync settings with my other devices (through the Bridge)')}
       <h4>Jellyfin</h4>
       ${text('jellyfinUrl', 'Server address', 'https://jellyfin.tail1234.ts.net')}${text('jellyfinKey', 'API key', 'Dashboard › API Keys', 'password')}
       <div class="m-row"><span></span><button type="button" class="m-btn" data-do="jellyfin">Test & load libraries</button><em id="mJelly"></em></div>
@@ -100,6 +105,17 @@ function body() {
       <div class="m-chlist">${CHANNELS.map(c => `<div class="m-ch"><span class="m-ico">${iconSVG(c)}</span><b>${c.n}</b><span>${esc(c.name)}</span>
         <input type="checkbox" data-hide="${c.n}" ${settings.hidden.includes(c.n) ? '' : 'checked'} aria-label="Show ${esc(c.name)}">
         ${c.user ? `<button type="button" class="m-x" data-del="${c.n}" aria-label="Delete">✕</button>` : '<i></i>'}</div>`).join('')}</div>`;
+    }
+    case 'parental': {
+      const cats = [...new Set(CHANNELS.map(c => c.cat))].filter(Boolean).sort();
+      return `
+      <p class="m-note">Set a 4-digit PIN to lock channels. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN.</p>
+      <div class="m-row"><span>${pinSet() ? 'Change PIN' : 'Set a PIN'}</span><input type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4 digits" autocomplete="off"><button type="button" class="m-eye" data-eyeid="mPin" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="pin">Save PIN</button><em id="mPinMsg">${pinSet() ? 'PIN is set' : 'No PIN yet: nothing is locked'}</em></div>
+      ${check('kids', 'Kids profile')}
+      <h4>Locked categories</h4>
+      <div class="m-cats">${cats.map(c => `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
+      <h4>Locked channels</h4>
+      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
     }
     case 'system': return `
       <div class="m-about">${lockup('color', 'mab')}<p>NostalgiaVue 1.0 · The picture of yesterday.</p></div>
@@ -225,6 +241,11 @@ async function act(what, el) {
     settings.localMap = map; changed(true); renderMenu(); return;
   }
   if (what === 'add') return addChannel();
+  if (what === 'pin') { const r = setPin($('#mPin').value.trim()); renderMenu(); $('#mPinMsg').textContent = r; return; }
+  if (what === 'lockch') {
+    if (!confirmPin('Change locked channels')) return renderMenu();
+    settings.lockedChannels = $('#mLockCh').value.split(/[^0-9]+/).filter(Boolean).map(Number); changed(); renderMenu(); return;
+  }
   if (what === 'era') {
     const y = el.dataset.y ? +el.dataset.y : null;
     settings.yearFrom = y; settings.yearTo = y ? y + 9 : null;
@@ -244,6 +265,8 @@ export function bindMenu() {
   m.addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (t) { tab = t.dataset.tab; renderMenu(); $(`#menu [data-tab="${tab}"]`)?.focus(); return; }
     const eye = e.target.closest('[data-eye]');
+    const eyeId = e.target.closest('[data-eyeid]');
+    if (eyeId) { const inp = m.querySelector('#' + eyeId.dataset.eyeid); inp.type = inp.type === 'password' ? 'text' : 'password'; eyeId.classList.toggle('on', inp.type === 'text'); return; }
     if (eye) { e.preventDefault(); const inp = m.querySelector(`input[data-k="${eye.dataset.eye}"]`); const show = inp.type === 'password'; inp.type = show ? 'text' : 'password'; eye.classList.toggle('on', show); return; }
     const d = e.target.closest('[data-do]'); if (d) { act(d.dataset.do, d); return; }
     const del = e.target.closest('[data-del]'); if (del) { const n = +del.dataset.del; settings.userChannels = settings.userChannels.filter(u => u.n !== n); changed(true); renderMenu(); }
@@ -257,10 +280,16 @@ export function bindMenu() {
   });
   m.addEventListener('change', e => {
     const el = e.target, k = el.dataset.k;
+    if (k === 'kids' && !el.checked && !confirmPin('Turn off the Kids profile')) { el.checked = true; return; }
+    if (el.dataset.lockcat) {
+      if (!confirmPin('Change locked categories')) { el.checked = !el.checked; return; }
+      const c = el.dataset.lockcat; settings.lockedCats = (settings.lockedCats || []).filter(x => x !== c); if (el.checked) settings.lockedCats.push(c); changed(); return;
+    }
     if (k && el.type !== 'range') {
       settings[k] = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' && /^\d+$/.test(el.value) ? +el.value : el.value.trim();
       if (k === 'yearFrom' || k === 'yearTo') settings[k] = el.value ? +el.value : null;
       changed(k === 'set'); if (k === 'set' || k.startsWith('year')) renderMenu();
+      if (k === 'kids' && settings.kids && state.on) hooks().tune?.(state.num);
       if (k.startsWith('year') || k === 'eraYouTube') hooks().eraChanged?.();
     }
     if (el.dataset.hide) {
