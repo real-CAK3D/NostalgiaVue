@@ -11,6 +11,7 @@
 //   600-699             My playlists (YouTube playlists, named after their real titles)
 //   700-799             LIVE: every YouTube channel's live stream, plus 24/7 live channels
 //   800-899             Shows A–Z: Kids' WB!, The WB and one channel per classic show
+//   900-999             More Shows: more classic series (900s) and the sports block (950s)
 import { settings } from './store.js';
 
 export const SECTIONS = [
@@ -26,6 +27,7 @@ export const SECTIONS = [
   { id: 'playlists', label: 'MY PLAYLISTS',  from: 600, to: 699, add: true },
   { id: 'live',      label: 'LIVE',          from: 700, to: 799, add: true },
   { id: 'shows',     label: 'SHOWS A–Z',     from: 800, to: 899, add: true },
+  { id: 'shows2',    label: 'MORE SHOWS',    from: 900, to: 999, add: true },
 ];
 export const sectionOf = n => SECTIONS.find(s => s.nums ? s.nums.includes(n) : n >= s.from && n <= s.to);
 
@@ -761,13 +763,37 @@ const SHOWS = [
   show(899, 'SITCOMS', 'GOLD', 'The Golden Girls', ep('The Golden Girls')),
 ];
 
+// 900-999: More Shows, with the sports block from 950
+const MORE_SHOWS = [
+  show(900, 'CARTOONS', 'DILB', 'Dilbert', ep('Dilbert animated series')),
+  show(901, 'CARTOONS', 'GRIM', 'Grim Adventures of Billy & Mandy', ep('Grim Adventures of Billy and Mandy')),
+  show(902, 'CARTOONS', 'DTHM', 'Celebrity Deathmatch', ['celebrity deathmatch full episode', 'celebrity deathmatch best fights']),
+  show(903, 'CARTOONS', 'RBCK', 'Robot Chicken', ['robot chicken full episode', 'robot chicken best sketches']),
+  show(904, 'COMEDY', 'WHOS', 'Whose Line Is It Anyway?', ['whose line is it anyway full episode', 'whose line is it anyway best of']),
+  show(905, 'SITCOMS', 'DREW', 'The Drew Carey Show', ep('The Drew Carey Show')),
+  show(906, 'DRAMA', 'MATL', 'Matlock', ep('Matlock')),
+  show(907, 'DRAMA', 'MONK', 'Monk', ep('Monk detective')),
+  show(908, 'DRAMA', 'MSW', 'Murder, She Wrote', ep('Murder She Wrote')),
+  show(909, 'SITCOMS', 'THRE', 'Three’s Company', ep('Threes Company')),
+  show(910, 'SITCOMS', 'GILL', 'Gilligan’s Island', ep('Gilligans Island'), [TS('gilligans island', "gilligan's island")]),
+  show(911, 'SITCOMS', 'MASH', 'M*A*S*H', ep('MASH 4077')),
+  show(950, 'SPORTS', 'GOLF', 'Golf Classics', ['classic golf final round full', 'masters final round classic', 'golf best shots ever'], [S('golf')]),
+  show(951, 'SPORTS', 'NFL', 'Pro Football', ['nfl classic full game', 'nfl films classic', 'nfl greatest games']),
+  show(952, 'SPORTS', 'NCAA', 'College Football', ['college football classic full game', 'college football greatest games', 'college football highlights classic']),
+  show(953, 'SPORTS', 'SOCR', 'Soccer', ['world cup classic full match', 'soccer greatest goals ever', 'classic football match full']),
+  show(954, 'SPORTS', 'RUGB', 'Rugby', ['rugby world cup classic full match', 'rugby biggest hits', 'rugby greatest tries']),
+  show(955, 'SPORTS', 'MMA', 'MMA Fight Night', ['classic mma full fight', 'pride fc full fight', 'early ufc full fight']),
+  show(956, 'SPORTS', 'HOCK', 'Hockey', ['nhl classic full game', 'hockey greatest goals', 'nhl fights classic']),
+  show(957, 'SPORTS', 'LFL', 'Lingerie Football', ['lingerie football league full game', 'legends football league full game', 'lingerie bowl']),
+];
+
 export let CHANNELS = [];
 export function buildLineup() {
   const all = [
     ...localMediaChannels(),
     { n: 3, cat: 'GAMES', call: 'GAME', name: 'Game Channel', kind: 'games' },
     ...areaChannels(),
-    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247, ...SHOWS,
+    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247, ...SHOWS, ...MORE_SHOWS,
   ];
   const taken = new Map(all.map(c => [c.n, c]));
   for (const u of settings.userChannels) {

@@ -50,7 +50,7 @@ export const DEFAULTS = {
   pin: '',
   kids: false,           // Kids profile: only kid-friendly categories
   lockedCats: ['HALF BAKED'],
-  lockedChannels: [34, 273, 274, 289, 290, 419, 846],
+  lockedChannels: [34, 273, 274, 289, 290, 419, 846, 957],
   favorites: [],
   tapes: [],             // VCR tapes recorded with REC
   cc: false,

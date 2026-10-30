@@ -619,3 +619,28 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 897 | BAND | Band Footage | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 898 | RAPC | Rap City | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 899 | GOLD | The Golden Girls | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+
+## More Shows (900–999)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 900 | DILB | Dilbert | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 901 | GRIM | Grim Adventures of Billy & Mandy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 902 | DTHM | Celebrity Deathmatch | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 903 | RBCK | Robot Chicken | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 904 | WHOS | Whose Line Is It Anyway? | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 905 | DREW | The Drew Carey Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 906 | MATL | Matlock | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 907 | MONK | Monk | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 908 | MSW | Murder, She Wrote | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 909 | THRE | Three’s Company | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 910 | GILL | Gilligan’s Island | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 911 | MASH | M*A*S*H | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 950 | GOLF | Golf Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 951 | NFL | Pro Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 952 | NCAA | College Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 953 | SOCR | Soccer | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 954 | RUGB | Rugby | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 955 | MMA | MMA Fight Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 956 | HOCK | Hockey | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 957 | LFL | Lingerie Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
