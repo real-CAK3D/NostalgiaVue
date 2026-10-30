@@ -4,16 +4,17 @@
 //   6 8 9 10 12 13 21-30 Local-area TV for your ZIP
 //   31-200              NostalgiaVue cable (archive.org + a few YouTube)
 //   201-299             YouTube channels
-//   300-350             Podcasts
+//   300-314             Podcasts
+//   315-350             Docs, gaming, science & tech
 //   351-419             More cable
 //   420-499             Bring-your-own channels
-//   500-599             Pay-per-view / streaming shortcuts
+//   500-529             Pay-per-view / streaming shortcuts
+//   530-549             Maker Lab (ESP32, Raspberry Pi, electronics, homelab)
+//   550-599             Late-night PPV (After Dark sci-fi at 590s)
 //   600-699             My playlists (YouTube playlists, named after their real titles)
 //   700-799             LIVE: every YouTube channel's live stream, plus 24/7 live channels
 //   800-899             Shows A–Z: Kids' WB!, The WB and one channel per classic show
 //   900-999             More Shows: more classic series (900s) and the sports block (950s)
-//   1000-1099           Extended Cable: docs (1000s), gaming (1020s), science & tech (1040s),
-//                       the Maker Lab (1060s) and After Dark sci-fi (1080s)
 import { settings } from './store.js';
 
 export const SECTIONS = [
@@ -22,15 +23,17 @@ export const SECTIONS = [
   { id: 'area',      label: 'LOCAL TV',      nums: [6, 8, 9, 10, 12, 13, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] },
   { id: 'nostalgia', label: 'NOSTALGIA CABLE', from: 31, to: 200, add: true },
   { id: 'youtube',   label: 'YOUTUBE',       from: 201, to: 299, add: true },
-  { id: 'podcasts',  label: 'PODCASTS',      from: 300, to: 350, add: true },
+  { id: 'podcasts',  label: 'PODCASTS',      from: 300, to: 314, add: true },
+  { id: 'docs',      label: 'DOCS · GAMING · TECH', from: 315, to: 350, add: true },
   { id: 'more',      label: 'MORE CABLE',    from: 351, to: 419, add: true },
   { id: 'byo',       label: 'BRING YOUR OWN', from: 420, to: 499, add: true },
-  { id: 'ppv',       label: 'PAY-PER-VIEW',  from: 500, to: 599, add: true },
+  { id: 'ppv',       label: 'PAY-PER-VIEW',  from: 500, to: 529, add: true },
+  { id: 'maker',     label: 'MAKER LAB',     from: 530, to: 549, add: true },
+  { id: 'ppv2',      label: 'PPV · LATE NIGHT', from: 550, to: 599, add: true },
   { id: 'playlists', label: 'MY PLAYLISTS',  from: 600, to: 699, add: true },
   { id: 'live',      label: 'LIVE',          from: 700, to: 799, add: true },
   { id: 'shows',     label: 'SHOWS A–Z',     from: 800, to: 899, add: true },
   { id: 'shows2',    label: 'MORE SHOWS',    from: 900, to: 999, add: true },
-  { id: 'extended',  label: 'EXTENDED CABLE', from: 1000, to: 1099, add: true },
 ];
 export const sectionOf = n => SECTIONS.find(s => s.nums ? s.nums.includes(n) : n >= s.from && n <= s.to);
 
@@ -872,68 +875,68 @@ const MORE_SHOWS = [
   show(999, 'CARTOONS', 'TICK', 'The Tick', ['the tick 1994 cartoon full episode', 'the tick animated series']),
 ];
 
-// 1000-1099: Extended Cable. Channels built on YouTube channel IDs play their uploads and cost no
+// Docs, gaming & tech (315-346), the Maker Lab (530-544) and late-night PPV sci-fi (590-595). Channels built on YouTube channel IDs play their uploads and cost no
 // API quota; a mix rotates its channels every half hour and skips any that won't play.
 const tube = (n, cat, call, name, ids, desc) => yt(n, cat, call, name, ids, { mix: ids.length > 1, desc });
-const EXTENDED = [
+const EXTRA = [
   // docs & investigations
-  tube(1000, 'DOCS', 'VICE', 'VICE', ['UCn8zNIfYAQNdrFRrr8oibKw'], 'VICE documentaries and reports.'),
-  show(1001, 'DOCS', 'VCTV', 'VICE TV', ['vice tv full episode', 'vice documentary full', 'vice news tonight', 'hate thy neighbor vice full episode']),
-  show(1002, 'DOCS', 'TRFK', 'Trafficked w/ Mariana van Zeller', ['trafficked with mariana van zeller full episode', 'mariana van zeller documentary', 'mariana van zeller vanguard']),
-  show(1003, 'DOCS', 'SKRA', 'Siddharth Kara · Modern Slavery', ['siddharth kara cobalt red', 'siddharth kara modern slavery talk', 'siddharth kara interview congo cobalt']),
-  show(1004, 'DOCS', 'BLKM', 'Black Market', ['black market michael k williams full episode', 'black market vice tv']),
-  show(1005, 'DOCS', 'DSOR', 'Dark Side of the Ring', ['dark side of the ring full episode', 'dark side of the ring vice']),
-  show(1006, 'DOCS', 'PHRM', 'Hamilton’s Pharmacopeia', ['hamiltons pharmacopeia full episode', 'hamilton morris pharmacopeia']),
-  show(1007, 'HALF BAKED', 'BONG', 'Bong Appétit', ['bong appetit vice full episode', 'bong appetit cooking with cannabis']),
-  show(1008, 'DOCS', 'DRGS', 'Drugs, Inc. & Underworld', ['drugs inc full episode', 'underworld inc full episode', 'narco documentary full']),
-  show(1009, 'DOCS', 'THRX', 'Louis Theroux', ['louis theroux full documentary', 'louis theroux weird weekends']),
-  show(1010, 'DOCS', 'FRNT', 'Frontline', ['frontline pbs full documentary']),
-  show(1011, 'DOCS', 'LUAB', 'Locked Up Abroad', ['locked up abroad full episode', 'banged up abroad full episode']),
-  show(1012, 'DOCS', 'GANG', 'Gangland', ['gangland history channel full episode']),
-  tube(1013, 'DOCS', 'JHAR', 'Johnny Harris', ['UCmGSJVG3mCRXVOP4yZrU1Dw'], 'Maps, history and explainers from Johnny Harris.'),
-  show(1014, 'DOCS', 'REAL', 'Real Stories', ['real stories full documentary', 'free documentary full', 'documentary full crime']),
+  tube(315, 'DOCS', 'VICE', 'VICE', ['UCn8zNIfYAQNdrFRrr8oibKw'], 'VICE documentaries and reports.'),
+  show(316, 'DOCS', 'VCTV', 'VICE TV', ['vice tv full episode', 'vice documentary full', 'vice news tonight', 'hate thy neighbor vice full episode']),
+  show(317, 'DOCS', 'TRFK', 'Trafficked w/ Mariana van Zeller', ['trafficked with mariana van zeller full episode', 'mariana van zeller documentary', 'mariana van zeller vanguard']),
+  show(318, 'DOCS', 'SKRA', 'Siddharth Kara · Modern Slavery', ['siddharth kara cobalt red', 'siddharth kara modern slavery talk', 'siddharth kara interview congo cobalt']),
+  show(319, 'DOCS', 'BLKM', 'Black Market', ['black market michael k williams full episode', 'black market vice tv']),
+  show(320, 'DOCS', 'DSOR', 'Dark Side of the Ring', ['dark side of the ring full episode', 'dark side of the ring vice']),
+  show(321, 'DOCS', 'PHRM', 'Hamilton’s Pharmacopeia', ['hamiltons pharmacopeia full episode', 'hamilton morris pharmacopeia']),
+  show(346, 'HALF BAKED', 'BONG', 'Bong Appétit', ['bong appetit vice full episode', 'bong appetit cooking with cannabis']),
+  show(322, 'DOCS', 'DRGS', 'Drugs, Inc. & Underworld', ['drugs inc full episode', 'underworld inc full episode', 'narco documentary full']),
+  show(323, 'DOCS', 'THRX', 'Louis Theroux', ['louis theroux full documentary', 'louis theroux weird weekends']),
+  show(324, 'DOCS', 'FRNT', 'Frontline', ['frontline pbs full documentary']),
+  show(325, 'DOCS', 'LUAB', 'Locked Up Abroad', ['locked up abroad full episode', 'banged up abroad full episode']),
+  show(326, 'DOCS', 'GANG', 'Gangland', ['gangland history channel full episode']),
+  tube(327, 'DOCS', 'JHAR', 'Johnny Harris', ['UCmGSJVG3mCRXVOP4yZrU1Dw'], 'Maps, history and explainers from Johnny Harris.'),
+  show(328, 'DOCS', 'REAL', 'Real Stories', ['real stories full documentary', 'free documentary full', 'documentary full crime']),
   // gaming
-  tube(1020, 'GAMING', 'IGN', 'IGN', ['UCKy1dAqELo0zrOtPkf0eTMw'], 'Game news, reviews and trailers from IGN.'),
-  show(1021, 'GAMING', 'GSPT', 'GameSpot', ['gamespot review', 'gamespot trailer']),
-  show(1022, 'GAMING', 'XPLY', 'G4 · X-Play', ['x-play g4 full episode', 'attack of the show g4', 'g4tv classic']),
-  tube(1023, 'GAMING', 'LGR', 'Retro Computing & Games', ['UCLx053rWZxCiYWsBETgdKrQ', 'UC8uT9cgJorJPWu7ITLGo9Ww'], 'LGR and The 8-Bit Guy: old PCs, retro games and thrift-store finds.'),
-  tube(1024, 'GAMING', 'GDQ', 'Speedruns (GDQ)', ['UC4a-Gbdw7vOaccHmFo40b9g'], 'Games Done Quick speedruns.'),
-  show(1025, 'GAMING', 'E3', 'E3 & Classic Trailers', ['e3 press conference 2000s full', 'classic video game trailers', 'e3 2006 full']),
-  show(1026, 'GAMING', 'GHIS', 'Video Game History', ['gaming historian', 'noclip documentary', 'video game history documentary']),
-  show(1027, 'GAMING', 'LONG', 'Longplays', ['nes longplay full game no commentary', 'snes longplay full game', 'n64 longplay']),
-  show(1028, 'GAMING', 'GCCX', 'Retro Game Master', ['game center cx retro game master full episode']),
+  tube(329, 'GAMING', 'IGN', 'IGN', ['UCKy1dAqELo0zrOtPkf0eTMw'], 'Game news, reviews and trailers from IGN.'),
+  show(330, 'GAMING', 'GSPT', 'GameSpot', ['gamespot review', 'gamespot trailer']),
+  show(331, 'GAMING', 'XPLY', 'G4 · X-Play', ['x-play g4 full episode', 'attack of the show g4', 'g4tv classic']),
+  tube(332, 'GAMING', 'LGR', 'Retro Computing & Games', ['UCLx053rWZxCiYWsBETgdKrQ', 'UC8uT9cgJorJPWu7ITLGo9Ww'], 'LGR and The 8-Bit Guy: old PCs, retro games and thrift-store finds.'),
+  tube(333, 'GAMING', 'GDQ', 'Speedruns (GDQ)', ['UC4a-Gbdw7vOaccHmFo40b9g'], 'Games Done Quick speedruns.'),
+  show(334, 'GAMING', 'E3', 'E3 & Classic Trailers', ['e3 press conference 2000s full', 'classic video game trailers', 'e3 2006 full']),
+  show(335, 'GAMING', 'GHIS', 'Video Game History', ['gaming historian', 'noclip documentary', 'video game history documentary']),
+  show(336, 'GAMING', 'LONG', 'Longplays', ['nes longplay full game no commentary', 'snes longplay full game', 'n64 longplay']),
+  show(337, 'GAMING', 'GCCX', 'Retro Game Master', ['game center cx retro game master full episode']),
   // science & tech
-  tube(1040, 'SCIENCE', 'VERI', 'Science Channel', ['UCHnyfMqiRRG1u-2MsSQLbXA', 'UCsXVk37bltHxD1rDPwtNM8Q', 'UC6107grRI4m0o2-emgoDnAA', 'UCY1kMZp36IQSyNx_9h4mpCg'], 'Veritasium, Kurzgesagt, Smarter Every Day and Mark Rober.'),
-  tube(1041, 'SCIENCE', 'TREV', 'Tech Review', ['UCXuqSBlHAE6Xw-yeJA0Tunw', 'UCBJycsmduvYEL83R_U4JriQ'], 'Linus Tech Tips and MKBHD.'),
-  tube(1042, 'SCIENCE', 'PHIL', 'Computerphile & Numberphile', ['UC9-y-6csu5WGm29I7JiwpnA', 'UCoxcjq-8xIDTYp3uz647V5A'], 'Computer science and maths, explained.'),
-  tube(1043, 'SCIENCE', 'ORBT', 'Space Channel', ['UCxzC4EngIsMrPmbm6Nxvb-A', 'UC7_gcs09iThXybpVgjHZ_7g'], 'Scott Manley and PBS Space Time.'),
-  tube(1044, 'SCIENCE', 'ENGR', 'Practical Engineering', ['UCMOqf8ab-42UUQIdVoKwjlQ'], 'How infrastructure really works.'),
-  show(1045, 'SCIENCE', 'TALK', 'Hacker Talks', ['defcon talk full', 'chaos communication congress talk', 'low level learning']),
-  show(1046, 'SCIENCE', 'TTV', 'TechTV · The Screen Savers', ['the screen savers techtv full episode', 'techtv call for help']),
-  show(1047, 'SCIENCE', 'SPCX', 'Rocket Launches', ['spacex launch full', 'falcon heavy launch', 'starship flight test full']),
+  tube(338, 'SCIENCE', 'VERI', 'Science Channel', ['UCHnyfMqiRRG1u-2MsSQLbXA', 'UCsXVk37bltHxD1rDPwtNM8Q', 'UC6107grRI4m0o2-emgoDnAA', 'UCY1kMZp36IQSyNx_9h4mpCg'], 'Veritasium, Kurzgesagt, Smarter Every Day and Mark Rober.'),
+  tube(339, 'SCIENCE', 'TREV', 'Tech Review', ['UCXuqSBlHAE6Xw-yeJA0Tunw', 'UCBJycsmduvYEL83R_U4JriQ'], 'Linus Tech Tips and MKBHD.'),
+  tube(340, 'SCIENCE', 'PHIL', 'Computerphile & Numberphile', ['UC9-y-6csu5WGm29I7JiwpnA', 'UCoxcjq-8xIDTYp3uz647V5A'], 'Computer science and maths, explained.'),
+  tube(341, 'SCIENCE', 'ORBT', 'Space Channel', ['UCxzC4EngIsMrPmbm6Nxvb-A', 'UC7_gcs09iThXybpVgjHZ_7g'], 'Scott Manley and PBS Space Time.'),
+  tube(342, 'SCIENCE', 'ENGR', 'Practical Engineering', ['UCMOqf8ab-42UUQIdVoKwjlQ'], 'How infrastructure really works.'),
+  show(343, 'SCIENCE', 'TALK', 'Hacker Talks', ['defcon talk full', 'chaos communication congress talk', 'low level learning']),
+  show(344, 'SCIENCE', 'TTV', 'TechTV · The Screen Savers', ['the screen savers techtv full episode', 'techtv call for help']),
+  show(345, 'SCIENCE', 'SPCX', 'Rocket Launches', ['spacex launch full', 'falcon heavy launch', 'starship flight test full']),
   // maker lab
-  tube(1060, 'MAKER', 'ESP', 'ESP32 Lab', ['UCu7_D0o48KbfhpEohoP7YSQ', 'UCzml9bXoEM0itbcE96CB03w'], 'Andreas Spiess (the guy with the Swiss accent) and DroneBot Workshop: ESP32, LoRa, sensors and IoT.'),
-  show(1061, 'MAKER', 'ESPP', 'ESP32 Projects', ['esp32 project', 'esp32 tutorial', 'esphome project', 'esp32 cam project', 'esp32 marauder'], [], { yt: ['UCu7_D0o48KbfhpEohoP7YSQ'] }),
-  tube(1062, 'MAKER', 'RPI', 'Raspberry Pi Lab', ['UCR-DXc1voovS8nhAvccRZhg'], 'Jeff Geerling: Raspberry Pi, homelabs and hardware hacking.'),
-  show(1063, 'MAKER', 'RPIP', 'Raspberry Pi Projects', ['raspberry pi project', 'raspberry pi 5 project', 'retropie build', 'pi hole setup'], [], { yt: ['UCR-DXc1voovS8nhAvccRZhg'] }),
-  show(1064, 'MAKER', 'ARDU', 'Arduino', ['arduino project', 'arduino tutorial beginner']),
-  show(1065, 'MAKER', 'HASS', 'Home Assistant & Smart Home', ['home assistant setup', 'esphome home assistant', 'home assistant dashboard', 'zigbee home assistant']),
-  tube(1066, 'MAKER', 'BNCH', 'Electronics Bench', ['UC6mIxFTvXkWQVEHPsEdflzQ', 'UC2DjFE7Xf11URZqWBigcVOQ'], 'GreatScott! and EEVblog: circuits, teardowns and test gear.'),
-  tube(1067, 'MAKER', 'FIX', 'Repair Shop', ['UCl2mFZoRqjw_ELax4Yisf6w'], 'Louis Rossmann: board repair and right to repair.'),
-  tube(1068, 'MAKER', 'HAK5', 'Hak5', ['UC3s0BtrBJpwNDaflRSoiieQ'], 'Hacker gadgets, Wi-Fi and pentest tools.'),
-  show(1069, 'MAKER', 'MESH', 'Meshtastic & Radio', ['meshtastic', 'lora esp32 project', 'sdr software defined radio', 'ham radio for beginners']),
-  show(1070, 'MAKER', 'PRNT', '3D Printing', ['3d printing projects', 'cnc kitchen', '3d printer upgrades']),
-  show(1071, 'MAKER', 'LAB', 'Homelab', ['homelab tour', 'proxmox homelab', 'self hosted apps', 'jellyfin server setup', 'tailscale homelab']),
-  show(1072, 'MAKER', 'DRON', 'Robots & Drones', ['diy robot build', 'fpv drone build', 'robot arm project']),
-  show(1073, 'MAKER', 'CODE', 'Linux & Code', ['linux tips', 'python project tutorial', 'micropython esp32']),
-  show(1074, 'MAKER', 'MODS', 'Console Mods', ['console mod', 'gameboy mod', 'retro console restoration']),
+  tube(530, 'MAKER', 'ESP', 'ESP32 Lab', ['UCu7_D0o48KbfhpEohoP7YSQ', 'UCzml9bXoEM0itbcE96CB03w'], 'Andreas Spiess (the guy with the Swiss accent) and DroneBot Workshop: ESP32, LoRa, sensors and IoT.'),
+  show(531, 'MAKER', 'ESPP', 'ESP32 Projects', ['esp32 project', 'esp32 tutorial', 'esphome project', 'esp32 cam project', 'esp32 marauder'], [], { yt: ['UCu7_D0o48KbfhpEohoP7YSQ'] }),
+  tube(532, 'MAKER', 'RPI', 'Raspberry Pi Lab', ['UCR-DXc1voovS8nhAvccRZhg'], 'Jeff Geerling: Raspberry Pi, homelabs and hardware hacking.'),
+  show(533, 'MAKER', 'RPIP', 'Raspberry Pi Projects', ['raspberry pi project', 'raspberry pi 5 project', 'retropie build', 'pi hole setup'], [], { yt: ['UCR-DXc1voovS8nhAvccRZhg'] }),
+  show(534, 'MAKER', 'ARDU', 'Arduino', ['arduino project', 'arduino tutorial beginner']),
+  show(535, 'MAKER', 'HASS', 'Home Assistant & Smart Home', ['home assistant setup', 'esphome home assistant', 'home assistant dashboard', 'zigbee home assistant']),
+  tube(536, 'MAKER', 'BNCH', 'Electronics Bench', ['UC6mIxFTvXkWQVEHPsEdflzQ', 'UC2DjFE7Xf11URZqWBigcVOQ'], 'GreatScott! and EEVblog: circuits, teardowns and test gear.'),
+  tube(537, 'MAKER', 'FIX', 'Repair Shop', ['UCl2mFZoRqjw_ELax4Yisf6w'], 'Louis Rossmann: board repair and right to repair.'),
+  tube(538, 'MAKER', 'HAK5', 'Hak5', ['UC3s0BtrBJpwNDaflRSoiieQ'], 'Hacker gadgets, Wi-Fi and pentest tools.'),
+  show(539, 'MAKER', 'MESH', 'Meshtastic & Radio', ['meshtastic', 'lora esp32 project', 'sdr software defined radio', 'ham radio for beginners']),
+  show(540, 'MAKER', 'PRNT', '3D Printing', ['3d printing projects', 'cnc kitchen', '3d printer upgrades']),
+  show(541, 'MAKER', 'LAB', 'Homelab', ['homelab tour', 'proxmox homelab', 'self hosted apps', 'jellyfin server setup', 'tailscale homelab']),
+  show(542, 'MAKER', 'DRON', 'Robots & Drones', ['diy robot build', 'fpv drone build', 'robot arm project']),
+  show(543, 'MAKER', 'CODE', 'Linux & Code', ['linux tips', 'python project tutorial', 'micropython esp32']),
+  show(544, 'MAKER', 'MODS', 'Console Mods', ['console mod', 'gameboy mod', 'retro console restoration']),
   // After Dark sci-fi (PIN-locked with the rest of AFTER DARK)
-  show(1080, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
-  show(1081, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),
-  a(1082, 'AFTER DARK', 'GALX', 'Galaxina', [TS('galaxina')], { desc: 'Galaxina (1980), the public-domain space-robot cult film.' }),
-  a(1083, 'AFTER DARK', 'SPBB', 'Space Babes', [TS('cat-women of the moon', 'fire maidens from outer space', 'queen of outer space', 'mars needs women', 'nude on the moon', 'missile to the moon', 'the wild world of batwoman', 'project moonbase')], { desc: 'Pin-up girls from outer space: Cat-Women of the Moon, Fire Maidens from Outer Space, Mars Needs Women, Nude on the Moon…' }),
-  show(1084, 'AFTER DARK', 'SXSF', 'Sexy Sci-Fi', ['lifeforce 1985', 'liquid sky 1982', 'invasion of the bee girls', 'spaced out 1979', 'cherry 2000', 'species 1995'], [TS('invasion of the bee girls', 'sexy sci-fi')], { desc: 'Lifeforce, Liquid Sky, Invasion of the Bee Girls, Spaced Out, Cherry 2000, Species and more.' }),
-  show(1085, 'AFTER DARK', 'HVMT', 'Heavy Metal & Adult Animation', ['heavy metal 1981', 'fritz the cat', 'heavy metal 2000 movie', 'cool world 1992']),
+  show(590, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
+  show(591, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),
+  a(592, 'AFTER DARK', 'GALX', 'Galaxina', [TS('galaxina')], { desc: 'Galaxina (1980), the public-domain space-robot cult film.' }),
+  a(593, 'AFTER DARK', 'SPBB', 'Space Babes', [TS('cat-women of the moon', 'fire maidens from outer space', 'queen of outer space', 'mars needs women', 'nude on the moon', 'missile to the moon', 'the wild world of batwoman', 'project moonbase')], { desc: 'Pin-up girls from outer space: Cat-Women of the Moon, Fire Maidens from Outer Space, Mars Needs Women, Nude on the Moon…' }),
+  show(594, 'AFTER DARK', 'SXSF', 'Sexy Sci-Fi', ['lifeforce 1985', 'liquid sky 1982', 'invasion of the bee girls', 'spaced out 1979', 'cherry 2000', 'species 1995'], [TS('invasion of the bee girls', 'sexy sci-fi')], { desc: 'Lifeforce, Liquid Sky, Invasion of the Bee Girls, Spaced Out, Cherry 2000, Species and more.' }),
+  show(595, 'AFTER DARK', 'HVMT', 'Heavy Metal & Adult Animation', ['heavy metal 1981', 'fritz the cat', 'heavy metal 2000 movie', 'cool world 1992']),
 ];
 
 export let CHANNELS = [];
@@ -942,7 +945,7 @@ export function buildLineup() {
     ...localMediaChannels(),
     { n: 3, cat: 'GAMES', call: 'GAME', name: 'Game Channel', kind: 'games' },
     ...areaChannels(),
-    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247, ...SHOWS, ...MORE_SHOWS, ...EXTENDED,
+    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247, ...SHOWS, ...MORE_SHOWS, ...EXTRA,
   ];
   const taken = new Map(all.map(c => [c.n, c]));
   for (const u of settings.userChannels) {

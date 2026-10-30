@@ -20,12 +20,14 @@ NostalgiaVue is a 1980s–2000s TV in your browser: https://nostalgiavue.vercel.
 | 6 8 9 10 12 13 21–30 | Local TV for your ZIP |
 | 31–200 | NostalgiaVue Cable |
 | 201–299 | YouTube |
-| 300–350 | Podcasts |
+| 300–314 | Podcasts |
+| 315–350 | Docs, gaming, science & tech |
 | 351–419 | More Cable |
 | 420–499 | Bring your own |
-| 500–599 | Pay-per-view & streaming shortcuts |
+| 500–529 | Pay-per-view & streaming shortcuts |
+| 530–549 | Maker Lab (ESP32, Raspberry Pi, electronics, homelab) |
+| 550–599 | Late-night PPV (After Dark sci-fi at 590s) |
 | 600–699 | My playlists |
 | 700–799 | LIVE |
 | 800–899 | Shows A–Z (880 = VCR) |
 | 900–999 | More Shows (950s = sports; After Dark is PIN-locked) |
-| 1000–1099 | Extended Cable: docs, gaming, science & tech, Maker Lab, After Dark sci-fi |
