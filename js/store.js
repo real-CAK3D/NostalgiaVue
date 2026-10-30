@@ -13,6 +13,7 @@ export const DEFAULTS = {
   color: 100,            // saturation %
   brightness: 100,       // %
   logoIntro: true,       // NostalgiaVue splash on power-on
+  guideStyle: 'prevue',  // see GUIDE_STYLES in guide.js
   clock24: false,
   // sound
   vol: 0.7,

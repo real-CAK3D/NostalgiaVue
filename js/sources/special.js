@@ -136,7 +136,7 @@ export async function tuneWeather(ch, token) {
 /* ---------- the NostalgiaVue Guide channel ---------- */
 export async function tuneGuideChannel(ch, token) {
   staticOff(); hideMsg();
-  scene(`<div class="gch"><div class="gch-top"><div class="gch-promo"></div><div class="gch-side">${lockup('white', 'gchl')}<div class="gch-clock"></div><div class="gch-tag">THE GUIDE CHANNEL</div></div></div>
+  scene(`<div class="gch" data-gstyle="${settings.guideStyle || 'prevue'}"><div class="gch-top"><div class="gch-promo"></div><div class="gch-side">${lockup('white', 'gchl')}<div class="gch-clock"></div><div class="gch-tag">THE GUIDE CHANNEL</div></div></div>
     <div class="gch-grid"></div></div>`, 'guidech');
   bgMusic(90031, [S_LOUNGE], token);
   const promos = CHANNELS.filter(c => !isHidden(c.n) && (c.kind === 'archive' || c.kind === 'yt'));

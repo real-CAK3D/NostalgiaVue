@@ -8,6 +8,8 @@
 //   351-419             More cable
 //   420-499             Bring-your-own channels
 //   500-599             Pay-per-view / streaming shortcuts
+//   600-699             My playlists (YouTube playlists, named after their real titles)
+//   700-799             LIVE: every YouTube channel's live stream, plus 24/7 live channels
 import { settings } from './store.js';
 
 export const SECTIONS = [
@@ -20,6 +22,8 @@ export const SECTIONS = [
   { id: 'more',      label: 'MORE CABLE',    from: 351, to: 419, add: true },
   { id: 'byo',       label: 'BRING YOUR OWN', from: 420, to: 499, add: true },
   { id: 'ppv',       label: 'PAY-PER-VIEW',  from: 500, to: 599, add: true },
+  { id: 'playlists', label: 'MY PLAYLISTS',  from: 600, to: 699, add: true },
+  { id: 'live',      label: 'LIVE',          from: 700, to: 799, add: true },
 ];
 export const sectionOf = n => SECTIONS.find(s => s.nums ? s.nums.includes(n) : n >= s.from && n <= s.to);
 
@@ -236,6 +240,61 @@ const FIRE_SEASON = ['new years fireplace', 'valentines fireplace', 'irish pub f
 const yn = (n, call, name, id, x = {}) => yt(n, 'YOUTUBE', call, name, [id], { autoName: true, ...x });
 const genre = (n, call, g, archiveQ) => yt(n, 'MOVIES', call, `Movie Night: ${g}`, MOVIE_YT, { mix: true, search: { q: [`full movie ${g.toLowerCase()}`, `${g.toLowerCase()} full movie free`], channels: MOVIE_YT, long: true }, q: archiveQ, desc: `Full-length ${g.toLowerCase()} movies from YouTube. Press OK for the ON DEMAND list (needs a YouTube API key).` });
 
+// Requested shows and themes: YouTube searches (with archive.org as the backup where it has anything).
+const show = (n, cat, call, name, qs, archiveQ = [], x = {}) => yt(n, cat, call, name, [], { search: { q: qs }, q: archiveQ, ...x });
+const CLASSIC_BLOCK = [
+  show(250, 'CARTOONS', 'TMNT', 'Turtle Power (TMNT)', ['teenage mutant ninja turtles 1987 full episode', 'tmnt full episode'], [TS('teenage mutant ninja turtles')]),
+  show(251, 'SCI-FI', 'LAZR', 'Bob Lazar & the Aliens', ['bob lazar interview', 'bob lazar area 51 full', 'alien ufo documentary full'], [S('ufo', 'ufos', 'aliens', 'area 51')]),
+  show(252, 'DRAMA', 'HTCH', 'Hitchcock Theater', ['alfred hitchcock presents full episode', 'alfred hitchcock hour full episode'], [TS('alfred hitchcock', 'hitchcock')]),
+  show(253, 'SCI-FI', 'CNSP', 'Conspiracy Theater', ['heckle fish', 'conspiracy theories documentary', 'area 51 documentary full'], [S('conspiracy', 'conspiracy theory')]),
+  show(254, 'MUSIC', 'VH1', 'VH1 Classic', ['behind the music full episode', 'pop up video vh1', 'i love the 80s vh1', 'vh1 storytellers']),
+  show(255, 'NEWS', 'HIST', 'History Vault', ['modern marvels full episode', 'history channel documentary full', 'ancient aliens full episode'], [S('history', 'documentary')]),
+  show(256, 'NATURE', 'ANPL', 'Animal Planet', ['animal planet full episode', 'animal cops full episode', 'the crocodile hunter full episode'], [S('wildlife', 'animals')]),
+  show(257, 'KIDS', 'ZOBO', 'Zoboomafoo', ['zoboomafoo full episode']),
+  show(258, 'KIDS', 'SESA', 'Sesame Street', ['sesame street classic full episode', 'sesame street full episode'], [TS('sesame street')]),
+  show(259, 'KIDS', 'KRAT', 'Kratts’ Creatures', ['kratts creatures full episode', 'wild kratts full episode', 'be the creature full episode']),
+  show(260, 'NATURE', 'IRWN', 'Steve Irwin', ['the crocodile hunter full episode', 'steve irwin full episode', 'steve irwin best moments']),
+  show(261, 'COMEDY', 'STOO', 'Three Stooges Shorts', ['three stooges full episode', 'three stooges short'], [TS('three stooges')]),
+  show(262, 'DRAMA', 'BSHP', 'Black Sheep Squadron', ['baa baa black sheep full episode', 'black sheep squadron full episode']),
+  show(263, 'CLASSIC TV', 'CR54', 'Car 54, Where Are You?', ['car 54 where are you full episode'], [TS('car 54')]),
+  show(264, 'CLASSIC TV', 'FTRP', 'F Troop', ['f troop full episode']),
+  show(265, 'CLASSIC TV', 'ATEM', 'The A-Team', ['the a-team full episode', 'a team full episode']),
+  show(266, 'CLASSIC TV', 'BAYW', 'Baywatch', ['baywatch full episode']),
+  show(267, 'DRAMA', 'DOCS', 'Doctor Shows', ['house md full episode', 'er full episode', 'scrubs full episode', 'chicago hope full episode']),
+  show(268, 'TALK', 'LATE', 'Late Night', ['johnny carson tonight show full episode', 'late night with conan obrien 90s', 'late show with david letterman full episode', 'arsenio hall show full episode']),
+  show(269, 'TALK', 'DAY', 'Daytime Talk', ['oprah winfrey show full episode', 'jerry springer show full episode', 'maury full episode', 'ricki lake show full episode', 'phil donahue show full']),
+  show(270, 'LIFESTYLE', 'MRTH', 'Martha Stewart', ['martha stewart living full episode', 'martha stewart cooking school']),
+  show(271, 'LIFESTYLE', 'RRAY', 'Rachael Ray', ['rachael ray 30 minute meals full episode', 'rachael ray show']),
+  show(272, 'LIFESTYLE', 'SNOP', 'Martha & Snoop', ['martha and snoops potluck dinner party full episode', 'martha stewart snoop dogg cooking']),
+  show(273, 'HALF BAKED', 'HITV', 'High Times TV', ['cannabis documentary full', 'weed strain review', 'cooking with cannabis'], [TS('marijuana', 'cannabis')]),
+  show(274, 'HALF BAKED', 'GROW', 'The Grow Room', ['cannabis grow tutorial', 'growing weed indoor full grow']),
+  show(275, 'SITCOMS', 'SEIN', 'Seinfeld', ['seinfeld full episode', 'seinfeld best scenes']),
+  show(276, 'SITCOMS', 'BBT', 'Big Bang Theory', ['big bang theory full episode', 'big bang theory best scenes']),
+  show(277, 'SITCOMS', 'EHC', 'Everybody Hates Chris', ['everybody hates chris full episode']),
+  show(278, 'SITCOMS', 'MITM', 'Malcolm in the Middle', ['malcolm in the middle full episode']),
+  show(279, 'CARTOONS', 'KOTH', 'King of the Hill', ['king of the hill full episode', 'king of the hill best moments']),
+  show(280, 'OUTDOORS', 'HUNT', 'Hunting Channel', ['deer hunting full episode', 'elk hunting full episode', 'duck hunting show full episode'], [S('hunting')]),
+  show(281, 'NATURE', 'HANA', 'Jack Hanna', ['jack hanna into the wild full episode', 'jack hanna letterman', 'jack hannas animal adventures']),
+  show(282, 'EXTREME', 'SKI', 'Warren Miller', ['warren miller ski film full', 'warren miller ski movie']),
+  show(283, 'EXTREME', 'XGMS', 'X Games', ['x games classic', 'x games full event']),
+  show(284, 'EXTREME', 'RBUL', 'Red Bull', ['red bull rampage full', 'red bull cliff diving', 'red bull extreme sports']),
+  show(285, 'EXTREME', 'FLUG', 'Red Bull Flugtag', ['red bull flugtag', 'flugtag best crashes']),
+  show(286, 'EXTREME', 'BMX', 'BMX', ['bmx classic video', 'bmx street full part', 'bmx contest full']),
+  show(287, 'COMEDY', 'AFV', 'Funniest Home Videos', ['americas funniest home videos full episode', 'afv classic full episode']),
+  show(288, 'EXTREME', 'DRDK', 'Rob Dyrdek', ['rob and big full episode', 'rob dyrdek fantasy factory full episode', 'ridiculousness full episode']),
+  show(289, 'EXTREME', 'JACK', 'Jackass', ['jackass full episode', 'jackass best stunts']),
+  show(290, 'EXTREME', 'WBOY', 'Wildboyz', ['wildboyz full episode']),
+  show(291, 'KIDS', 'RNGR', 'Power Rangers', ['mighty morphin power rangers full episode', 'power rangers full episode']),
+  show(292, 'HORROR', 'CRYP', 'The Crypt Keeper', ['tales from the crypt full episode', 'tales from the cryptkeeper full episode']),
+  show(293, 'HORROR', 'GOOS', 'Goosebumps', ['goosebumps full episode']),
+  show(294, 'SCI-FI', 'RIPL', 'Ripley’s Believe It or Not', ['ripleys believe it or not full episode']),
+  show(295, 'HORROR', 'SCRY', 'Scary Stories', ['are you afraid of the dark full episode', 'scary stories to tell in the dark', 'scary stories animated']),
+  show(296, 'KIDS', 'DOGS', 'Doggy Day School', ['doggy day school full episode', 'doggie daycare cartoon full episode']),
+  show(297, 'KIDS', 'PEEW', 'Pee-wee’s Playhouse', ['pee-wees playhouse full episode']),
+  show(298, 'SITCOMS', 'ALF', 'ALF', ['alf full episode']),
+  show(299, 'SCI-FI', 'UNSL', 'Unsolved Mysteries', ['unsolved mysteries full episode']),
+];
+
 const YOUTUBE = [
   yt(201, 'YOUTUBE', '[AS]', 'Adult Swim', ['UCgPClNr5VSYC3syrDUIlzLw']),
   yt(202, 'YOUTUBE', 'CN', 'Cartoon Network', ['UCMsgXPD3wzzt8RxHJmXH7hQ']),
@@ -280,6 +339,7 @@ const YOUTUBE = [
   genre(247, 'FAMY', 'Family', ['collection:feature_films AND subject:family']),
   genre(248, 'ROMC', 'Romance', ['collection:feature_films AND subject:romance']),
   genre(249, 'KICK', 'Martial Arts', [S('martial arts', 'kung fu')]),
+  ...CLASSIC_BLOCK,
 ];
 
 const MORE = [
@@ -367,6 +427,10 @@ const PODCASTS = [
   au(308, 'PODCASTS', 'CALL', 'Talk Radio', [S('talk radio', 'call-in show', 'radio talk show')]),
   au(309, 'PODCASTS', 'OWL', 'Night Owl Radio', [TS('coast to coast am', 'art bell', 'george noory')]),
   au(310, 'PODCASTS', 'JOCK', 'Sports Talk', [POD + ' AND subject:sports']),
+  show(311, 'PODCASTS', 'HAWK', 'Tony Hawk Podcast', ['tony hawk hawk vs wolf podcast', 'tony hawk podcast']),
+  show(312, 'PODCASTS', 'FKS', 'Friends Keep Secrets', ['friends keep secrets podcast benny blanco', 'friends keep secrets podcast']),
+  show(313, 'PODCASTS', 'THEO', 'Theo Von', ['this past weekend theo von full episode']),
+  show(314, 'PODCASTS', 'BERT', 'Bertcast', ['bertcast full episode', '2 bears 1 cave full episode']),
 ];
 
 const ev = (n, call, name, qs, archiveQ, long = true) => yt(n, 'PPV', call, name, [], { ppvEvent: true, search: { q: qs, long }, q: archiveQ, desc: `PAY-PER-VIEW · ${name} · $0.00, billed to your imagination. Press OK for the event list.` });
@@ -569,13 +633,34 @@ const YTS = {
   419: ['cheech and chong', 'reefer madness full movie', 'trippy psychedelic animation', 'stoner comedy'],
 };
 
+const PLAYLISTS = ['PLd3-CCCcbQeIAHI_hOYSo_GftE0fyHz2M', 'PLd3-CCCcbQeLfoWOb9bbb5UC89tuRWHjc', 'PLd3-CCCcbQeIpw7OJTcXG4sNZHLwvWikt', 'PLd3-CCCcbQeJ4A0MXjaOk3C_1ABIN3ICM',
+  'PLd3-CCCcbQeLNarEq7P5dEDfJ-AuSDI20', 'PLd3-CCCcbQeJ91WE_NwvKvujeyvrEFMGc', 'PLd3-CCCcbQeK3_hbq_s1EuOU31OndGApb', 'PLd3-CCCcbQeIpu_AB8XdyTfyCr9077ZXG']
+  .map((id, i) => yt(600 + i, 'PLAYLISTS', 'PL' + (i + 1), `My Playlist ${i + 1}`, [id], { autoName: true }));
+
+// 24/7 live streams found by YouTube search (needs the site's YouTube key)
+const live = (n, call, name, q) => yt(n, 'LIVE', call, name, [], { search: { q, live: true }, desc: `${name}: whatever is streaming live right now.` });
+const LIVE_247 = [
+  live(780, 'NEWS', 'Live News', ['news live', 'breaking news live']),
+  live(781, 'NASA', 'NASA Live', ['nasa live']),
+  live(782, 'ISS', 'Space Station Live', ['iss live earth from space']),
+  live(783, 'CAMS', 'Animal Cams', ['live animal cam', 'explore.org live cam']),
+  live(784, 'LOFI', 'Lo-Fi Radio Live', ['lofi hip hop radio live']),
+  live(785, 'JAZZ', 'Jazz Radio Live', ['jazz radio live 24/7']),
+  live(786, 'WX', 'Weather Live', ['weather live stream']),
+  live(787, 'EARTH', 'EarthCam Live', ['earthcam live']),
+  live(788, 'GAME', 'Retro Gaming Live', ['retro gaming live']),
+  live(789, 'MUSC', 'Live Music', ['live concert stream', 'music live 24/7']),
+  live(790, 'FIRE', 'Fireplace Live', ['fireplace live 24/7']),
+  live(791, 'TRAIN', 'Train Cam Live', ['train cam live']),
+];
+
 export let CHANNELS = [];
 export function buildLineup() {
   const all = [
     ...localMediaChannels(),
     { n: 3, cat: 'GAMES', call: 'GAME', name: 'Game Channel', kind: 'games' },
     ...areaChannels(),
-    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV,
+    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247,
   ];
   const taken = new Map(all.map(c => [c.n, c]));
   for (const u of settings.userChannels) {
@@ -591,6 +676,17 @@ export function buildLineup() {
   for (let i = 0; i < all.length; i++) {
     const c = all[i];
     if (c.autoName && c.yt && names[c.yt[0]]) all[i] = { ...c, name: names[c.yt[0]] };
+  }
+  // LIVE twins: every channel built on a YouTube channel ID gets a live slot from 700 up
+  const taken2 = new Set(all.map(c => c.n));
+  let ln = 700;
+  for (const c of [...all].sort((x, y) => x.n - y.n)) {
+    const id = c.kind === 'yt' && !c.mix && c.yt && c.yt.find(x => x.startsWith('UC'));
+    if (!id || c.n >= 700) continue;
+    while (taken2.has(ln) && ln < 780) ln++;
+    if (ln >= 780) break;
+    all.push({ n: ln, cat: 'LIVE', call: c.call, name: `${c.name} · LIVE`, kind: 'ytlive', channelId: id, from: c.n, desc: `Whatever ${c.name} is streaming live right now. Press OK to watch its latest videos on ${c.n} instead.` });
+    taken2.add(ln++);
   }
   all.sort((x, y) => x.n - y.n);
   CHANNELS = all;

@@ -8,6 +8,7 @@ import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle } from './sources/youtube.js';
 import { lockup } from './logo.js';
+import { GUIDE_STYLES } from './guide.js';
 
 const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
@@ -28,6 +29,7 @@ function body() {
       ${check('remote', 'Show remote')}${check('zoom', 'Screen only (zoom)')}
       ${range('scanlines', 'Scanlines')}${range('mask', 'Phosphor mask')}${range('curvature', 'Glass & curve')}
       ${range('color', 'Color', 0, 160)}${range('brightness', 'Brightness', 50, 150)}
+      ${select('guideStyle', 'Guide style', GUIDE_STYLES)}
       ${check('logoIntro', 'NostalgiaVue logo at power-on')}${check('clock24', '24-hour clock')}
       <div class="m-row"><span>Full screen</span><button type="button" class="m-btn" data-do="fullscreen">Go full screen</button></div>`;
     case 'sound': return `

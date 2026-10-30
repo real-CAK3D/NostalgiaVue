@@ -1,15 +1,14 @@
 // The on-screen program guide (GUIDE button) and the shared grid renderer used by the Guide Channel.
 import { $, esc, one, slotNow, fmtTime, SLOT } from './util.js';
-import { settings, state } from './store.js';
+import { settings, state, save } from './store.js';
 import { CHANNELS, isHidden } from './lineup.js';
 import { getList, listsDone, listKey } from './sources/archive.js';
-import { iconSVG } from './icons.js';
+import { iconSVG, CAT_HUE } from './icons.js';
+
+export const GUIDE_STYLES = [['prevue', 'Prevue (1990s blue grid)'], ['tvguide', 'TV Guide Channel (2000s)'], ['cable', 'Cable Box (green screen)'], ['teletext', 'Teletext (1980s blocks)']];
+const hueOf = cat => CAT_HUE[cat] ?? 225;
 import { lockup } from './logo.js';
 
-const CAT_CLASS = {
-  MOVIES: 'movie', HORROR: 'movie', 'SCI-FI': 'movie', WESTERN: 'movie', SPORTS: 'sport', NEWS: 'news', 'LOCAL TV': 'news',
-  CARTOONS: 'kids', KIDS: 'kids', MUSIC: 'music', RADIO: 'music', PODCASTS: 'music', PPV: 'ppv', SHOPPING: 'ppv', YOUTUBE: 'yt',
-};
 
 function programTitle(ch, slot) {
   switch (ch.kind) {
@@ -22,6 +21,7 @@ function programTitle(ch, slot) {
     case 'external': return ch.ppv || ch.cat === 'PPV' ? `${ch.name} · PPV` : ch.name;
     case 'bars': return 'Test Pattern';
     case 'stream': return ch.name + ' (Live)';
+    case 'ytlive': return '● LIVE · ' + ch.name.replace(/ · LIVE$/, '');
   }
   if (ch.custom && !settings.custom) return '— Press ★ to program —';
   const l = listsDone.get(listKey(ch));
@@ -40,9 +40,9 @@ export function guideGridHTML({ start = 0, count = CHANNELS.length, auto = false
   const rows = auto ? Array.from({ length: Math.min(count, list.length) }, (_, k) => list[(start + k) % list.length]) : list;
   let lastCat = '', html = `<div class="g-row g-head"><div>${new Date().toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}</div>${[0, 1, 2].map(k => `<div>${fmtTime(t0 + k * SLOT, h24)}</div>`).join('')}</div><div class="g-rows">`;
   for (const [ch, i] of rows) {
-    if (!auto && ch.cat !== lastCat) html += `<div class="g-cat">${esc(lastCat = ch.cat)}</div>`;
-    const cls = CAT_CLASS[ch.cat] || '';
-    const cells = [0, 1, 2].map(k => { const t = programTitle(ch, slot + k); return `<div class="g-cell ${cls}${k ? '' : ' now'}${dim(t) ? ' dim' : ''}">${esc(t)}</div>`; }).join('');
+    if (!auto && ch.cat !== lastCat) html += `<div class="g-cat" style="--h:${hueOf(ch.cat)}">${esc(lastCat = ch.cat)}</div>`;
+    // every category has its own color, like the old printed TV Guide grids
+    const cells = [0, 1, 2].map(k => { const t = programTitle(ch, slot + k); return `<div class="g-cell${k ? '' : ' now'}${dim(t) ? ' dim' : ''}" style="--h:${hueOf(ch.cat)}">${esc(t)}</div>`; }).join('');
     html += `<div class="g-row${i === sel ? ' sel' : ''}${ch.n === state.num ? ' tuned' : ''}" data-i="${i}"><div class="g-cell g-ch"><span class="g-ico">${iconSVG(ch)}</span><em>${ch.n}</em><span class="g-call">${esc(ch.call)}</span></div>${cells}</div>`;
   }
   return html + '</div>';
@@ -76,6 +76,7 @@ function loadNear() {
 export function openGuide() {
   if (!state.on) return;
   state.guide = true; $('#screen').classList.add('guide-open');
+  $('#guide').dataset.gstyle = settings.guideStyle || 'prevue';
   $('#gLogo').innerHTML = lockup('white', 'gl');
   let i = CHANNELS.findIndex(c => c.n === state.num);
   state.guideSel = i < 0 ? 0 : i;
@@ -93,4 +94,13 @@ export function guidePage(d) { for (let k = 0; k < 6; k++) guideMove(d); }
 export const guideSelected = () => CHANNELS[state.guideSel];
 export function bindGuide(onPick) {
   $('#gGrid').addEventListener('click', e => { const r = e.target.closest('.g-row[data-i]'); if (r) onPick(CHANNELS[+r.dataset.i]); });
+}
+
+// INFO inside the guide flips through the guide styles
+export function cycleGuideStyle() {
+  const ids = GUIDE_STYLES.map(x => x[0]), i = ids.indexOf(settings.guideStyle || 'prevue');
+  settings.guideStyle = ids[(i + 1) % ids.length]; save();
+  $('#guide').dataset.gstyle = settings.guideStyle;
+  const g = document.querySelector('.gch'); if (g) g.dataset.gstyle = settings.guideStyle;
+  return GUIDE_STYLES[(i + 1) % ids.length][1];
 }

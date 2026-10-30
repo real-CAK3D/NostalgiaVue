@@ -268,6 +268,56 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 247 | FAMY | Movie Night: Family | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 248 | ROMC | Movie Night: Romance | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 249 | KICK | Movie Night: Martial Arts | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 250 | TMNT | Turtle Power (TMNT) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 251 | LAZR | Bob Lazar & the Aliens | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 252 | HTCH | Hitchcock Theater | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 253 | CNSP | Conspiracy Theater | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 254 | VH1 | VH1 Classic | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 255 | HIST | History Vault | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 256 | ANPL | Animal Planet | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 257 | ZOBO | Zoboomafoo | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 258 | SESA | Sesame Street | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 259 | KRAT | Kratts’ Creatures | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 260 | IRWN | Steve Irwin | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 261 | STOO | Three Stooges Shorts | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 262 | BSHP | Black Sheep Squadron | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 263 | CR54 | Car 54, Where Are You? | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 264 | FTRP | F Troop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 265 | ATEM | The A-Team | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 266 | BAYW | Baywatch | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 267 | DOCS | Doctor Shows | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 268 | LATE | Late Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 269 | DAY | Daytime Talk | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 270 | MRTH | Martha Stewart | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 271 | RRAY | Rachael Ray | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 272 | SNOP | Martha & Snoop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 273 | HITV | High Times TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 274 | GROW | The Grow Room | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 275 | SEIN | Seinfeld | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 276 | BBT | Big Bang Theory | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 277 | EHC | Everybody Hates Chris | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 278 | MITM | Malcolm in the Middle | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 279 | KOTH | King of the Hill | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 280 | HUNT | Hunting Channel | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 281 | HANA | Jack Hanna | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 282 | SKI | Warren Miller | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 283 | XGMS | X Games | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 284 | RBUL | Red Bull | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 285 | FLUG | Red Bull Flugtag | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 286 | BMX | BMX | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 287 | AFV | Funniest Home Videos | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 288 | DRDK | Rob Dyrdek | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 289 | JACK | Jackass | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 290 | WBOY | Wildboyz | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 291 | RNGR | Power Rangers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 292 | CRYP | The Crypt Keeper | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 293 | GOOS | Goosebumps | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 294 | RIPL | Ripley’s Believe It or Not | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 295 | SCRY | Scary Stories | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 296 | DOGS | Doggy Day School | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 297 | PEEW | Pee-wee’s Playhouse | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 298 | ALF | ALF | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 299 | UNSL | Unsolved Mysteries | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 
 ## Podcasts (300–350)
 
@@ -284,6 +334,10 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 308 | CALL | Talk Radio | archive.org (audio) |
 | 309 | OWL | Night Owl Radio | archive.org (audio) |
 | 310 | JOCK | Sports Talk | archive.org (audio) |
+| 311 | HAWK | Tony Hawk Podcast | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 312 | FKS | Friends Keep Secrets | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 313 | THEO | Theo Von | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 314 | BERT | Bertcast | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 
 ## More Cable (351–419)
 
@@ -398,3 +452,65 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 527 | KIDS | Kids Movie Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 528 | KUNG | Martial Arts Showdown | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 529 | ROCK | Rock Opera | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+
+## My Playlists (600–699)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 600 | PL1 | My Playlist 1 | YouTube (auto-named) |
+| 601 | PL2 | My Playlist 2 | YouTube (auto-named) |
+| 602 | PL3 | My Playlist 3 | YouTube (auto-named) |
+| 603 | PL4 | My Playlist 4 | YouTube (auto-named) |
+| 604 | PL5 | My Playlist 5 | YouTube (auto-named) |
+| 605 | PL6 | My Playlist 6 | YouTube (auto-named) |
+| 606 | PL7 | My Playlist 7 | YouTube (auto-named) |
+| 607 | PL8 | My Playlist 8 | YouTube (auto-named) |
+
+## Live (700–799)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 700 | WCSH | WCSH 6 · NBC · NEWS CENTER Maine · LIVE | ytlive |
+| 701 | WMTW | WMTW News 8 · ABC · LIVE | ytlive |
+| 702 | WGME | WGME CBS 13 · LIVE | ytlive |
+| 703 | PYTH | Monty Python Flying Channel · LIVE | ytlive |
+| 704 | NYE | Bill Nye Science Guy · LIVE | ytlive |
+| 705 | [AS] | Adult Swim · LIVE | ytlive |
+| 706 | CN | Cartoon Network · LIVE | ytlive |
+| 707 | WBK | Looney Tunes · WB Kids · LIVE | ytlive |
+| 708 | BEAN | Mr Bean · LIVE | ytlive |
+| 709 | PBSK | PBS Kids · LIVE | ytlive |
+| 710 | CNAS | Cartoon Network Asia · LIVE | ytlive |
+| 711 | SNL | Saturday Night Live · LIVE | ytlive |
+| 712 | MAD | MADtv · LIVE | ytlive |
+| 713 | BOOM | Boomerang · LIVE | ytlive |
+| 714 | TCLB | Toon Club · LIVE | ytlive |
+| 715 | TOON | Toon Time · LIVE | ytlive |
+| 716 | TOON | Toon Town Tube · LIVE | ytlive |
+| 717 | MOVA | Free Movies A · LIVE | ytlive |
+| 718 | MOVB | Free Movies B · LIVE | ytlive |
+| 719 | STND | Stand-Up Tube · LIVE | ytlive |
+| 720 | TEDX | TEDx Talks · LIVE | ytlive |
+| 721 | TED | TED · LIVE | ytlive |
+| 722 | TEDE | TED-Ed · LIVE | ytlive |
+| 723 | TLK1 | Talks Channel 1 · LIVE | ytlive |
+| 724 | TLK2 | Talks Channel 2 · LIVE | ytlive |
+| 725 | TLK3 | Talks Channel 3 · LIVE | ytlive |
+| 726 | COZ1 | Cozy Channel 1 · LIVE | ytlive |
+| 727 | COZ2 | Cozy Channel 2 · LIVE | ytlive |
+| 728 | COZ3 | Cozy Channel 3 · LIVE | ytlive |
+| 729 | LEGS | Stand-Up Legends · LIVE | ytlive |
+| 730 | JRE | The Joe Rogan Experience · LIVE | ytlive |
+| 731 | STAR | StarTalk w/ Neil deGrasse Tyson · LIVE | ytlive |
+| 780 | NEWS | Live News | YouTube (YouTube search + ON DEMAND) |
+| 781 | NASA | NASA Live | YouTube (YouTube search + ON DEMAND) |
+| 782 | ISS | Space Station Live | YouTube (YouTube search + ON DEMAND) |
+| 783 | CAMS | Animal Cams | YouTube (YouTube search + ON DEMAND) |
+| 784 | LOFI | Lo-Fi Radio Live | YouTube (YouTube search + ON DEMAND) |
+| 785 | JAZZ | Jazz Radio Live | YouTube (YouTube search + ON DEMAND) |
+| 786 | WX | Weather Live | YouTube (YouTube search + ON DEMAND) |
+| 787 | EARTH | EarthCam Live | YouTube (YouTube search + ON DEMAND) |
+| 788 | GAME | Retro Gaming Live | YouTube (YouTube search + ON DEMAND) |
+| 789 | MUSC | Live Music | YouTube (YouTube search + ON DEMAND) |
+| 790 | FIRE | Fireplace Live | YouTube (YouTube search + ON DEMAND) |
+| 791 | TRAIN | Train Cam Live | YouTube (YouTube search + ON DEMAND) |

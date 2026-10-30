@@ -23,7 +23,7 @@
 /* program window (shrinks into the guide's preview box) */
 #prog{position:absolute;inset:0;z-index:2;background:#000;transition:all .35s ease}
 .screen.guide-open #prog{top:4%;left:4%;width:45%;height:41%;inset:auto;box-shadow:0 0 0 .4cqw #9fb4ff,0 0 0 .8cqw #0b1a5c;z-index:3}
-#vid,#yt,#snow,#scene,#bars,#gameFrame,#webFrame{position:absolute;inset:0;width:100%;height:100%}
+#vid,#yt,#snow,#scene,#bars,#gameFrame,#webFrame,#liveFrame{position:absolute;inset:0;width:100%;height:100%}
 #vid{object-fit:contain;background:#000}
 #yt{background:#000}
 #yt iframe{width:100%;height:100%;border:0;pointer-events:none}
@@ -104,13 +104,10 @@
 .g-cat{background:#7a0d11;color:#ffd9d9;font-weight:700;font-size:1.8cqw;letter-spacing:.25em;padding:.25cqw 1cqw}
 .g-cell{padding:.6cqw 1cqw;font-size:2.2cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--guide-cell);border-right:.2cqw solid #0a1a66}
 .g-cell.now{background:var(--guide-now)}
-.g-cell.movie{background:#5a1f8a}.g-cell.movie.now{background:#6d29a6}
-.g-cell.sport{background:#1d7a3a}.g-cell.sport.now{background:#239147}
-.g-cell.kids{background:#0f7f86}.g-cell.kids.now{background:#13979f}
-.g-cell.news{background:#7a5a10}.g-cell.news.now{background:#94701a}
-.g-cell.music{background:#8a1f6a}.g-cell.music.now{background:#a3297e}
-.g-cell.ppv{background:#8a6a00}.g-cell.ppv.now{background:#a68100}
-.g-cell.yt{background:#8a1414}.g-cell.yt.now{background:#a31b1b}
+/* category colors (TV Guide style): each cell carries --h, the category hue */
+.g-rows .g-cell:not(.g-ch){background:hsl(var(--h) 55% 30%)}
+.g-rows .g-cell.now:not(.g-ch){background:hsl(var(--h) 62% 38%)}
+.g-cat{background:hsl(var(--h,0) 60% 26%)!important;border-left:1cqw solid hsl(var(--h,0) 80% 55%)}
 .g-ch{background:linear-gradient(180deg,#2a2a7a,#16164f)!important;font-weight:700;display:flex;gap:.8cqw;align-items:center;padding:.3cqw .6cqw}
 .g-ico{width:4.4cqw;flex:none}.g-ico svg{width:100%;display:block}
 .g-ch em{font-style:normal;color:var(--sel);font-size:2.6cqw}
@@ -281,3 +278,40 @@
 #webHint button{pointer-events:auto;background:#ffd23f;color:#221a00;border:0;border-radius:.6cqw;font:700 2.2cqw Oswald;padding:.4cqw 1.4cqw}
 .card-btns{display:flex;gap:2cqw;flex-wrap:wrap;justify-content:center}
 .card-go.alt{background:linear-gradient(#9fb4ff,#4f73ff);color:#06104a;box-shadow:0 .5cqw 0 #1b3bb3}
+#liveFrame{border:0;z-index:1;background:#000;pointer-events:none}
+
+/* ---------- guide style variants (MENU › Picture › Guide style, or INFO while the guide is open) ---------- */
+/* 2000s TV Guide Channel: charcoal, purple header, neon category stripes */
+[data-gstyle="tvguide"]{background:linear-gradient(180deg,#1b1630,#0c0a18)!important}
+[data-gstyle="tvguide"] .g-grid,[data-gstyle="tvguide"] .gch-grid{background:#0c0a18;border-color:#7d5cff}
+[data-gstyle="tvguide"] .g-head{background:linear-gradient(90deg,#5b2ad6,#2b9bd8)}
+[data-gstyle="tvguide"] .g-rows .g-cell:not(.g-ch){background:#1c1a2b;border-left:.7cqw solid hsl(var(--h) 85% 58%);color:#f2f0ff}
+[data-gstyle="tvguide"] .g-rows .g-cell.now:not(.g-ch){background:#28243d}
+[data-gstyle="tvguide"] .g-ch{background:#121020!important}
+[data-gstyle="tvguide"] .g-cat{background:#121020!important;color:hsl(var(--h) 85% 70%)}
+[data-gstyle="tvguide"] .g-logo,[data-gstyle="tvguide"] .gch-tag{color:#c9b8ff}
+/* cable-box green screen: black, phosphor text colored by category */
+[data-gstyle="cable"]{background:#000!important;font-family:VT323,monospace!important}
+[data-gstyle="cable"] .g-grid,[data-gstyle="cable"] .gch-grid{background:#000;border-color:#1f6f2a}
+[data-gstyle="cable"] .g-head{background:#062a0c;color:#5dff6e}
+[data-gstyle="cable"] .g-head div{border-color:#1f6f2a}
+[data-gstyle="cable"] .g-cell{font-family:VT323,monospace;font-size:2.8cqw}
+[data-gstyle="cable"] .g-rows .g-cell:not(.g-ch){background:#000;color:hsl(var(--h) 90% 66%);border-right-color:#0b3312}
+[data-gstyle="cable"] .g-rows .g-cell.now:not(.g-ch){background:#041a08}
+[data-gstyle="cable"] .g-ch{background:#000!important}
+[data-gstyle="cable"] .g-cat{background:#000!important;color:hsl(var(--h) 90% 66%);border-left:0}
+[data-gstyle="cable"] .g-row{border-bottom-color:#0b3312}
+[data-gstyle="cable"] .gch-promo{background:#000;border-color:#1f6f2a}
+/* 1980s teletext: pure black, blocky type, solid primary colors */
+[data-gstyle="teletext"]{background:#000!important}
+[data-gstyle="teletext"] .g-grid,[data-gstyle="teletext"] .gch-grid{background:#000;border-color:#00f}
+[data-gstyle="teletext"] .g-head{background:#00f;color:#ff0;font-family:'Press Start 2P',monospace;font-size:1.6cqw}
+[data-gstyle="teletext"] .g-cell{font-family:'Press Start 2P',monospace;font-size:1.5cqw;line-height:1.6}
+[data-gstyle="teletext"] .g-rows .g-cell:not(.g-ch){background:hsl(var(--h) 100% 30%);color:#fff}
+[data-gstyle="teletext"] .g-rows .g-cell.now:not(.g-ch){background:hsl(var(--h) 100% 40%)}
+[data-gstyle="teletext"] .g-ch{background:#000!important}
+[data-gstyle="teletext"] .g-ch em{color:#0ff}
+[data-gstyle="teletext"] .g-cat{background:#000!important;color:#ff0;font-family:'Press Start 2P',monospace;font-size:1.4cqw;border-left:0}
+[data-gstyle="teletext"] .g-logo,[data-gstyle="teletext"] .g-clock,[data-gstyle="teletext"] .gch-clock{font-family:'Press Start 2P',monospace;font-size:2.4cqw;color:#ff0}
+[data-gstyle="teletext"] .g-row.sel .g-cell{background:#ff0!important;color:#000}
+[data-gstyle] .g-row.sel .g-cell:not(.g-ch){background:#ffd23f!important;color:#111!important;border-left-color:#111}

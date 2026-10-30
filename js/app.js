@@ -6,11 +6,11 @@ import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, kn
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
 import { tuneArchive } from './sources/archive.js';
-import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker } from './sources/youtube.js';
+import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker, tuneLive, stopLive, learnPlaylistNames } from './sources/youtube.js';
 import { tuneLocal, tuneStream, bridgeApi } from './sources/local.js';
 import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal, watchOnTV, webActive, stopWeb } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
-import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide } from './guide.js';
+import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide, cycleGuideStyle } from './guide.js';
 import { openMenu, closeMenu, bindMenu, menuNav, renderMenu } from './menu.js';
 import { renderSet, turnDial, irBlink, era, setId, SETS } from './sets.js';
 import { runBreak } from './ads.js';
@@ -41,6 +41,8 @@ let pairedNote = '';
 await pairFromLink();
 buildLineup();
 if (!chanByNum(state.num)) state.num = 31;
+// name playlist channels after their real YouTube titles
+learnPlaylistNames(CHANNELS.flatMap(c => c.kind === 'yt' && c.autoName ? c.yt : [])).then(ok => { if (ok) buildLineup(); }).catch(() => {});
 
 /* ---------- applying settings to the picture ---------- */
 let renderedSet = '';
@@ -65,7 +67,7 @@ state.hooks.namesLearned = () => buildLineup();
 
 /* ---------- tuning ---------- */
 function stopAll() {
-  stopProgram(); stopYouTube(); leaveGames(); stopWeb(); barsOff();
+  stopProgram(); stopYouTube(); stopLive(); leaveGames(); stopWeb(); barsOff();
   v.hidden = false;
 }
 export async function tune(n, { silent } = {}) {
@@ -102,6 +104,7 @@ export async function tune(n, { silent } = {}) {
     case 'guidech': return tuneGuideChannel(ch, token);
     case 'games': return tuneGames(ch, token);
     case 'bars': return tuneBars();
+    case 'ytlive': return tuneLive(ch, token);
     case 'station': case 'external': return tuneCard(ch);
   }
   msg('NO SIGNAL');
@@ -195,6 +198,7 @@ function act(a) {
     if (a === 'right') return guidePage(1);
     if (a === 'ok') { const ch = guideSelected(); closeGuide(); return tune(ch.n); }
     if (a === 'guide' || a === 'back') return closeGuide();
+    if (a === 'info') { const name = cycleGuideStyle(); osdChan(null, name.split(' (')[0]); return; }
   }
   if (pickerOpen()) {
     if (a === 'up' || a === 'chup') return pickerNav(-1);
@@ -225,6 +229,7 @@ function act(a) {
     case 'back': if (webActive()) { stopWeb(); return tuneCard(ch); } clearOverlays(); return;
     case 'ok':
       if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() ? openExternal(ch) : watchOnTV(ch);
+      if (ch && ch.kind === 'ytlive') return tune(ch.from);
       if (ytActive() && openPicker()) return;
       if (programInfo() && !$('#msg').classList.contains('tap')) return showProgramBanner();
       if ($('#msg').classList.contains('tap')) return $('#msg').click();

@@ -12,13 +12,16 @@
 | 3 | **Game Channel.** ROMs from `E:\ROMs`, played in the browser with EmulatorJS (keyboard, USB/Bluetooth controller, or touch) |
 | 6 8 9 10 12 13 21–30 | **Local TV** for your ZIP. 04240 is preset: WCSH 6, WMTW 8, WCBB 10, WGME 13, WPFO 23 … plus *Local on the 9s* weather |
 | 31–200 | **NostalgiaVue Cable.** 170 themed channels from archive.org: cartoons, Three Stooges, Monty Python, cops & chases, Bill Nye, westerns, horror, MST3K, music videos, shopping, auctions, religious satire… |
-| 201–299 | **YouTube.** Adult Swim, Cartoon Network, Boomerang, WB Kids, SNL, TED/TEDx/TED-Ed, Fireside & Lo-Fi Coffeehouse, the Elon Channel, Stand-Up Legends, Movie Night by genre (240–249)… |
-| 300–350 | **Podcasts.** Joe Rogan, StarTalk, archive.org podcast radio |
+| 201–249 | **YouTube.** Adult Swim, Cartoon Network, Boomerang, WB Kids, SNL, TED/TEDx/TED-Ed, Fireside & Lo-Fi Coffeehouse, the Elon Channel, Stand-Up Legends, Movie Night by genre (240–249)… |
+| 250–299 | **Classic TV block.** TMNT, Bob Lazar & the Aliens, Hitchcock, Conspiracy, VH1, History, Animal Planet, Zoboomafoo, Sesame Street, Kratts’ Creatures, Steve Irwin, Black Sheep Squadron, Car 54, F Troop, The A-Team, Baywatch, doctor shows, late night & daytime talk, Martha Stewart, Rachael Ray, Martha & Snoop, High Times TV, Seinfeld, Big Bang Theory, Everybody Hates Chris, Malcolm in the Middle, King of the Hill, hunting, Jack Hanna, Warren Miller, X Games, Red Bull & Flugtag, BMX, AFV, Rob Dyrdek, Jackass, Wildboyz, Power Rangers, the Crypt Keeper, Goosebumps, Ripley’s, Scary Stories… |
+| 300–350 | **Podcasts.** Joe Rogan, StarTalk, Tony Hawk, Friends Keep Secrets, Theo Von, Bertcast, archive.org podcast radio |
 | 351–419 | **More Cable.** Another ~70 themed channels, ending with **419 Half Baked** |
 | 420–499 | **Bring your own.** Stream links, M3U playlists, anything |
-| 500–599 | **Pay-Per-View.** Shortcuts to Netflix, Max, Pluto TV, Tubi… |
+| 500–599 | **Pay-Per-View.** PPV events that play on the TV, plus shortcuts to Netflix, Max, Pluto TV, Tubi… |
+| 600–699 | **My Playlists.** Your YouTube playlists, named after their real titles |
+| 700–799 | **LIVE.** Every YouTube channel’s live stream (OK jumps to its regular channel), plus 24/7 live news, NASA, ISS, animal cams, lo-fi radio… |
 
-More than 300 channels out of the box. Every channel, including ones you add, gets a generated station logo. The full list is in [docs/Channel-Lineup.md](docs/Channel-Lineup.md).
+More than 450 channels out of the box. Every channel, including ones you add, gets a generated station logo. The full list is in [docs/Channel-Lineup.md](docs/Channel-Lineup.md).
 
 ## Features
 - Nine TV sets, three per decade. **1980s:** Space Commander 25" wood console, Portavision 13" portable, Monitor/Receiver 27". **1990s:** TrinoTube KV-27, VCR Combo 13", BigVue 32" Surround. **2000s:** FlatFace Pro 32", WideTube 30" HD, PlasmaVue 42" (widescreen sets pillarbox the 4:3 picture). Each decade has its own remote, on-screen display, menu style and sounds: 80s dials click once per detent, 90s tuners tick, 2000s sets beep.
@@ -26,7 +29,7 @@ More than 300 channels out of the box. Every channel, including ones you add, ge
 - **ON DEMAND:** once `YT_API_KEY` is set on Vercel, YouTube channels like Movie Night, the Elon Channel and Stand-Up Legends get a list of titles to pick from (press OK).
 - Show or hide the remote, or switch to **screen-only zoom** and full screen.
 - Half-hour broadcast schedule: tuning in drops you into whatever's already on.
-- A Prevue-style **GUIDE** with colored categories, plus a **Guide Channel** (31) that scrolls the grid on its own.
+- A color-coded **GUIDE** (every category has its own color) in four styles: Prevue, 2000s TV Guide Channel, cable-box green screen and 80s teletext. Press INFO in the guide to flip styles. Plus a **Guide Channel** (31) that scrolls the grid on its own.
 - **Commercial breaks** every 10/15/20/30 minutes, using real vintage ads (can be turned off).
 - **NostalgiaVue logo animation** at power-on. All sounds are synthesized: relay clicks, degauss thump, static, 15.7 kHz whine and the dial clunk.
 - Settings for picture (scanlines, phosphor mask, glass, color), sound, commercials, location, sources and channels. Back up and restore all settings as one file.

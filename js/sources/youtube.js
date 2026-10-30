@@ -41,7 +41,7 @@ const serverReady = () => serverKey ?? (serverKey = fetch('api/yt?op=ping').then
 export const hasKey = () => !!settings.ytKey || serverKey === true;
 async function ytApi(op, params) {
   if (settings.ytKey) {
-    const path = op === 'search' ? 'search' : 'channels';
+    const path = op;
     const p = new URLSearchParams({ ...params, key: settings.ytKey });
     return fetchJSON(`https://www.googleapis.com/youtube/v3/${path}?${p}`);
   }
@@ -50,12 +50,13 @@ async function ytApi(op, params) {
 }
 serverReady().then(ok => { serverKey = ok; });
 
-async function apiSearch(q, { channelId, long } = {}) {
-  const k = `s|${q}|${channelId || ''}|${long ? 1 : 0}`;
+async function apiSearch(q, { channelId, long, live } = {}) {
+  const k = `s|${q}|${channelId || ''}|${long ? 1 : 0}|${live ? 1 : 0}`;
   if (cache[k]) return cache[k];
   const p = { part: 'snippet', type: 'video', maxResults: '50', q, videoEmbeddable: 'true' };
   if (channelId) p.channelId = channelId;
   if (long) p.videoDuration = 'long';
+  if (live) p.eventType = 'live';
   const j = await ytApi('search', p);
   const items = (j.items || []).filter(i => i.id && i.id.videoId).map(i => ({ id: i.id.videoId, title: decode(i.snippet.title), by: decode(i.snippet.channelTitle) }));
   cache[k] = items; keep();
@@ -78,7 +79,7 @@ async function searchItems(ch) {
   // one search per channel per day keeps the free API quota happy; the half-hour slots then
   // walk through its results. Channel-restricted searches merge their results.
   const q = qs[hash(daySeed(), ch.n) % qs.length];
-  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long }).catch(() => [])));
+  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live }).catch(() => [])));
   const seen = new Set(), out = [];
   for (const l of lists) for (const it of l) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }
   return out.length ? out : null;
@@ -141,7 +142,7 @@ function onStateChange(e) {
 // Channels added by ID alone get their real name the first time they air.
 function learnName(author) {
   const ch = yt.ch; if (!ch || !author || ch.mix || ch.search) return;
-  const id = yt.cands[yt.cand]; if (!id) return;
+  const id = yt.cands[yt.cand]; if (!id || id.startsWith('PL')) return; // playlists are named from their own title
   settings.ytNames = settings.ytNames || {};
   if (settings.ytNames[id] !== author) { settings.ytNames[id] = author; save(); state.hooks.namesLearned?.(); }
 }
@@ -161,6 +162,27 @@ function fallback(ch, token, why) {
   if (ch && ch.url) return state.hooks.card?.(ch);
   staticOn(); msg('NO SIGNAL', why);
 }
+// Playlist channels take their real playlist titles (one cheap API call for all of them).
+export async function learnPlaylistNames(ids) {
+  const want = ids.filter(id => id.startsWith('PL') && !(settings.ytNames || {})[id]);
+  if (!want.length) return false;
+  if (!settings.ytKey && !(await serverReady())) return false;
+  const j = await ytApi('playlists', { part: 'snippet', id: want.slice(0, 50).join(','), maxResults: '50' });
+  settings.ytNames = settings.ytNames || {};
+  for (const it of j.items || []) settings.ytNames[it.id] = decode(it.snippet.title);
+  save(); return true;
+}
+
+/* ---------- LIVE: a channel's current live stream ---------- */
+export function tuneLive(ch, token) {
+  const f = $('#liveFrame');
+  f.src = `https://www.youtube.com/embed/live_stream?${new URLSearchParams({ channel: ch.channelId, autoplay: '1', controls: '0', modestbranding: '1', playsinline: '1', rel: '0' })}`;
+  f.hidden = false;
+  setTimeout(() => { if (token === state.token) { staticOff(); hideMsg(); } }, 1500);
+  banner({ ch, title: `${ch.name.replace(/ · LIVE$/, '')} — LIVE`, sub: 'If YouTube says the stream is offline, nothing is live right now · OK = latest videos' }, 7000);
+}
+export function stopLive() { const f = $('#liveFrame'); if (!f.hidden) { f.src = 'about:blank'; f.hidden = true; } }
+
 export function stopYouTube() {
   clearTimeout(yt.watchdog); closePicker();
   yt.ch = null; yt.items = null; $('#yt').hidden = true;

@@ -2,11 +2,12 @@
 // deterministic SVG badge built from its call letters, category and number.
 import { hash, esc } from './util.js';
 
-const CAT_HUE = {
+export const CAT_HUE = {
   'LOCAL MEDIA': 140, GAMES: 280, 'LOCAL TV': 210, GUIDE: 220, SHOPPING: 320, COMEDY: 45, CRIME: 0, SCIENCE: 175,
   GAMING: 270, MOVIES: 355, SPORTS: 120, LIFESTYLE: 30, NEWS: 205, WESTERN: 25, DRAMA: 300, 'SCI-FI': 190, CARTOONS: 50,
   KIDS: 85, 'GAME SHOWS': 330, TALK: 260, HORROR: 15, SEASONAL: 100, MUSIC: 290, RADIO: 35, LEARNING: 160, 'ADS & TV': 340,
   ARCHIVES: 40, WORLD: 150, YOUTUBE: 0, PODCASTS: 265, PPV: 48, BYO: 195, YOURS: 195,
+  'CLASSIC TV': 215, SITCOMS: 60, NATURE: 110, OUTDOORS: 95, EXTREME: 10, 'HALF BAKED': 130, LIVE: 350, PLAYLISTS: 230, TALKS: 245, COZY: 22,
 };
 const FONTS = ["'Bungee'", "'Righteous'", "'Bebas Neue'", "'Rubik Mono One'", "'Lobster'", "'Press Start 2P'", "'Oswald'", "'Monoton'"];
 const SHAPES = ['disc', 'shield', 'box', 'tv', 'burst', 'pill', 'diamond', 'stripes'];
