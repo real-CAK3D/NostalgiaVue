@@ -369,8 +369,9 @@ const PODCASTS = [
   au(310, 'PODCASTS', 'JOCK', 'Sports Talk', [POD + ' AND subject:sports']),
 ];
 
+const ev = (n, call, name, qs, archiveQ, long = true) => yt(n, 'PPV', call, name, [], { ppvEvent: true, search: { q: qs, long }, q: archiveQ, desc: `PAY-PER-VIEW · ${name} · $0.00, billed to your imagination. Press OK for the event list.` });
 const PPV = [
-  web(500, 'PPV', 'PPV1', 'NostalgiaVue PPV Events', 'https://archive.org/details/feature_films', { ppv: true, desc: 'Tonight’s main event, priced at $0.00. Opens archive.org feature films.' }),
+  ev(500, 'PPV', 'NostalgiaVue PPV Main Event', ['ppv full event classic', 'classic pay per view full event', 'full concert live classic'], ['collection:feature_films']),
   web(501, 'PPV', 'NFLX', 'Netflix', 'https://www.netflix.com/'),
   web(502, 'PPV', 'PRIM', 'Prime Video', 'https://www.primevideo.com/'),
   web(503, 'PPV', 'DSNY', 'Disney+', 'https://www.disneyplus.com/'),
@@ -390,6 +391,17 @@ const PPV = [
   web(517, 'PPV', 'SHUD', 'Shudder', 'https://www.shudder.com/'),
   web(518, 'PPV', 'TWCH', 'Twitch', 'https://www.twitch.tv/'),
   web(519, 'PPV', 'SPOT', 'Spotify', 'https://open.spotify.com/'),
+  // events that play right on the TV (YouTube, with archive.org as the backup)
+  ev(520, 'WMNA', 'Wrestling PPV Classics', ['wrestlemania full event', 'wwf ppv full event classic', 'wcw ppv full event'], [S('wrestling', 'professional wrestling')]),
+  ev(521, 'FITE', 'Fight of the Century', ['classic boxing full fight ppv', 'mike tyson full fight', 'muhammad ali full fight'], [S('boxing', 'prize fight')]),
+  ev(522, 'CAGE', 'Cage Fight Classics', ['ufc classic full fight', 'early ufc full event', 'pride fc full fight'], [S('martial arts', 'mixed martial arts')]),
+  ev(523, 'LIVE', 'Concert Event', ['full concert live 80s', 'full concert live 90s', 'full concert live classic rock'], [S('concert', 'live music')]),
+  ev(524, 'LAFF', 'Comedy Special', ['full stand up comedy special', 'stand up special full show'], [S('stand-up comedy', 'comedian')]),
+  ev(525, 'MNST', 'Monster Truck Jam', ['monster jam full event', 'monster truck rally full'], [TS('monster truck', 'demolition derby')]),
+  ev(526, 'MIDN', 'Midnight Movie Premiere', ['full movie horror classic', 'full movie cult classic'], ['subject:horror']),
+  ev(527, 'KIDS', 'Kids Movie Night', ['full animated movie classic', 'kids full movie family'], ['collection:feature_films AND subject:family']),
+  ev(528, 'KUNG', 'Martial Arts Showdown', ['kung fu full movie', 'martial arts full movie classic'], [S('martial arts', 'kung fu')]),
+  ev(529, 'ROCK', 'Rock Opera', ['rock opera full movie', 'music documentary full'], [S('rock opera', 'music documentary')]),
 ];
 
 // Local-area TV presets. 04240 = Lewiston/Auburn, Maine (Portland–Auburn market).

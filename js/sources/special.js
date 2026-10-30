@@ -1,7 +1,7 @@
 // Channels that aren't a stream of programs: weather, the guide channel, PPV/station cards, test pattern.
 import { esc, fetchJSON, fmtTime, sleep } from '../util.js';
 import { settings, save, state } from '../store.js';
-import { staticOff, scene, bars, hideMsg } from '../osd.js';
+import { staticOff, scene, bars, barsOff, hideMsg } from '../osd.js';
 import { tuneArchive } from './archive.js';
 import { iconSVG } from '../icons.js';
 import { CHANNELS, isHidden, TS } from '../lineup.js';
@@ -169,10 +169,34 @@ export function tuneCard(ch) {
     ${ppv ? '<div class="ppv-head">PAY-PER-VIEW · PRESS OK TO ORDER · $0.00</div>' : ''}
     <div class="card-icon">${iconSVG(ch)}</div><div class="card-name">${esc(ch.name)}</div>
     <div class="card-text">${esc(text)}</div>
-    ${ch.url ? `<button type="button" class="card-go" data-url="${esc(ch.url)}">▶ ${ppv ? 'ORDER / OPEN' : 'WATCH LIVE'} — ${esc(new URL(ch.url).hostname.replace(/^www\./, ''))}</button>` : ''}
-    ${ppv ? '<div class="ppv-fine">Opens in a new tab. NostalgiaVue will keep the set warm on INPUT 2.</div>' : ''}</div>`, 'cardscene');
-  const go = document.querySelector('.card-go');
-  if (go) go.onclick = () => openExternal(ch);
+    ${ch.url ? `<div class="card-btns"><button type="button" class="card-go" data-tv>📺 WATCH ON THE TV</button><button type="button" class="card-go alt" data-tab>↗ NEW TAB — ${esc(new URL(ch.url).hostname.replace(/^www\./, ''))}</button></div>` : ''}
+    ${ch.url ? '<div class="ppv-fine">OK = watch on the TV · press OK again for a new tab</div>' : ''}</div>`, 'cardscene');
+  document.querySelector('.card-btns [data-tv]')?.addEventListener('click', () => watchOnTV(ch));
+  document.querySelector('.card-btns [data-tab]')?.addEventListener('click', () => openExternal(ch));
+}
+// Some services can be shown inside another page; these are their embeddable player addresses.
+const EMBED = {
+  'www.twitch.tv': () => `https://player.twitch.tv/?channel=twitchpresents&parent=${location.hostname}`,
+  'open.spotify.com': () => 'https://open.spotify.com/embed/playlist/37i9dQZF1DX4o1oenSJRJd',
+  'pluto.tv': () => 'https://pluto.tv/live-tv',
+  'watch.plex.tv': () => 'https://watch.plex.tv/live-tv',
+};
+export const webActive = () => !document.querySelector('#webFrame').hidden;
+export function watchOnTV(ch) {
+  if (!ch.url) return;
+  const host = new URL(ch.url).hostname, f = document.querySelector('#webFrame'), hint = document.querySelector('#webHint');
+  bars('INPUT 2', 'Switching to ' + ch.name + '…');
+  f.src = (EMBED[host] || (() => ch.url))(); f.hidden = false;
+  setTimeout(() => { if (!f.hidden) { barsOff(); hideMsg(); } }, 1200);
+  hint.innerHTML = `<span>INPUT 2 · ${esc(ch.name)} — blank or “refused to connect”? That service blocks TV mode.</span><button type="button">↗ OPEN IN NEW TAB</button>`;
+  hint.hidden = false; hint.querySelector('button').onclick = () => openExternal(ch);
+  clearTimeout(hintTimer); hintTimer = setTimeout(() => { hint.hidden = true; }, 9000);
+}
+let hintTimer = 0;
+export function stopWeb() {
+  const f = document.querySelector('#webFrame');
+  if (!f.hidden) { f.src = 'about:blank'; f.hidden = true; }
+  document.querySelector('#webHint').hidden = true;
 }
 export function openExternal(ch) {
   if (!ch.url) return;

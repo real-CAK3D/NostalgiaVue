@@ -23,7 +23,7 @@
 /* program window (shrinks into the guide's preview box) */
 #prog{position:absolute;inset:0;z-index:2;background:#000;transition:all .35s ease}
 .screen.guide-open #prog{top:4%;left:4%;width:45%;height:41%;inset:auto;box-shadow:0 0 0 .4cqw #9fb4ff,0 0 0 .8cqw #0b1a5c;z-index:3}
-#vid,#yt,#snow,#scene,#bars,#gameFrame{position:absolute;inset:0;width:100%;height:100%}
+#vid,#yt,#snow,#scene,#bars,#gameFrame,#webFrame{position:absolute;inset:0;width:100%;height:100%}
 #vid{object-fit:contain;background:#000}
 #yt{background:#000}
 #yt iframe{width:100%;height:100%;border:0;pointer-events:none}
@@ -274,3 +274,10 @@
 .skin-plasma .screen .vignette{box-shadow:none}
 .skin-plasma .screen .scan{display:none}
 .skin-plasma .glare{background:linear-gradient(155deg,rgba(255,255,255,.08),transparent 30%)}
+
+/* INPUT 2: a streaming site shown inside the set */
+#webFrame{border:0;z-index:6;background:#fff}
+#webHint{position:absolute;left:0;right:0;bottom:0;z-index:8;background:rgba(0,0,0,.85);color:#ffd23f;font:2.6cqw VT323,monospace;padding:.8cqw 2cqw;display:flex;gap:2cqw;align-items:center;justify-content:space-between}
+#webHint button{pointer-events:auto;background:#ffd23f;color:#221a00;border:0;border-radius:.6cqw;font:700 2.2cqw Oswald;padding:.4cqw 1.4cqw}
+.card-btns{display:flex;gap:2cqw;flex-wrap:wrap;justify-content:center}
+.card-go.alt{background:linear-gradient(#9fb4ff,#4f73ff);color:#06104a;box-shadow:0 .5cqw 0 #1b3bb3}

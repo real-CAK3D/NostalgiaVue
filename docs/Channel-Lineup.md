@@ -368,7 +368,7 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 
 | Ch | Call | Name | Source |
 |---|---|---|---|
-| 500 | PPV1 | NostalgiaVue PPV Events | Link out |
+| 500 | PPV | NostalgiaVue PPV Main Event | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 501 | NFLX | Netflix | Link out |
 | 502 | PRIM | Prime Video | Link out |
 | 503 | DSNY | Disney+ | Link out |
@@ -388,3 +388,13 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 517 | SHUD | Shudder | Link out |
 | 518 | TWCH | Twitch | Link out |
 | 519 | SPOT | Spotify | Link out |
+| 520 | WMNA | Wrestling PPV Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 521 | FITE | Fight of the Century | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 522 | CAGE | Cage Fight Classics | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 523 | LIVE | Concert Event | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 524 | LAFF | Comedy Special | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 525 | MNST | Monster Truck Jam | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 526 | MIDN | Midnight Movie Premiere | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 527 | KIDS | Kids Movie Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 528 | KUNG | Martial Arts Showdown | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 529 | ROCK | Rock Opera | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

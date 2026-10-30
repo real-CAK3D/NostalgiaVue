@@ -19,7 +19,7 @@ const changed = (rebuild) => { save(); if (rebuild) { buildLineup(); hooks().lin
 const range = (k, label, min = 0, max = 100, step = 1) => `<label class="m-row"><span>${label}</span><input type="range" data-k="${k}" min="${min}" max="${max}" step="${step}" value="${settings[k]}"><output>${settings[k]}</output></label>`;
 const check = (k, label) => `<label class="m-row m-check"><span>${label}</span><input type="checkbox" data-k="${k}" ${settings[k] ? 'checked' : ''}><i></i></label>`;
 const select = (k, label, opts) => `<label class="m-row"><span>${label}</span><select data-k="${k}">${opts.map(([v, t]) => `<option value="${esc(v)}" ${String(settings[k]) === String(v) ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`;
-const text = (k, label, ph = '', type = 'text') => `<label class="m-row"><span>${label}</span><input type="${type}" data-k="${k}" value="${esc(settings[k] || '')}" placeholder="${esc(ph)}" autocomplete="off" spellcheck="false"></label>`;
+const text = (k, label, ph = '', type = 'text') => `<label class="m-row"><span>${label}</span><input type="${type}" data-k="${k}" value="${esc(settings[k] || '')}" placeholder="${esc(ph)}" autocomplete="off" spellcheck="false">${type === 'password' ? `<button type="button" class="m-eye" data-eye="${k}" aria-label="Show or hide" title="Show / hide">👁</button>` : ''}</label>`;
 
 function body() {
   switch (tab) {
@@ -221,6 +221,8 @@ export function bindMenu() {
   const m = $('#menu');
   m.addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (t) { tab = t.dataset.tab; renderMenu(); $(`#menu [data-tab="${tab}"]`)?.focus(); return; }
+    const eye = e.target.closest('[data-eye]');
+    if (eye) { e.preventDefault(); const inp = m.querySelector(`input[data-k="${eye.dataset.eye}"]`); const show = inp.type === 'password'; inp.type = show ? 'text' : 'password'; eye.classList.toggle('on', show); return; }
     const d = e.target.closest('[data-do]'); if (d) { act(d.dataset.do, d); return; }
     const del = e.target.closest('[data-del]'); if (del) { const n = +del.dataset.del; settings.userChannels = settings.userChannels.filter(u => u.n !== n); changed(true); renderMenu(); }
   });

@@ -3,12 +3,12 @@ import { $, $$, esc, sleep } from './util.js';
 import { settings, save, state } from './store.js';
 import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS } from './lineup.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
-import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic } from './osd.js';
+import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
 import { tuneArchive } from './sources/archive.js';
 import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker } from './sources/youtube.js';
 import { tuneLocal, tuneStream, bridgeApi } from './sources/local.js';
-import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal } from './sources/special.js';
+import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal, watchOnTV, webActive, stopWeb } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
 import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide } from './guide.js';
 import { openMenu, closeMenu, bindMenu, menuNav, renderMenu } from './menu.js';
@@ -65,7 +65,7 @@ state.hooks.namesLearned = () => buildLineup();
 
 /* ---------- tuning ---------- */
 function stopAll() {
-  stopProgram(); stopYouTube(); leaveGames(); barsOff();
+  stopProgram(); stopYouTube(); leaveGames(); stopWeb(); barsOff();
   v.hidden = false;
 }
 export async function tune(n, { silent } = {}) {
@@ -86,7 +86,16 @@ export async function tune(n, { silent } = {}) {
   if (token !== state.token) return;
   switch (ch.kind) {
     case 'archive': return tuneArchive(ch, token);
-    case 'yt': return tuneYouTube(ch, token);
+    case 'yt':
+      if (ch.ppvEvent) {
+        staticOff();
+        scene(`<div class="card ppv"><div class="ppv-head">PAY-PER-VIEW · ORDER CONFIRMED</div><div class="card-icon">${iconSVG(ch)}</div>
+          <div class="card-name">${esc(ch.name)}</div><div class="card-text">$0.00 · billed to your imagination<br>Your event begins in a moment…</div></div>`, 'cardscene');
+        await sleep(2800);
+        if (token !== state.token) return;
+        clearOverlays(); staticOn();
+      }
+      return tuneYouTube(ch, token);
     case 'local': return tuneLocal(ch, token);
     case 'stream': return tuneStream(ch, token);
     case 'weather': return tuneWeather(ch, token);
@@ -213,9 +222,9 @@ function act(a) {
     case 'ppv': return tune(500);
     case 'games': return tune(3);
     case 'find': return openMenu('channels');
-    case 'back': clearOverlays(); return;
+    case 'back': if (webActive()) { stopWeb(); return tuneCard(ch); } clearOverlays(); return;
     case 'ok':
-      if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return openExternal(ch);
+      if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() ? openExternal(ch) : watchOnTV(ch);
       if (ytActive() && openPicker()) return;
       if (programInfo() && !$('#msg').classList.contains('tap')) return showProgramBanner();
       if ($('#msg').classList.contains('tap')) return $('#msg').click();

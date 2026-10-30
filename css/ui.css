@@ -49,3 +49,5 @@
 #menu.mobile .m-st{grid-template-columns:44px 80px 1fr}
 #menu.mobile .m-st input[data-f="yt"],#menu.mobile .m-st input[data-f="url"]{grid-column:2/-1}
 #menu.mobile .m-row>span:first-child{flex-basis:100%}
+.m-eye{background:rgba(255,255,255,.1);border:calc(var(--u)*.2) solid #5e7dff;border-radius:calc(var(--u)*.6);padding:calc(var(--u)*.3) calc(var(--u)*.9);font-size:calc(var(--u)*2.4);line-height:1;filter:grayscale(1);opacity:.7}
+.m-eye.on{filter:none;opacity:1;background:var(--sel)}
