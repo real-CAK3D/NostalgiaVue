@@ -1,13 +1,13 @@
 // NostalgiaVue — main wiring: power, tuning, remote, keyboard, touch, zoom.
 import { $, $$, esc, sleep } from './util.js';
 import { settings, save, state } from './store.js';
-import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf } from './lineup.js';
+import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS } from './lineup.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
 import { tuneArchive } from './sources/archive.js';
 import { tuneYouTube, stopYouTube, ytActive, title as ytTitle, ytUrl, pickerOpen, openPicker, pickerNav, pickerOK, closePicker } from './sources/youtube.js';
-import { tuneLocal, tuneStream } from './sources/local.js';
+import { tuneLocal, tuneStream, bridgeApi } from './sources/local.js';
 import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
 import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide } from './guide.js';
@@ -17,6 +17,28 @@ import { runBreak } from './ads.js';
 import { iconSVG } from './icons.js';
 import './ads.js';
 
+// Pairing link from the Bridge installer: #pair=<base64 {"u": bridge url, "t": token}>
+async function pairFromLink() {
+  const m = location.hash.match(/pair=([A-Za-z0-9+/=_-]+)/); if (!m) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  try {
+    const { u, t } = JSON.parse(atob(m[1].replace(/-/g, '+').replace(/_/g, '/')));
+    if (!/^https:\/\//.test(u)) return;
+    settings.bridgeUrl = u; settings.bridgeToken = t || ''; save();
+    // first pairing: fill the local channels with Movies, the whole TV library, then one show per channel
+    if (!Object.keys(settings.localMap).length) {
+      const { dirs = [] } = await bridgeApi('/api/browse', { depth: 2 });
+      const slots = SECTIONS.find(x => x.id === 'local').nums, map = {};
+      const pick = [...dirs.filter(d => !d.includes('/')), ...dirs.filter(d => d.split('/').length === 2 && /^TV\//.test(d))];
+      pick.slice(0, slots.length).forEach((path, i) => { map[slots[i]] = { type: 'bridge', path, label: path === 'TV' ? 'All TV Shows' : path.split('/').pop() }; });
+      settings.localMap = map; save();
+    }
+    buildLineup();
+    pairedNote = `Connected to your PC. Local channels: ${Object.keys(settings.localMap).join(', ')}`;
+  } catch { pairedNote = 'That pairing link didn’t work. Re-run the installer, or enter the Bridge in MENU › Sources.'; }
+}
+let pairedNote = '';
+await pairFromLink();
 buildLineup();
 if (!chanByNum(state.num)) state.num = 31;
 
@@ -122,6 +144,7 @@ async function power() {
     if (era() !== '00s') { staticOn(); await sleep(900); staticOff(); }
     await splash();
     if (state.on) tune(state.num, { silent: 'power' });
+    if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
     state.on = false; state.token++;
     closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
