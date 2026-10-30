@@ -9,7 +9,7 @@ on:
     inputs:
       budget:
         description: 'Searches to run (100 quota units each)'
-        default: '95'
+        default: '70'
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ jobs:
       - name: Run searches
         env:
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
-          YT_BUDGET: ${{ github.event.inputs.budget || '95' }}
+          YT_BUDGET: ${{ github.event.inputs.budget || '70' }}
         run: node scripts/prefetch-yt.mjs
       - name: Save results
         run: |

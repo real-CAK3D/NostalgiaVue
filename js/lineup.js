@@ -740,6 +740,10 @@ const SHOWS = [
   show(878, 'KIDS', 'WSHB', 'Wishbone', ep('Wishbone')),
   show(879, 'KIDS', 'CRMN', 'Where in the World Is Carmen Sandiego?', ep('Where in the World is Carmen Sandiego game show')),
   { n: 880, cat: 'VCR', call: 'VCR', name: 'VCR · Tape Shelf', kind: 'vcr', desc: 'Everything you taped with REC. OK plays a tape.' },
+  show(881, 'SITCOMS', 'MORK', 'Mork & Mindy', ['mork and mindy full episode', 'mork and mindy robin williams best moments'], [TS('mork and mindy', 'mork & mindy')]),
+  show(882, 'SITCOMS', 'NWSR', 'NewsRadio', ['newsradio full episode', 'newsradio joe rogan joe garrelli', 'newsradio best moments']),
+  show(883, 'SITCOMS', 'ROGN', 'Joe Rogan’s Early TV', ['newsradio joe rogan', 'hardball 1994 joe rogan sitcom', 'joe rogan 90s sitcom', 'newsradio full episode']),
+  show(884, 'COMEDY', 'RWIL', 'Robin Williams Marathon', ['robin williams live at the met full', 'robin williams stand up full', 'mork and mindy full episode', 'robin williams interview carson']),
 ];
 
 export let CHANNELS = [];

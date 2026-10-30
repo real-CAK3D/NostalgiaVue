@@ -8,7 +8,7 @@ import { buildLineup } from '../js/lineup.js';
 import { ytCacheKey, ytCacheFile } from '../js/ytcache.js';
 
 const KEY = process.env.YT_API_KEY;
-const BUDGET = +(process.env.YT_BUDGET || 95);
+const BUDGET = +(process.env.YT_BUDGET || 70); // leaves ~30 of the 100 daily searches for viewers
 const DIR = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'data', 'yt');
 if (!KEY) { console.error('YT_API_KEY is not set'); process.exit(1); }
 fs.mkdirSync(DIR, { recursive: true });

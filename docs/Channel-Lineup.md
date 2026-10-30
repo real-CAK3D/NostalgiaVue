@@ -600,3 +600,7 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 878 | WSHB | Wishbone | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 879 | CRMN | Where in the World Is Carmen Sandiego? | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 880 | VCR | VCR · Tape Shelf | vcr |
+| 881 | MORK | Mork & Mindy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 882 | NWSR | NewsRadio | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 883 | ROGN | Joe Rogan’s Early TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 884 | RWIL | Robin Williams Marathon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

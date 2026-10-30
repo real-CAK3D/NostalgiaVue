@@ -16,7 +16,7 @@ Untick a channel in the list to hide it from surfing and the guide. Channels you
 **Back up:** MENU › System › *Export settings* saves everything, including your channels, to one file.
 
 ## Nightly pre-fetch (saves your quota)
-The *Nightly YouTube pre-fetch* GitHub Action runs every night. It does up to 95 of the lineup's ~600 YouTube searches ahead of time (missing and oldest first) and saves the results with the site in `data/yt/`, so viewers' channel surfing doesn't use the API quota. It needs the key as a repository secret: **GitHub › Settings › Secrets and variables › Actions › New repository secret**, named `YT_API_KEY`. After about a week every search channel is pre-filled; after that it keeps refreshing.
+The *Nightly YouTube pre-fetch* GitHub Action runs every night. It does up to 70 of the lineup's ~600 YouTube searches ahead of time (leaving ~30 of the free 100-a-day for live and era searches) (missing and oldest first) and saves the results with the site in `data/yt/`, so viewers' channel surfing doesn't use the API quota. It needs the key as a repository secret: **GitHub › Settings › Secrets and variables › Actions › New repository secret**, named `YT_API_KEY`. After about nine days every search channel is pre-filled; after that it keeps refreshing.
 
 ## YouTube API key
 The key stays private on Vercel; it is never in the code or the page.
