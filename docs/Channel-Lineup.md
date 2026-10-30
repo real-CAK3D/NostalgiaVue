@@ -1,6 +1,6 @@
 # Channel Lineup
 
-Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in the open slots of each section.
+Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in the open slots of each section. YouTube channels marked *auto-named* show their real YouTube name once they've aired.
 
 ## Local Media (1, 2, 4, 5, 7, 11, 14, 15, 16, 17, 18, 19, 20)
 
@@ -30,12 +30,12 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 
 | Ch | Call | Name | Source |
 |---|---|---|---|
-| 6 | WCSH | WCSH 6 · NBC · NEWS CENTER Maine | Station website |
-| 8 | WMTW | WMTW News 8 · ABC | Station website |
-| 9 | WX9 | Local on the 9s · Weather | Open-Meteo |
+| 6 | WCSH | WCSH 6 · NBC · NEWS CENTER Maine | YouTube |
+| 8 | WMTW | WMTW News 8 · ABC | YouTube |
+| 9 | WX9 | Local on the 9s · Weather | Open-Meteo + RainViewer radar |
 | 10 | WCBB | WCBB 10 · Maine Public | Station website |
 | 12 | PINE | Pine Tree Past | archive.org |
-| 13 | WGME | WGME CBS 13 | Station website |
+| 13 | WGME | WGME CBS 13 | YouTube |
 | 21 | GFTV | Great Falls TV (Auburn) | Station website |
 | 22 | OPEN | Channel 22 (open) | Open slot |
 | 23 | WPFO | WPFO 23 | Station website |
@@ -232,8 +232,42 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 204 | BEAN | Mr Bean | YouTube |
 | 205 | PBSK | PBS Kids | YouTube |
 | 206 | CNAS | Cartoon Network Asia | YouTube |
-| 207 | SNL | Saturday Night Live | YouTube → archive.org fallback |
-| 208 | MAD | MADtv | YouTube → archive.org fallback |
+| 207 | SNL | Saturday Night Live | YouTube (archive.org fallback) |
+| 208 | MAD | MADtv | YouTube (archive.org fallback) |
+| 209 | BOOM | Boomerang | YouTube |
+| 210 | TOON | Toon Playlist | YouTube (auto-named) |
+| 211 | TCLB | Toon Club | YouTube (auto-named) |
+| 212 | TMAR | Toon Marathon | YouTube (auto-named) |
+| 213 | TOON | Toon Time | YouTube (auto-named) |
+| 214 | TOON | Toon Town Tube | YouTube (auto-named) |
+| 215 | MOVA | Free Movies A | YouTube (auto-named) |
+| 216 | MOVB | Free Movies B | YouTube (auto-named) |
+| 217 | STND | Stand-Up Tube | YouTube (auto-named) |
+| 218 | TEDX | TEDx Talks | YouTube |
+| 219 | TED | TED | YouTube (archive.org fallback) |
+| 220 | TEDE | TED-Ed | YouTube |
+| 221 | TLK1 | Talks Channel 1 | YouTube (auto-named) |
+| 222 | TLK2 | Talks Channel 2 | YouTube (auto-named) |
+| 223 | TLK3 | Talks Channel 3 | YouTube (auto-named) |
+| 224 | COZ1 | Cozy Channel 1 | YouTube (auto-named) |
+| 225 | COZ2 | Cozy Channel 2 | YouTube (auto-named) |
+| 226 | COZ3 | Cozy Channel 3 | YouTube (auto-named) |
+| 230 | FIRE | Fireside | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 231 | LOFI | Lo-Fi Coffeehouse | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 232 | ELON | The Elon Channel | YouTube (API-key search + ON DEMAND, archive.org fallback) |
+| 233 | IDEA | Ideas Worth Watching | YouTube (rotating mix, archive.org fallback) |
+| 234 | LEGS | Stand-Up Legends | YouTube (API-key search + ON DEMAND, archive.org fallback) |
+| 235 | MEGA | Cartoon Mega Mix | YouTube (rotating mix) |
+| 240 | ACTN | Movie Night: Action | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 241 | COMD | Movie Night: Comedy | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 242 | HORR | Movie Night: Horror | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 243 | SCIF | Movie Night: Sci-Fi | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 244 | WEST | Movie Night: Western | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 245 | DRMA | Movie Night: Drama | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 246 | THRL | Movie Night: Thriller | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 247 | FAMY | Movie Night: Family | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 248 | ROMC | Movie Night: Romance | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
+| 249 | KICK | Movie Night: Martial Arts | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 
 ## Podcasts (300–350)
 
@@ -323,7 +357,7 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 416 | ROST | Roast Pit | archive.org |
 | 417 | PRNK | Prank Patrol | archive.org |
 | 418 | HOSP | General Hospital Hour | archive.org |
-| 419 | SIGN | Sign-Off | archive.org |
+| 419 | 420 | Half Baked | archive.org |
 
 ## Bring Your Own (420–499)
 

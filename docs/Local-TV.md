@@ -7,12 +7,12 @@ Set your ZIP in **MENU › Location** (default **04240**, Lewiston–Auburn, Mai
 ## Preset for 04240 (Portland–Auburn market)
 | Ch | Station |
 |---|---|
-| 6 | WCSH · NBC · NEWS CENTER Maine |
-| 8 | WMTW · ABC |
-| 9 | **Local on the 9s**: WeatherStar-style forecast with smooth jazz |
+| 6 | WCSH · NBC · NEWS CENTER Maine (YouTube) |
+| 8 | WMTW · ABC (YouTube) |
+| 9 | **Weather Station**: current conditions, Doppler radar with clouds, today, next 12 hours, 3/5/7-day, local forecast, almanac, with smooth jazz |
 | 10 | WCBB · Maine Public |
 | 12 | Pine Tree Past: old Maine films from archive.org |
-| 13 | WGME · CBS 13 |
+| 13 | WGME · CBS 13 (YouTube) |
 | 21 | Great Falls TV (Auburn public access) |
 | 23 | WPFO |
 | 24 | WPXT · The CW |

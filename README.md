@@ -12,16 +12,18 @@
 | 3 | **Game Channel.** ROMs from `E:\ROMs`, played in the browser with EmulatorJS (keyboard, USB/Bluetooth controller, or touch) |
 | 6 8 9 10 12 13 21–30 | **Local TV** for your ZIP. 04240 is preset: WCSH 6, WMTW 8, WCBB 10, WGME 13, WPFO 23 … plus *Local on the 9s* weather |
 | 31–200 | **NostalgiaVue Cable.** 170 themed channels from archive.org: cartoons, Three Stooges, Monty Python, cops & chases, Bill Nye, westerns, horror, MST3K, music videos, shopping, auctions, religious satire… |
-| 201–299 | **YouTube.** Adult Swim, Cartoon Network, WB Kids, Mr Bean, PBS Kids, SNL, MADtv, plus whatever you add |
+| 201–299 | **YouTube.** Adult Swim, Cartoon Network, Boomerang, WB Kids, SNL, TED/TEDx/TED-Ed, Fireside & Lo-Fi Coffeehouse, the Elon Channel, Stand-Up Legends, Movie Night by genre (240–249)… |
 | 300–350 | **Podcasts.** Joe Rogan, StarTalk, archive.org podcast radio |
-| 351–419 | **More Cable.** Another ~70 themed channels |
+| 351–419 | **More Cable.** Another ~70 themed channels, ending with **419 Half Baked** |
 | 420–499 | **Bring your own.** Stream links, M3U playlists, anything |
 | 500–599 | **Pay-Per-View.** Shortcuts to Netflix, Max, Pluto TV, Tubi… |
 
 More than 300 channels out of the box. Every channel, including ones you add, gets a generated station logo. The full list is in [docs/Channel-Lineup.md](docs/Channel-Lineup.md).
 
 ## Features
-- Three TV sets: the **Space Commander 25"** wood console (1980s), the **TrinoTube KV-27** (1990s) and the **FlatFace Pro 32"** (2000s). Each set has its own remote, on-screen display, menu style and sounds.
+- Nine TV sets, three per decade. **1980s:** Space Commander 25" wood console, Portavision 13" portable, Monitor/Receiver 27". **1990s:** TrinoTube KV-27, VCR Combo 13", BigVue 32" Surround. **2000s:** FlatFace Pro 32", WideTube 30" HD, PlasmaVue 42" (widescreen sets pillarbox the 4:3 picture). Each decade has its own remote, on-screen display, menu style and sounds: 80s dials click once per detent, 90s tuners tick, 2000s sets beep.
+- Real warm-up: switch snap, relay, degauss thump and hum, flyback whine, snow, then the picture.
+- **ON DEMAND:** with a free YouTube API key, YouTube channels like Movie Night, the Elon Channel and Stand-Up Legends get a list of titles to pick from (press OK).
 - Show or hide the remote, or switch to **screen-only zoom** and full screen.
 - Half-hour broadcast schedule: tuning in drops you into whatever's already on.
 - A Prevue-style **GUIDE** with colored categories, plus a **Guide Channel** (31) that scrolls the grid on its own.
