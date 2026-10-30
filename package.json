@@ -1,0 +1,6 @@
+{
+  "name": "nostalgiavue",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" }
+}

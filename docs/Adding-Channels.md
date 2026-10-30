@@ -15,14 +15,19 @@ Untick a channel in the list to hide it from surfing and the guide. Channels you
 
 **Back up:** MENU › System › *Export settings* saves everything, including your channels, to one file.
 
-## YouTube API key (optional, free)
-1. Go to https://console.cloud.google.com, create a project, and enable **YouTube Data API v3**.
-2. *Credentials › Create credentials › API key*. Restrict it to *YouTube Data API v3* and to the website `nostalgiavue.vercel.app/*`.
-3. Paste it into **MENU › Sources › YouTube › API key**.
+## YouTube API key
+The key stays private on Vercel; it is never in the code or the page.
+
+1. In https://console.cloud.google.com (your project with **YouTube Data API v3** enabled): *APIs & Services › Credentials*, then copy your API key. Under *API restrictions*, limit it to *YouTube Data API v3*.
+2. In Vercel: **nostalgiavue › Settings › Environment Variables › Add**
+   - Key: `YT_API_KEY`
+   - Value: your key
+   - Environments: Production (and Preview if you like)
+3. **Deployments › ⋯ › Redeploy** so the new variable takes effect.
+
+The site's `/api/yt` function then makes the YouTube lookups for every viewer, and results are cached for 6 hours to save quota. You can still put a personal key in **MENU › Sources › YouTube** to use your own quota instead.
 
 This turns on:
 - **ON DEMAND:** press OK on Movie Night (240–249), the Elon Channel (232), Stand-Up Legends (234), Fireside (230) and Lo-Fi Coffeehouse (231) to pick from a list of titles.
 - **Seasonal fireplaces** that change with the month.
 - **Adding channels by @handle.**
-
-The free quota covers about 100 searches a day. NostalgiaVue caches results for the day, so normal channel surfing uses only a handful.

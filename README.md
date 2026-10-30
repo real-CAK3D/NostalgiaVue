@@ -23,7 +23,7 @@ More than 300 channels out of the box. Every channel, including ones you add, ge
 ## Features
 - Nine TV sets, three per decade. **1980s:** Space Commander 25" wood console, Portavision 13" portable, Monitor/Receiver 27". **1990s:** TrinoTube KV-27, VCR Combo 13", BigVue 32" Surround. **2000s:** FlatFace Pro 32", WideTube 30" HD, PlasmaVue 42" (widescreen sets pillarbox the 4:3 picture). Each decade has its own remote, on-screen display, menu style and sounds: 80s dials click once per detent, 90s tuners tick, 2000s sets beep.
 - Real warm-up: switch snap, relay, degauss thump and hum, flyback whine, snow, then the picture.
-- **ON DEMAND:** with a free YouTube API key, YouTube channels like Movie Night, the Elon Channel and Stand-Up Legends get a list of titles to pick from (press OK).
+- **ON DEMAND:** once `YT_API_KEY` is set on Vercel, YouTube channels like Movie Night, the Elon Channel and Stand-Up Legends get a list of titles to pick from (press OK).
 - Show or hide the remote, or switch to **screen-only zoom** and full screen.
 - Half-hour broadcast schedule: tuning in drops you into whatever's already on.
 - A Prevue-style **GUIDE** with colored categories, plus a **Guide Channel** (31) that scrolls the grid on its own.
@@ -42,7 +42,7 @@ python3 -m http.server 8080   # then open http://localhost:8080
 Your drives are shared with the TV through the **NostalgiaVue Bridge** (`bridge/`). It's a small Python server that runs on your PC and is only reachable over your Tailscale network. See [Local Media & the Bridge](docs/Local-Media-and-the-Bridge.md).
 
 ## Deploying
-The repo deploys to Vercel as a static site, so you don't need to set a framework or build command. `vercel.json` sets the headers.
+The repo deploys to Vercel as a static site plus one function (`api/yt.js`), so you don't need to set a framework or build command. `vercel.json` sets the headers. Set the `YT_API_KEY` environment variable to turn on YouTube search and ON DEMAND (see [Adding Channels](docs/Adding-Channels.md#youtube-api-key)).
 
 ## Credits
 Programs stream from [archive.org](https://archive.org) and YouTube; NostalgiaVue doesn't host any video. Weather is from [Open-Meteo](https://open-meteo.com). Games run on [EmulatorJS](https://emulatorjs.org).

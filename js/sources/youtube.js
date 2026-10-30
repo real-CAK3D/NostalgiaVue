@@ -34,15 +34,29 @@ let cache; try { cache = JSON.parse(localStorage.getItem(DAY_KEY) || '{}'); } ca
 // drop older days' caches
 try { Object.keys(localStorage).filter(k => k.startsWith('nv.ytcache.') && k !== DAY_KEY).forEach(k => localStorage.removeItem(k)); } catch {}
 const keep = () => { try { localStorage.setItem(DAY_KEY, JSON.stringify(cache)); } catch {} };
-export const hasKey = () => !!settings.ytKey;
+// A key typed into MENU › Sources is used directly; otherwise the site's own /api/yt proxy
+// (key stored privately on Vercel) is used when it's set up.
+let serverKey = null;
+const serverReady = () => serverKey ?? (serverKey = fetch('api/yt?op=ping').then(r => r.ok).catch(() => false));
+export const hasKey = () => !!settings.ytKey || serverKey === true;
+async function ytApi(op, params) {
+  if (settings.ytKey) {
+    const path = op === 'search' ? 'search' : 'channels';
+    const p = new URLSearchParams({ ...params, key: settings.ytKey });
+    return fetchJSON(`https://www.googleapis.com/youtube/v3/${path}?${p}`);
+  }
+  if (!(await serverReady())) throw new Error('no YouTube key');
+  return fetchJSON(`api/yt?${new URLSearchParams({ op, ...params })}`);
+}
+serverReady().then(ok => { serverKey = ok; });
 
 async function apiSearch(q, { channelId, long } = {}) {
   const k = `s|${q}|${channelId || ''}|${long ? 1 : 0}`;
   if (cache[k]) return cache[k];
-  const p = new URLSearchParams({ part: 'snippet', type: 'video', maxResults: '50', q, videoEmbeddable: 'true', safeSearch: 'none', key: settings.ytKey });
-  if (channelId) p.set('channelId', channelId);
-  if (long) p.set('videoDuration', 'long');
-  const j = await fetchJSON(`https://www.googleapis.com/youtube/v3/search?${p}`);
+  const p = { part: 'snippet', type: 'video', maxResults: '50', q, videoEmbeddable: 'true' };
+  if (channelId) p.channelId = channelId;
+  if (long) p.videoDuration = 'long';
+  const j = await ytApi('search', p);
   const items = (j.items || []).filter(i => i.id && i.id.videoId).map(i => ({ id: i.id.videoId, title: decode(i.snippet.title), by: decode(i.snippet.channelTitle) }));
   cache[k] = items; keep();
   return items;
@@ -52,14 +66,14 @@ function decode(s) { const t = document.createElement('textarea'); t.innerHTML =
 // @handle -> UC… channel ID (needs the API key)
 export async function resolveHandle(handle) {
   const h = handle.replace(/^.*\/(@[^/?#]+).*$/, '$1');
-  const p = new URLSearchParams({ part: 'id,snippet', forHandle: h.startsWith('@') ? h : '@' + h, key: settings.ytKey });
-  const j = await fetchJSON(`https://www.googleapis.com/youtube/v3/channels?${p}`);
+  const j = await ytApi('channels', { part: 'id,snippet', forHandle: h.startsWith('@') ? h : '@' + h });
   const c = j.items && j.items[0];
   return c ? { id: c.id, name: c.snippet.title } : null;
 }
 
 async function searchItems(ch) {
-  const s = ch.search; if (!s || !hasKey()) return null;
+  const s = ch.search; if (!s) return null;
+  if (!settings.ytKey && !(await serverReady())) return null;
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
   const { slot } = slotNow();
   // rotate which query airs each half hour; channel-restricted searches merge their results

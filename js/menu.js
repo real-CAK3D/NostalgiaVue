@@ -62,8 +62,8 @@ function body() {
       <h4>Jellyfin</h4>
       ${text('jellyfinUrl', 'Server address', 'https://jellyfin.tail1234.ts.net')}${text('jellyfinKey', 'API key', 'Dashboard › API Keys', 'password')}
       <div class="m-row"><span></span><button type="button" class="m-btn" data-do="jellyfin">Test & load libraries</button><em id="mJelly"></em></div>
-      <h4>YouTube <small>(optional, free key from console.cloud.google.com › YouTube Data API v3)</small></h4>
-      ${text('ytKey', 'API key', 'AIza…', 'password')}
+      <h4>YouTube <small>(the site’s own key is used automatically; set one here only to use your own quota)</small></h4>
+      ${text('ytKey', 'API key', 'optional · AIza…', 'password')}
       <p class="m-note">Unlocks ON DEMAND lists, Movie Night genres, the Elon Channel, seasonal fireplaces, and adding channels by @handle.</p>
       <h4>Local channels</h4>
       <div class="m-table">${local.map(n => {
@@ -146,8 +146,8 @@ async function addChannel() {
   const base = { n, cat, name: name || 'Channel ' + n, call: makeCall(name || 'CH ' + n) };
   if (type === 'yt') {
     let id = parseYouTube(val), learned = null;
-    if (!id && /@/.test(val) && settings.ytKey) { try { learned = await resolveHandle(val); id = learned?.id; } catch {} }
-    if (!id) { out.textContent = settings.ytKey ? 'Couldn’t find that YouTube channel.' : 'Use the /channel/UC… address (or add a YouTube API key in Sources to use @handles).'; return; }
+    if (!id && /@/.test(val)) { try { learned = await resolveHandle(val); id = learned?.id; } catch {} }
+    if (!id) { out.textContent = 'Couldn’t find that channel. Use its /channel/UC… address, or make sure the YouTube key is set up.'; return; }
     add({ ...base, kind: 'yt', yt: [id], name: name || learned?.name || base.name, autoName: !name && !learned });
   }
   else if (type === 'archive') add({ ...base, kind: 'archive', q: [val], anyType: true });
