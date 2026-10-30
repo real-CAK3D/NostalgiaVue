@@ -1,6 +1,6 @@
 // archive.org: saved searches become channels; items become programs.
 import { one, shuffle, hash, daySeed, parseLen, stripHtml, fetchJSON } from '../util.js';
-import { settings, state } from '../store.js';
+import { settings, state, eraOn, eraRange } from '../store.js';
 import { airList } from '../player.js';
 import { bars, staticOn, msg } from '../osd.js';
 
@@ -24,19 +24,23 @@ export function search(q, rows = 200, urgent = false, sort = 'downloads desc') {
 }
 
 const lists = new Map(); export const listsDone = new Map();
-export const listKey = ch => `${ch.n}|${daySeed()}|${ch.custom ? settings.custom : ''}|${(ch.q || []).join('§')}`;
+export const listKey = ch => `${ch.n}|${daySeed()}|${ch.custom ? settings.custom : ''}|${(ch.q || []).join('§')}|${eraOn() ? eraRange().join('-') : ''}`;
 export function getList(ch, urgent) {
   const key = listKey(ch);
   if (!lists.has(key)) {
     const pr = (async () => {
       const qs = ch.custom ? (settings.custom ? [settings.custom] : []) : (ch.q || []);
       const type = ch.custom || ch.anyType ? '(movies OR audio)' : ch.audio ? 'audio' : 'movies';
-      for (const q of qs) {
-        const base = `(${q}) AND mediatype:${type}`;
-        let docs = await search(base + ' AND -access-restricted-item:true', ch.rows || 200, urgent);
-        if (!docs.length) docs = await search(base, ch.rows || 200, urgent);
-        const seen = new Set(); docs = docs.filter(d => d.identifier && !seen.has(d.identifier) && seen.add(d.identifier));
-        if (docs.length) return shuffle(docs, hash(daySeed(), ch.n));
+      // with an era picked, try that range first; a channel with nothing from then keeps its normal lineup
+      const eras = eraOn() ? [` AND year:[${eraRange().join(' TO ')}]`, ''] : [''];
+      for (const era of eras) {
+        for (const q of qs) {
+          const base = `(${q}) AND mediatype:${type}${era}`;
+          let docs = await search(base + ' AND -access-restricted-item:true', ch.rows || 200, urgent);
+          if (!docs.length) docs = await search(base, ch.rows || 200, urgent);
+          const seen = new Set(); docs = docs.filter(d => d.identifier && !seen.has(d.identifier) && seen.add(d.identifier));
+          if (docs.length) return shuffle(docs, hash(daySeed(), ch.n));
+        }
       }
       return [];
     })();

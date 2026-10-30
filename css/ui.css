@@ -51,3 +51,6 @@
 #menu.mobile .m-row>span:first-child{flex-basis:100%}
 .m-eye{background:rgba(255,255,255,.1);border:calc(var(--u)*.2) solid #5e7dff;border-radius:calc(var(--u)*.6);padding:calc(var(--u)*.3) calc(var(--u)*.9);font-size:calc(var(--u)*2.4);line-height:1;filter:grayscale(1);opacity:.7}
 .m-eye.on{filter:none;opacity:1;background:var(--sel)}
+.m-eras{gap:calc(var(--u)*.6)}
+.m-eras .m-btn{flex:1;padding:calc(var(--u)*.5) 0}
+.m-eras .m-btn.on{background:var(--sel);color:#111}

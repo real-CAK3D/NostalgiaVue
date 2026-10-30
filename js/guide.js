@@ -1,6 +1,6 @@
 // The on-screen program guide (GUIDE button) and the shared grid renderer used by the Guide Channel.
 import { $, esc, one, slotNow, fmtTime, SLOT } from './util.js';
-import { settings, state, save } from './store.js';
+import { settings, state, save, eraOn, eraLabel } from './store.js';
 import { CHANNELS, isHidden } from './lineup.js';
 import { getList, listsDone, listKey } from './sources/archive.js';
 import { iconSVG, CAT_HUE } from './icons.js';
@@ -54,7 +54,7 @@ const soon = () => { if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0
 function render() {
   if (!state.guide) return;
   const { slot, start } = slotNow(), h24 = settings.clock24;
-  $('#gClock').textContent = new Date().toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !h24 });
+  $('#gClock').textContent = new Date().toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !h24 }) + (eraOn() ? ` · ${eraLabel().toUpperCase()}` : '');
   const grid = $('#gGrid'), keep = grid.querySelector('.g-rows')?.scrollTop || 0;
   grid.innerHTML = guideGridHTML({ sel: state.guideSel });
   const rowsEl = grid.querySelector('.g-rows'); rowsEl.scrollTop = keep;

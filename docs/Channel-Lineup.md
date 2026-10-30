@@ -514,3 +514,88 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 789 | MUSC | Live Music | YouTube (YouTube search + ON DEMAND) |
 | 790 | FIRE | Fireplace Live | YouTube (YouTube search + ON DEMAND) |
 | 791 | TRAIN | Train Cam Live | YouTube (YouTube search + ON DEMAND) |
+
+## Shows A–Z (800–899)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 800 | KWB | Kids’ WB! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 801 | TWB | The WB | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 802 | ANIM | Animaniacs | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 803 | P&B | Pinky and the Brain | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 804 | TINY | Tiny Toon Adventures | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 805 | FRKZ | Freakazoid! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 806 | BTAS | Batman: The Animated Series | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 807 | STAS | Superman: The Animated Series | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 808 | POKE | Pokémon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 809 | YGO | Yu-Gi-Oh! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 810 | JCA | Jackie Chan Adventures | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 811 | XIAO | Xiaolin Showdown | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 812 | SCOO | Scooby-Doo | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 813 | TAZ | Taz-Mania | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 814 | TWTY | Sylvester & Tweety Mysteries | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 815 | HIST | Histeria! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 816 | STAT | Static Shock | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 817 | TTNS | Teen Titans | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 818 | EEE | Ed, Edd n Eddy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 819 | CRGE | Courage the Cowardly Dog | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 820 | DEXT | Dexter’s Laboratory | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 821 | PPG | The Powerpuff Girls | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 822 | BRVO | Johnny Bravo | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 823 | RUGR | Rugrats | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 824 | ARNL | Hey Arnold! | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 825 | ROCK | Rocko’s Modern Life | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 826 | R&S | Ren & Stimpy | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 827 | DOUG | Doug | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 828 | RCSS | Recess | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 829 | GARG | Gargoyles | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 830 | DUCK | DuckTales | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 831 | DKWG | Darkwing Duck | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 832 | TALE | TaleSpin | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 833 | CDRR | Chip ’n Dale Rescue Rangers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 834 | XMEN | X-Men: The Animated Series | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 835 | SPDR | Spider-Man (1994) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 836 | SNIC | Sonic the Hedgehog | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 837 | CPLN | Captain Planet | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 838 | THUN | ThunderCats | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 839 | HEMN | He-Man | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 840 | GIJO | G.I. Joe | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 841 | GDGT | Inspector Gadget | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 842 | SMRF | The Smurfs | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 843 | GARF | Garfield and Friends | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 844 | SIMP | The Simpsons | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 845 | FUTR | Futurama | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 846 | B&B | Beavis and Butt-Head | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 847 | DARI | Daria | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 848 | FRSH | The Fresh Prince of Bel-Air | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 849 | URKL | Family Matters | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 850 | FULL | Full House | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 851 | SBTB | Saved by the Bell | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 852 | BMW | Boy Meets World | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 853 | HOME | Home Improvement | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 854 | MWC | Married… with Children | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 855 | ROSE | Roseanne | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 856 | 70S | That ’70s Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 857 | FRND | Friends | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 858 | FRAS | Frasier | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 859 | XFLS | The X-Files | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 860 | BUFY | Buffy the Vampire Slayer | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 861 | SMVL | Smallville | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 862 | GILM | Gilmore Girls | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 863 | CHRM | Charmed | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 864 | NICK | Nick at Nite | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 865 | FOXK | Fox Kids | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 866 | OSM | One Saturday Morning | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 867 | TGIF | TGIF | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 868 | SNIK | SNICK | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 869 | TOON | Toonami | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 870 | CHRA | Cartoon Cartoons | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 871 | GOOF | Goof Troop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 872 | BILL | Bill Nye Marathon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 873 | MAGS | The Magic School Bus | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 874 | ARTH | Arthur | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 875 | BARN | Barney & Friends | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 876 | BLUE | Blue’s Clues | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 877 | RDRB | Reading Rainbow | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 878 | WSHB | Wishbone | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 879 | CRMN | Where in the World Is Carmen Sandiego? | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

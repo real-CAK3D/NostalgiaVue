@@ -5,7 +5,7 @@
 //                  gives titles for the ON DEMAND picker (OK button)
 //   q: [...]       archive.org fallback when YouTube has nothing
 import { $, esc, hash, daySeed, slotNow, loadScript, fetchJSON } from '../util.js';
-import { settings, save, state } from '../store.js';
+import { settings, save, state, eraWords } from '../store.js';
 import { staticOn, staticOff, hideMsg, msg, banner, scene, clearScene } from '../osd.js';
 import { tuneArchive } from './archive.js';
 
@@ -78,7 +78,8 @@ async function searchItems(ch) {
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
   // one search per channel per day keeps the free API quota happy; the half-hour slots then
   // walk through its results. Channel-restricted searches merge their results.
-  const q = qs[hash(daySeed(), ch.n) % qs.length];
+  const extra = s.live ? '' : eraWords();
+  const q = qs[hash(daySeed(), ch.n) % qs.length] + (extra ? ' ' + extra : '');
   const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live }).catch(() => [])));
   const seen = new Set(), out = [];
   for (const l of lists) for (const it of l) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }

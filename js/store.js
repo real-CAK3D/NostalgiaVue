@@ -40,6 +40,9 @@ export const DEFAULTS = {
   userChannels: [],      // channels added by the user (any section)
   hidden: [],            // channel numbers hidden from surfing + guide
   custom: '',            // search for the "your channel" slot
+  yearFrom: null,        // era selector: only air content from yearFrom..yearTo (null = any)
+  yearTo: null,
+  eraYouTube: true,      // also add the decade to YouTube searches
   // last state
   num: 31,
 };
@@ -72,3 +75,18 @@ export const state = {
   hooks: {},         // app-level callbacks registered by app.js (tune, step, ...)
 };
 export const live = () => state.on;
+export const eraOn = () => !!(settings.yearFrom || settings.yearTo);
+export const eraRange = () => [settings.yearFrom || 1890, settings.yearTo || new Date().getFullYear()];
+export function eraLabel() {
+  if (!eraOn()) return 'All years';
+  const [a, b] = eraRange();
+  return a % 10 === 0 && b === a + 9 ? `the ${a}s` : `${a}–${b}`;
+}
+// Words added to YouTube searches for the chosen era ("1990s", or "80s 90s" for two decades).
+export function eraWords() {
+  if (!eraOn() || !settings.eraYouTube) return '';
+  const [a, b] = eraRange(), d0 = Math.floor(a / 10) * 10, d1 = Math.floor(b / 10) * 10;
+  if (d0 === d1) return `${d0}s`;
+  if (d1 - d0 === 10) return `${String(d0).slice(2)}s ${String(d1).slice(2)}s`;
+  return '';
+}

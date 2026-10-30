@@ -61,6 +61,8 @@ function apply() {
 state.hooks.apply = apply;
 state.hooks.lineupChanged = () => { if (state.on && !chanByNum(state.num)) tune(31); };
 state.hooks.breakNow = () => runBreak(true);
+// a new era retunes the current channel so it shows something from those years
+state.hooks.eraChanged = () => { const ch = chanByNum(state.num); if (state.on && ch && (ch.kind === 'archive' || ch.kind === 'yt')) tune(state.num); };
 state.hooks.fullscreen = fullscreen;
 state.hooks.card = ch => tuneCard(ch);
 state.hooks.namesLearned = () => buildLineup();

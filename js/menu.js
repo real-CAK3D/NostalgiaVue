@@ -1,6 +1,6 @@
 // On-screen TV settings (MENU button).
 import { $, $$, esc } from './util.js';
-import { settings, save, state, exportSettings, importSettings, resetAll } from './store.js';
+import { settings, save, state, exportSettings, importSettings, resetAll, eraLabel } from './store.js';
 import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf } from './lineup.js';
 import { iconSVG } from './icons.js';
 import { SETS, setId, era } from './sets.js';
@@ -78,7 +78,15 @@ function body() {
     }
     case 'channels': {
       const addable = SECTIONS.filter(s => s.add);
+      const years = [['', 'Any']].concat(Array.from({ length: 14 }, (_, i) => { const y = 1900 + i * 10; return [y, String(y)]; }), [[new Date().getFullYear(), 'Today']]);
+      const yearsTo = [['', 'Any']].concat(Array.from({ length: 13 }, (_, i) => { const y = 1909 + i * 10; return [y, String(y)]; }), [[new Date().getFullYear(), 'Today']]);
       return `
+      <h4>Era <small>(only air content from these years: ${esc(eraLabel())})</small></h4>
+      <div class="m-row m-eras">${[['', 'All'], [1950, '50s'], [1960, '60s'], [1970, '70s'], [1980, '80s'], [1990, '90s'], [2000, '00s'], [2010, '10s']].map(([y, t]) =>
+        `<button type="button" class="m-btn${(settings.yearFrom || '') == y && (!y || settings.yearTo == y + 9) ? ' on' : ''}" data-do="era" data-y="${y}">${t}</button>`).join('')}</div>
+      ${select('yearFrom', 'From', years)}${select('yearTo', 'To', yearsTo)}
+      ${check('eraYouTube', 'Add the decade to YouTube searches too')}
+      <p class="m-note">archive.org channels use the real air/release year. YouTube channels get the decade added to their search (one or two decades only). A channel with nothing from your era plays its normal lineup.</p>
       <h4>Add a channel</h4>
       <div class="m-add">
         <select id="aSec">${addable.map(s => `<option value="${s.id}">${s.label} (${s.from}–${s.to})</option>`).join('')}</select>
@@ -160,6 +168,7 @@ async function addChannel() {
 function nextFreeAfter(secId) { return nextFree(secId); }
 
 async function act(what, el) {
+  el = el || {};
   if (what === 'close') return closeMenu();
   if (what === 'fullscreen') return hooks().fullscreen?.();
   if (what === 'breaknow') { closeMenu(); return hooks().breakNow?.(); }
@@ -216,6 +225,11 @@ async function act(what, el) {
     settings.localMap = map; changed(true); renderMenu(); return;
   }
   if (what === 'add') return addChannel();
+  if (what === 'era') {
+    const y = el.dataset.y ? +el.dataset.y : null;
+    settings.yearFrom = y; settings.yearTo = y ? y + 9 : null;
+    changed(); renderMenu(); hooks().eraChanged?.(); return;
+  }
   if (what === 'install') { if (installEvt) { installEvt.prompt(); installEvt = null; } else alert('On iPhone: Share › Add to Home Screen. On Android/desktop Chrome: menu › Install app.'); return; }
   if (what === 'export') {
     const a = document.createElement('a');
@@ -245,7 +259,9 @@ export function bindMenu() {
     const el = e.target, k = el.dataset.k;
     if (k && el.type !== 'range') {
       settings[k] = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' && /^\d+$/.test(el.value) ? +el.value : el.value.trim();
-      changed(k === 'set'); if (k === 'set') renderMenu();
+      if (k === 'yearFrom' || k === 'yearTo') settings[k] = el.value ? +el.value : null;
+      changed(k === 'set'); if (k === 'set' || k.startsWith('year')) renderMenu();
+      if (k.startsWith('year') || k === 'eraYouTube') hooks().eraChanged?.();
     }
     if (el.dataset.hide) {
       const n = +el.dataset.hide; settings.hidden = settings.hidden.filter(x => x !== n); if (!el.checked) settings.hidden.push(n); changed();

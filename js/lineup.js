@@ -10,6 +10,7 @@
 //   500-599             Pay-per-view / streaming shortcuts
 //   600-699             My playlists (YouTube playlists, named after their real titles)
 //   700-799             LIVE: every YouTube channel's live stream, plus 24/7 live channels
+//   800-899             Shows A–Z: Kids' WB!, The WB and one channel per classic show
 import { settings } from './store.js';
 
 export const SECTIONS = [
@@ -24,6 +25,7 @@ export const SECTIONS = [
   { id: 'ppv',       label: 'PAY-PER-VIEW',  from: 500, to: 599, add: true },
   { id: 'playlists', label: 'MY PLAYLISTS',  from: 600, to: 699, add: true },
   { id: 'live',      label: 'LIVE',          from: 700, to: 799, add: true },
+  { id: 'shows',     label: 'SHOWS A–Z',     from: 800, to: 899, add: true },
 ];
 export const sectionOf = n => SECTIONS.find(s => s.nums ? s.nums.includes(n) : n >= s.from && n <= s.to);
 
@@ -654,13 +656,98 @@ const LIVE_247 = [
   live(791, 'TRAIN', 'Train Cam Live', ['train cam live']),
 ];
 
+// One channel per show: Saturday-morning blocks, cartoons and prime-time favorites.
+const ep = name => [`${name.toLowerCase()} full episode`, `${name.toLowerCase()} best moments`];
+const SHOWS = [
+  show(800, 'CARTOONS', 'KWB', 'Kids’ WB!', ['kids wb saturday morning 1999 full', 'kids wb commercials bumpers', 'kids wb cartoon lineup']),
+  show(801, 'SITCOMS', 'TWB', 'The WB', ['the wb network 90s promos', 'dawsons creek full episode', 'buffy the vampire slayer full episode', 'the wayans bros full episode']),
+  show(802, 'CARTOONS', 'ANIM', 'Animaniacs', ep('Animaniacs'), [TS('animaniacs')]),
+  show(803, 'CARTOONS', 'P&B', 'Pinky and the Brain', ep('Pinky and the Brain')),
+  show(804, 'CARTOONS', 'TINY', 'Tiny Toon Adventures', ep('Tiny Toon Adventures')),
+  show(805, 'CARTOONS', 'FRKZ', 'Freakazoid!', ep('Freakazoid')),
+  show(806, 'CARTOONS', 'BTAS', 'Batman: The Animated Series', ep('Batman The Animated Series')),
+  show(807, 'CARTOONS', 'STAS', 'Superman: The Animated Series', ep('Superman The Animated Series')),
+  show(808, 'CARTOONS', 'POKE', 'Pokémon', ['pokemon season 1 full episode', 'pokemon indigo league full episode']),
+  show(809, 'CARTOONS', 'YGO', 'Yu-Gi-Oh!', ep('Yu-Gi-Oh')),
+  show(810, 'CARTOONS', 'JCA', 'Jackie Chan Adventures', ep('Jackie Chan Adventures')),
+  show(811, 'CARTOONS', 'XIAO', 'Xiaolin Showdown', ep('Xiaolin Showdown')),
+  show(812, 'CARTOONS', 'SCOO', 'Scooby-Doo', ['scooby doo where are you full episode', 'whats new scooby doo full episode'], [TS('scooby-doo', 'scooby doo')]),
+  show(813, 'CARTOONS', 'TAZ', 'Taz-Mania', ep('Taz-Mania')),
+  show(814, 'CARTOONS', 'TWTY', 'Sylvester & Tweety Mysteries', ep('Sylvester and Tweety Mysteries')),
+  show(815, 'CARTOONS', 'HIST', 'Histeria!', ep('Histeria')),
+  show(816, 'CARTOONS', 'STAT', 'Static Shock', ep('Static Shock')),
+  show(817, 'CARTOONS', 'TTNS', 'Teen Titans', ep('Teen Titans 2003')),
+  show(818, 'CARTOONS', 'EEE', 'Ed, Edd n Eddy', ep('Ed Edd n Eddy')),
+  show(819, 'CARTOONS', 'CRGE', 'Courage the Cowardly Dog', ep('Courage the Cowardly Dog')),
+  show(820, 'CARTOONS', 'DEXT', 'Dexter’s Laboratory', ep('Dexters Laboratory')),
+  show(821, 'CARTOONS', 'PPG', 'The Powerpuff Girls', ep('Powerpuff Girls 1998')),
+  show(822, 'CARTOONS', 'BRVO', 'Johnny Bravo', ep('Johnny Bravo')),
+  show(823, 'CARTOONS', 'RUGR', 'Rugrats', ep('Rugrats')),
+  show(824, 'CARTOONS', 'ARNL', 'Hey Arnold!', ep('Hey Arnold')),
+  show(825, 'CARTOONS', 'ROCK', 'Rocko’s Modern Life', ep('Rockos Modern Life')),
+  show(826, 'CARTOONS', 'R&S', 'Ren & Stimpy', ep('Ren and Stimpy')),
+  show(827, 'CARTOONS', 'DOUG', 'Doug', ep('Doug Nickelodeon')),
+  show(828, 'CARTOONS', 'RCSS', 'Recess', ep('Recess Disney')),
+  show(829, 'CARTOONS', 'GARG', 'Gargoyles', ep('Gargoyles')),
+  show(830, 'CARTOONS', 'DUCK', 'DuckTales', ep('DuckTales 1987')),
+  show(831, 'CARTOONS', 'DKWG', 'Darkwing Duck', ep('Darkwing Duck')),
+  show(832, 'CARTOONS', 'TALE', 'TaleSpin', ep('TaleSpin')),
+  show(833, 'CARTOONS', 'CDRR', 'Chip ’n Dale Rescue Rangers', ep('Chip n Dale Rescue Rangers')),
+  show(834, 'CARTOONS', 'XMEN', 'X-Men: The Animated Series', ep('X-Men The Animated Series')),
+  show(835, 'CARTOONS', 'SPDR', 'Spider-Man (1994)', ep('Spider-Man 1994 animated series')),
+  show(836, 'CARTOONS', 'SNIC', 'Sonic the Hedgehog', ['sonic the hedgehog satam full episode', 'adventures of sonic the hedgehog full episode']),
+  show(837, 'CARTOONS', 'CPLN', 'Captain Planet', ep('Captain Planet and the Planeteers')),
+  show(838, 'CARTOONS', 'THUN', 'ThunderCats', ep('ThunderCats 1985')),
+  show(839, 'CARTOONS', 'HEMN', 'He-Man', ep('He-Man and the Masters of the Universe 1983'), [TS('he-man')]),
+  show(840, 'CARTOONS', 'GIJO', 'G.I. Joe', ep('G.I. Joe a real american hero')),
+  show(841, 'CARTOONS', 'GDGT', 'Inspector Gadget', ep('Inspector Gadget 1983')),
+  show(842, 'CARTOONS', 'SMRF', 'The Smurfs', ep('The Smurfs 1981')),
+  show(843, 'CARTOONS', 'GARF', 'Garfield and Friends', ep('Garfield and Friends')),
+  show(844, 'CARTOONS', 'SIMP', 'The Simpsons', ['the simpsons classic best moments', 'the simpsons classic clips']),
+  show(845, 'CARTOONS', 'FUTR', 'Futurama', ['futurama best moments', 'futurama clips']),
+  show(846, 'CARTOONS', 'B&B', 'Beavis and Butt-Head', ep('Beavis and Butt-Head')),
+  show(847, 'CARTOONS', 'DARI', 'Daria', ep('Daria')),
+  show(848, 'SITCOMS', 'FRSH', 'The Fresh Prince of Bel-Air', ep('Fresh Prince of Bel-Air')),
+  show(849, 'SITCOMS', 'URKL', 'Family Matters', ep('Family Matters')),
+  show(850, 'SITCOMS', 'FULL', 'Full House', ep('Full House')),
+  show(851, 'SITCOMS', 'SBTB', 'Saved by the Bell', ep('Saved by the Bell')),
+  show(852, 'SITCOMS', 'BMW', 'Boy Meets World', ep('Boy Meets World')),
+  show(853, 'SITCOMS', 'HOME', 'Home Improvement', ep('Home Improvement')),
+  show(854, 'SITCOMS', 'MWC', 'Married… with Children', ep('Married with Children')),
+  show(855, 'SITCOMS', 'ROSE', 'Roseanne', ep('Roseanne')),
+  show(856, 'SITCOMS', '70S', 'That ’70s Show', ep('That 70s Show')),
+  show(857, 'SITCOMS', 'FRND', 'Friends', ['friends best moments', 'friends tv show funniest scenes']),
+  show(858, 'SITCOMS', 'FRAS', 'Frasier', ep('Frasier')),
+  show(859, 'SCI-FI', 'XFLS', 'The X-Files', ['the x-files best moments', 'the x-files full episode']),
+  show(860, 'HORROR', 'BUFY', 'Buffy the Vampire Slayer', ep('Buffy the Vampire Slayer')),
+  show(861, 'SCI-FI', 'SMVL', 'Smallville', ep('Smallville')),
+  show(862, 'DRAMA', 'GILM', 'Gilmore Girls', ep('Gilmore Girls')),
+  show(863, 'DRAMA', 'CHRM', 'Charmed', ep('Charmed 1998')),
+  show(864, 'SITCOMS', 'NICK', 'Nick at Nite', ['nick at nite classic 90s', 'nick at nite bumpers promos']),
+  show(865, 'CARTOONS', 'FOXK', 'Fox Kids', ['fox kids saturday morning full', 'fox kids commercials 90s']),
+  show(866, 'CARTOONS', 'OSM', 'One Saturday Morning', ['one saturday morning abc full', 'disneys one saturday morning']),
+  show(867, 'SITCOMS', 'TGIF', 'TGIF', ['tgif abc lineup 90s', 'tgif abc full night']),
+  show(868, 'KIDS', 'SNIK', 'SNICK', ['snick nickelodeon saturday night', 'all that full episode', 'kenan and kel full episode']),
+  show(869, 'KIDS', 'TOON', 'Toonami', ['toonami 90s full block', 'toonami bumpers tom']),
+  show(870, 'CARTOONS', 'CHRA', 'Cartoon Cartoons', ['cartoon network cartoon cartoons 2000', 'cartoon network 90s commercials bumpers']),
+  show(871, 'KIDS', 'GOOF', 'Goof Troop', ep('Goof Troop')),
+  show(872, 'KIDS', 'BILL', 'Bill Nye Marathon', ep('Bill Nye the Science Guy')),
+  show(873, 'KIDS', 'MAGS', 'The Magic School Bus', ep('The Magic School Bus')),
+  show(874, 'KIDS', 'ARTH', 'Arthur', ep('Arthur PBS')),
+  show(875, 'KIDS', 'BARN', 'Barney & Friends', ep('Barney and Friends')),
+  show(876, 'KIDS', 'BLUE', 'Blue’s Clues', ep('Blues Clues')),
+  show(877, 'KIDS', 'RDRB', 'Reading Rainbow', ep('Reading Rainbow')),
+  show(878, 'KIDS', 'WSHB', 'Wishbone', ep('Wishbone')),
+  show(879, 'KIDS', 'CRMN', 'Where in the World Is Carmen Sandiego?', ep('Where in the World is Carmen Sandiego game show')),
+];
+
 export let CHANNELS = [];
 export function buildLineup() {
   const all = [
     ...localMediaChannels(),
     { n: 3, cat: 'GAMES', call: 'GAME', name: 'Game Channel', kind: 'games' },
     ...areaChannels(),
-    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247,
+    ...NOSTALGIA, ...YOUTUBE, ...PODCASTS, ...MORE, ...PPV, ...PLAYLISTS, ...LIVE_247, ...SHOWS,
   ];
   const taken = new Map(all.map(c => [c.n, c]));
   for (const u of settings.userChannels) {
