@@ -10,7 +10,8 @@
 //   420-499             Bring-your-own channels
 //   500-529             Pay-per-view / streaming shortcuts
 //   530-549             Maker Lab (ESP32, Raspberry Pi, electronics, homelab)
-//   550-599             Late-night PPV (After Dark sci-fi at 590s)
+//   550-579             Game Show Network (MXC, Takeshi's Castle, Supermarket Sweep...)
+//   580-599             Late-night PPV (After Dark sci-fi at 590s)
 //   600-699             My playlists (YouTube playlists, named after their real titles)
 //   700-799             LIVE: every YouTube channel's live stream, plus 24/7 live channels
 //   800-899             Shows A–Z: Kids' WB!, The WB and one channel per classic show
@@ -29,7 +30,8 @@ export const SECTIONS = [
   { id: 'byo',       label: 'BRING YOUR OWN', from: 420, to: 499, add: true },
   { id: 'ppv',       label: 'PAY-PER-VIEW',  from: 500, to: 529, add: true },
   { id: 'maker',     label: 'MAKER LAB',     from: 530, to: 549, add: true },
-  { id: 'ppv2',      label: 'PPV · LATE NIGHT', from: 550, to: 599, add: true },
+  { id: 'gameshows', label: 'GAME SHOW NETWORK', from: 550, to: 579, add: true },
+  { id: 'ppv2',      label: 'PPV · LATE NIGHT', from: 580, to: 599, add: true },
   { id: 'playlists', label: 'MY PLAYLISTS',  from: 600, to: 699, add: true },
   { id: 'live',      label: 'LIVE',          from: 700, to: 799, add: true },
   { id: 'shows',     label: 'SHOWS A–Z',     from: 800, to: 899, add: true },
@@ -930,6 +932,47 @@ const EXTRA = [
   show(542, 'MAKER', 'DRON', 'Robots & Drones', ['diy robot build', 'fpv drone build', 'robot arm project']),
   show(543, 'MAKER', 'CODE', 'Linux & Code', ['linux tips', 'python project tutorial', 'micropython esp32']),
   show(544, 'MAKER', 'MODS', 'Console Mods', ['console mod', 'gameboy mod', 'retro console restoration']),
+  // PBS how-to (YouTube section gaps and the end of the Maker Lab)
+  show(227, 'LIFESTYLE', 'ROSS', 'Bob Ross · The Joy of Painting', ['bob ross joy of painting full episode', 'bob ross season 1', 'the joy of painting full episode'], [TS('bob ross', 'joy of painting')], { yt: ['UCxcnsr1R5Ge_fbTu5ajt8DQ'], desc: 'Happy little trees, all day.' }),
+  show(228, 'LIFESTYLE', 'EASL', 'Painting Hour', ['bill alexander magic of oil painting full episode', 'jerry yarnell school of fine art', 'mark kistler secret city', 'wet on wet oil painting full episode']),
+  show(229, 'LIFESTYLE', 'YCOK', 'PBS Cooking', ['yan can cook full episode', 'frugal gourmet full episode', 'justin wilson cooking cajun', 'cooking at home with jacques pepin']),
+  show(236, 'MUSIC', 'WELK', 'The Lawrence Welk Show', ep('Lawrence Welk Show'), [TS('lawrence welk')]),
+  show(237, 'LIFESTYLE', 'STVS', 'Rick Steves’ Europe', ['rick steves europe full episode']),
+  show(238, 'LIFESTYLE', 'HUEL', 'California’s Gold w/ Huell Howser', ['huell howser californias gold full episode', 'visiting with huell howser']),
+  show(239, 'LIFESTYLE', 'ROAD', 'Antiques Roadshow', ['antiques roadshow full episode', 'antiques roadshow best finds']),
+  show(545, 'MAKER', 'NYWS', 'The New Yankee Workshop', ['new yankee workshop full episode', 'norm abram new yankee workshop']),
+  show(546, 'MAKER', 'TOH', 'This Old House', ['this old house classic full episode', 'ask this old house']),
+  show(547, 'MAKER', 'WDWR', 'The Woodwright’s Shop', ['woodwrights shop roy underhill full episode']),
+  show(548, 'MAKER', 'HMTM', 'Hometime', ['hometime full episode', 'hometime dean johnson']),
+  show(549, 'MAKER', 'VGDN', 'The Victory Garden', ['victory garden pbs full episode', 'pbs gardening show classic']),
+  // Game Show Network (550-579)
+  show(550, 'GAME SHOWS', 'MXC', 'MXC · Most Extreme Elimination Challenge', ['mxc most extreme elimination challenge full episode', 'mxc best moments'], [], { desc: 'Vic Romano and Kenny Blankenship call the wipeouts.' }),
+  show(551, 'GAME SHOWS', 'TAKE', 'Takeshi’s Castle', ['takeshis castle full episode', 'takeshis castle english']),
+  show(552, 'GAME SHOWS', 'WIPE', 'Wipeout', ['wipeout full episode abc', 'wipeout big balls best']),
+  show(553, 'GAME SHOWS', 'SASK', 'Ninja Warrior (Sasuke)', ['ninja warrior sasuke full episode', 'sasuke ninja warrior g4']),
+  show(554, 'GAME SHOWS', 'SLIB', 'Japanese Game Shows', ['silent library mtv full episode', 'hole in the wall japanese game show', 'japanese game show funny']),
+  show(555, 'GAME SHOWS', 'DSTC', 'Distraction', ['distraction jimmy carr full episode']),
+  show(556, 'GAME SHOWS', 'SWEP', 'Supermarket Sweep', ['supermarket sweep full episode 90s', 'supermarket sweep david ruprecht']),
+  show(557, 'GAME SHOWS', 'WHAM', 'Press Your Luck', ['press your luck full episode', 'press your luck michael larson']),
+  show(558, 'GAME SHOWS', 'GONG', 'The Gong Show', ['the gong show full episode chuck barris']),
+  show(559, 'GAME SHOWS', 'BENS', 'Win Ben Stein’s Money', ['win ben steins money full episode']),
+  show(560, 'GAME SHOWS', 'RMTC', 'Remote Control (MTV)', ['remote control mtv full episode', 'remote control ken ober']),
+  show(561, 'GAME SHOWS', 'SNGL', 'Singled Out', ['singled out mtv full episode']),
+  show(562, 'GAME SHOWS', 'STUD', 'Studs', ['studs fox game show full episode']),
+  show(563, 'GAME SHOWS', 'WEAK', 'The Weakest Link', ['weakest link anne robinson full episode']),
+  show(564, 'GAME SHOWS', 'DOND', 'Deal or No Deal', ['deal or no deal full episode howie mandel']),
+  show(565, 'GAME SHOWS', 'MTCH', 'Match Game', ['match game 70s full episode', 'match game gene rayburn']),
+  show(566, 'GAME SHOWS', 'SQRS', 'Hollywood Squares', ['hollywood squares paul lynde full episode', 'hollywood squares 70s']),
+  show(567, 'GAME SHOWS', 'PYRM', 'The $25,000 Pyramid', ['25000 pyramid dick clark full episode', '100000 pyramid full episode']),
+  show(568, 'GAME SHOWS', 'DEAL', 'Let’s Make a Deal', ['lets make a deal monty hall full episode']),
+  show(569, 'GAME SHOWS', 'SHRK', 'Card Sharks', ['card sharks full episode 80s']),
+  show(570, 'GAME SHOWS', 'FEUD', 'Family Feud', ['family feud richard dawson full episode', 'family feud funniest answers']),
+  show(571, 'GAME SHOWS', 'TPIR', 'The Price Is Right', ['price is right bob barker full episode', 'price is right 80s full episode']),
+  show(572, 'GAME SHOWS', 'NKGS', 'Nickelodeon Game Shows', ['figure it out nickelodeon full episode', 'get the picture nickelodeon', 'finders keepers nickelodeon', 'wild and crazy kids full episode']),
+  show(573, 'GAME SHOWS', 'LOHT', 'Legends of the Hidden Temple', ep('Legends of the Hidden Temple')),
+  show(574, 'GAME SHOWS', 'MILL', 'Who Wants to Be a Millionaire', ['who wants to be a millionaire regis full episode', 'greed fox game show full episode']),
+  show(575, 'GAME SHOWS', 'DATE', 'The Dating Game & Newlywed Game', ['the dating game full episode', 'the newlywed game bob eubanks full episode']),
+  show(576, 'GAME SHOWS', 'FAIL', 'Game Show Fails', ['game show fails', 'funniest game show moments', 'game show bloopers']),
   // After Dark sci-fi (PIN-locked with the rest of AFTER DARK)
   show(590, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
   show(591, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),

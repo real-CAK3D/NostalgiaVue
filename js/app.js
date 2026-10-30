@@ -21,7 +21,7 @@ import { tuneLocal, tuneStream, bridgeApi, openLibrary, libraryOpen, libraryNav,
 import { tuneWeather, tuneGuideChannel, tuneCard, tuneBars, openExternal, watchOnTV, webActive, stopWeb } from './sources/special.js';
 import { tuneGames, gameNav, gameOK, gameBack, leaveGames, gameState } from './games.js';
 import { openGuide, closeGuide, guideMove, guidePage, guideSelected, bindGuide, cycleGuideStyle } from './guide.js';
-import { openMenu, closeMenu, bindMenu, menuNav, renderMenu } from './menu.js';
+import { openMenu, closeMenu, bindMenu, menuNav, renderMenu, installed, installHelp } from './menu.js';
 import { renderSet, turnDial, irBlink, era, setId, SETS } from './sets.js';
 import { runBreak } from './ads.js';
 import { sleepButton, ccButton, favToggle, favNext, pipButton, pipSwap, pipRender, pipClose, recButton, tuneVCR, vcrNav, vcrOK, vcrBack, leaveVCR, vcrState } from './extras.js';
@@ -209,6 +209,11 @@ async function power() {
     if (era() !== '00s') { staticOn(); await sleep(900); staticOff(); }
     await splash();
     if (state.on) tune(state.num, { silent: 'power' });
+    // phones: point out Add to Home Screen once
+    if (state.on && !installed() && matchMedia('(pointer: coarse)').matches) {
+      let seen = true; try { seen = localStorage.getItem('nv.installHint'); localStorage.setItem('nv.installHint', '1'); } catch {}
+      if (!seen) setTimeout(() => infoPanel(`<h3>📲 Put NostalgiaVue on your home screen</h3><p>${esc(installHelp())}</p><p>It opens full screen like a real app. You can also find this in MENU › System.</p>`, 12000), 4000);
+    }
     if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
     state.on = false; state.token++; poweredOff(); clearUnlocks(); cancelPin(); pipClose(); state.sleepAt = 0;

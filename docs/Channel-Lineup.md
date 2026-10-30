@@ -252,12 +252,19 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 224 | COZ1 | Cozy Channel 1 | YouTube (auto-named) |
 | 225 | COZ2 | Cozy Channel 2 | YouTube (auto-named) |
 | 226 | COZ3 | Cozy Channel 3 | YouTube (auto-named) |
+| 227 | ROSS | Bob Ross · The Joy of Painting | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 228 | EASL | Painting Hour | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 229 | YCOK | PBS Cooking | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 230 | FIRE | Fireside | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 231 | LOFI | Lo-Fi Coffeehouse | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 232 | ELON | The Elon Channel | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 233 | IDEA | Ideas Worth Watching | YouTube (rotating mix, archive.org fallback) |
 | 234 | LEGS | Stand-Up Legends | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 235 | MEGA | Cartoon Mega Mix | YouTube (rotating mix) |
+| 236 | WELK | The Lawrence Welk Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 237 | STVS | Rick Steves’ Europe | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 238 | HUEL | California’s Gold w/ Huell Howser | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 239 | ROAD | Antiques Roadshow | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 240 | ACTN | Movie Night: Action | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 241 | COMD | Movie Night: Comedy | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
 | 242 | HORR | Movie Night: Horror | YouTube (rotating mix, API-key search + ON DEMAND, archive.org fallback) |
@@ -509,8 +516,45 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 542 | DRON | Robots & Drones | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 543 | CODE | Linux & Code | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 544 | MODS | Console Mods | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 545 | NYWS | The New Yankee Workshop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 546 | TOH | This Old House | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 547 | WDWR | The Woodwright’s Shop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 548 | HMTM | Hometime | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 549 | VGDN | The Victory Garden | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 
-## PPV · Late Night (550–599)
+## Game Show Network (550–579)
+
+| Ch | Call | Name | Source |
+|---|---|---|---|
+| 550 | MXC | MXC · Most Extreme Elimination Challenge | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 551 | TAKE | Takeshi’s Castle | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 552 | WIPE | Wipeout | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 553 | SASK | Ninja Warrior (Sasuke) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 554 | SLIB | Japanese Game Shows | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 555 | DSTC | Distraction | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 556 | SWEP | Supermarket Sweep | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 557 | WHAM | Press Your Luck | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 558 | GONG | The Gong Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 559 | BENS | Win Ben Stein’s Money | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 560 | RMTC | Remote Control (MTV) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 561 | SNGL | Singled Out | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 562 | STUD | Studs | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 563 | WEAK | The Weakest Link | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 564 | DOND | Deal or No Deal | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 565 | MTCH | Match Game | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 566 | SQRS | Hollywood Squares | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 567 | PYRM | The $25,000 Pyramid | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 568 | DEAL | Let’s Make a Deal | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 569 | SHRK | Card Sharks | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 570 | FEUD | Family Feud | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 571 | TPIR | The Price Is Right | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 572 | NKGS | Nickelodeon Game Shows | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 573 | LOHT | Legends of the Hidden Temple | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 574 | MILL | Who Wants to Be a Millionaire | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 575 | DATE | The Dating Game & Newlywed Game | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 576 | FAIL | Game Show Fails | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+
+## PPV · Late Night (580–599)
 
 | Ch | Call | Name | Source |
 |---|---|---|---|
@@ -567,19 +611,20 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 726 | COZ1 | Cozy Channel 1 · LIVE | ytlive |
 | 727 | COZ2 | Cozy Channel 2 · LIVE | ytlive |
 | 728 | COZ3 | Cozy Channel 3 · LIVE | ytlive |
-| 729 | LEGS | Stand-Up Legends · LIVE | ytlive |
-| 730 | JRE | The Joe Rogan Experience · LIVE | ytlive |
-| 731 | STAR | StarTalk w/ Neil deGrasse Tyson · LIVE | ytlive |
-| 732 | VICE | VICE · LIVE | ytlive |
-| 733 | JHAR | Johnny Harris · LIVE | ytlive |
-| 734 | IGN | IGN · LIVE | ytlive |
-| 735 | GDQ | Speedruns (GDQ) · LIVE | ytlive |
-| 736 | ENGR | Practical Engineering · LIVE | ytlive |
-| 737 | ESPP | ESP32 Projects · LIVE | ytlive |
-| 738 | RPI | Raspberry Pi Lab · LIVE | ytlive |
-| 739 | RPIP | Raspberry Pi Projects · LIVE | ytlive |
-| 740 | FIX | Repair Shop · LIVE | ytlive |
-| 741 | HAK5 | Hak5 · LIVE | ytlive |
+| 729 | ROSS | Bob Ross · The Joy of Painting · LIVE | ytlive |
+| 730 | LEGS | Stand-Up Legends · LIVE | ytlive |
+| 731 | JRE | The Joe Rogan Experience · LIVE | ytlive |
+| 732 | STAR | StarTalk w/ Neil deGrasse Tyson · LIVE | ytlive |
+| 733 | VICE | VICE · LIVE | ytlive |
+| 734 | JHAR | Johnny Harris · LIVE | ytlive |
+| 735 | IGN | IGN · LIVE | ytlive |
+| 736 | GDQ | Speedruns (GDQ) · LIVE | ytlive |
+| 737 | ENGR | Practical Engineering · LIVE | ytlive |
+| 738 | ESPP | ESP32 Projects · LIVE | ytlive |
+| 739 | RPI | Raspberry Pi Lab · LIVE | ytlive |
+| 740 | RPIP | Raspberry Pi Projects · LIVE | ytlive |
+| 741 | FIX | Repair Shop · LIVE | ytlive |
+| 742 | HAK5 | Hak5 · LIVE | ytlive |
 | 780 | NEWS | Live News | YouTube (YouTube search + ON DEMAND) |
 | 781 | NASA | NASA Live | YouTube (YouTube search + ON DEMAND) |
 | 782 | ISS | Space Station Live | YouTube (YouTube search + ON DEMAND) |

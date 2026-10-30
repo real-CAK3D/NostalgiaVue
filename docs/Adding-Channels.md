@@ -2,7 +2,7 @@
 
 Open **MENU › Channels › Add a channel** (or press **★ FIND**).
 
-1. **Section:** NostalgiaVue Cable (31–200), YouTube (201–299), Podcasts (300–314), Docs · Gaming · Tech (315–350), More Cable (351–419), Bring Your Own (420–499) Pay-Per-View (500–529), Maker Lab (530–549) or Late-night PPV (550–599). The next free number is filled in for you.
+1. **Section:** NostalgiaVue Cable (31–200), YouTube (201–299), Podcasts (300–314), Docs · Gaming · Tech (315–350), More Cable (351–419), Bring Your Own (420–499) Pay-Per-View (500–529), Maker Lab (530–549) Game Show Network (550–579) or Late-night PPV (580–599). The next free number is filled in for you.
 2. **Type**
    - **YouTube:** paste a channel link in the `youtube.com/channel/UC…` form, a playlist link, or a video link. Channels play their uploads, newest 150, a different one each half hour. `@handle` links work once you've added a YouTube API key (below). If you leave the name blank, the channel takes its real YouTube name the first time it airs.
    - **archive.org search:** any search words, or archive.org search syntax such as `collection:classic_tv AND subject:western`.

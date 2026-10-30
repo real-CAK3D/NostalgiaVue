@@ -16,6 +16,15 @@ import { pinSet, setPin, confirmPin, ADULT_CATS } from './parental.js';
 const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['stats', 'Stats'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
+// Add to Home Screen: Chrome/Edge/Android get the real install prompt; iPhone and others get the steps
+export const installed = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+export const canPrompt = () => !!installEvt;
+export function installHelp() {
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (ios) return /CriOS|FxiOS|EdgiOS/.test(ua) ? 'Tap the Share button (□↑) in the address bar › Add to Home Screen.' : 'In Safari, tap Share (□↑) at the bottom › scroll down › Add to Home Screen › Add.';
+  if (/Android/.test(ua)) return /SamsungBrowser/.test(ua) ? 'Tap the ≡ menu › Add page to › Home screen.' : /Firefox/.test(ua) ? 'Tap ⋮ › Install (or Add to Home screen).' : 'Tap ⋮ (top right) › Add to Home screen › Install.';
+  return 'In Chrome or Edge, click the install icon (⊕) at the right end of the address bar, or ⋮ › Cast, save and share › Install page as app.';
+}
 
 const hooks = () => state.hooks;
 const changed = (rebuild) => { save(); if (rebuild) { buildLineup(); hooks().lineupChanged?.(); } hooks().apply?.(); };
@@ -130,10 +139,10 @@ function body() {
       <div class="m-row"><span>This TV</span><button type="button" class="m-btn danger" data-do="resetstats">Reset my stats & ratings</button></div>`;
     case 'system': return `
       <div class="m-about">${lockup('color', 'mab')}<p>NostalgiaVue 1.0 · The picture of yesterday.</p></div>
+      <div class="m-row"><span>Home screen</span>${installed() ? '<em>✓ Installed on this device</em>' : `<button type="button" class="m-btn" data-do="install">📲 Add to Home Screen</button><em id="mInstall"></em>`}</div>
       ${check('translate', 'Show Spanish and other foreign titles and descriptions in English')}
       ${check('cc', 'Closed captions / subtitles (also the CC button)')}
       <p class="m-note">Your settings, keys, PIN, favorites, tapes and resume points are stored only on this device (and on your own Bridge if you turn on sync). There are no accounts.</p>
-      <div class="m-row"><span>Install</span><button type="button" class="m-btn" data-do="install">Install as an app</button></div>
       <div class="m-row"><span>Backup</span><button type="button" class="m-btn" data-do="export">Export settings</button><label class="m-btn">Import<input type="file" id="mImport" accept="application/json" hidden></label></div>
       <div class="m-row"><span>Reset</span><button type="button" class="m-btn danger" data-do="reset">Reset everything</button></div>
       <p class="m-note">Content plays from archive.org, YouTube and sources you add. NostalgiaVue doesn’t host any video.</p>`;
@@ -322,7 +331,10 @@ async function act(what, el) {
     settings.yearFrom = y; settings.yearTo = y ? y + 9 : null;
     changed(); renderMenu(); hooks().eraChanged?.(); return;
   }
-  if (what === 'install') { if (installEvt) { installEvt.prompt(); installEvt = null; } else alert('On iPhone: Share › Add to Home Screen. On Android/desktop Chrome: menu › Install app.'); return; }
+  if (what === 'install') {
+    if (installEvt) { installEvt.prompt(); installEvt.userChoice?.then(r => { if (r.outcome === 'accepted') renderMenu(); }); installEvt = null; return; }
+    $('#mInstall').textContent = installHelp(); return;
+  }
   if (what === 'export') {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([exportSettings()], { type: 'application/json' }));
