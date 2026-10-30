@@ -78,13 +78,16 @@ if (Test-Path $cfgPath) {
   if (Test-Path $tv) { $media.TV = $tv.Replace('\', '/') } else { Write-Host "   (no folder at $tv yet)" -ForegroundColor DarkYellow }
   $cfg = [ordered]@{ name = $env:COMPUTERNAME; port = 8787; token = $token; media = $media; allow_origins = @($site, 'http://localhost:8080') }
   if (Test-Path $roms) { $cfg.roms = $roms.Replace('\', '/') }
-  $cfg | ConvertTo-Json -Depth 4 | Set-Content -Encoding UTF8 $cfgPath
+  # no BOM: Windows PowerShell 5's -Encoding UTF8 adds one
+  [IO.File]::WriteAllText($cfgPath, ($cfg | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding $false))
 }
 
 # 5. Run it now and at every sign-in (hidden window)
 Say 'Starting the Bridge...'
 Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Where-Object { $_.CommandLine -like '*nostalgiavue_bridge.py*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+Remove-Item (Join-Path $dir 'bridge-error.log') -ErrorAction SilentlyContinue
 Start-Process -FilePath $pyw -ArgumentList "`"$dir\nostalgiavue_bridge.py`"" -WorkingDirectory $dir -WindowStyle Hidden
+Start-Sleep -Seconds 2
 $startup = [Environment]::GetFolderPath('Startup')
 $sh = (New-Object -ComObject WScript.Shell).CreateShortcut((Join-Path $startup 'NostalgiaVue Bridge.lnk'))
 $sh.TargetPath = $pyw; $sh.Arguments = "`"$dir\nostalgiavue_bridge.py`""; $sh.WorkingDirectory = $dir; $sh.WindowStyle = 7; $sh.Save()
@@ -96,7 +99,11 @@ tailscale serve --bg 8787
 $url = "https://$dns"
 Start-Sleep -Seconds 2
 try { Invoke-RestMethod "http://127.0.0.1:8787/api/info?t=$token" | Out-Null; Write-Host '   Bridge is answering.' -ForegroundColor Green }
-catch { Write-Host '   The Bridge did not answer locally; check that Python is installed and run start-bridge.bat to see errors.' -ForegroundColor Red }
+catch {
+  Write-Host '   The Bridge did not answer locally.' -ForegroundColor Red
+  $log = Join-Path $dir 'bridge-error.log'
+  if (Test-Path $log) { Get-Content $log | Select-Object -Last 5 | ForEach-Object { Write-Host "   $_" -ForegroundColor Red } }
+}
 
 # 7. Pair the TV: opens NostalgiaVue with the address + token filled in and channels assigned
 $pair = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((@{ u = $url; t = $token } | ConvertTo-Json -Compress)))

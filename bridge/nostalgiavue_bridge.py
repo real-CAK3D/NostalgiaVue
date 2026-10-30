@@ -39,7 +39,7 @@ def load_config():
     if not path.exists():
         shutil.copy(HERE / 'config.example.json', path)
         print(f'Created {path} — edit it to point at your folders, then restart.')
-    cfg = json.loads(path.read_text(encoding='utf-8'))
+    cfg = json.loads(path.read_text(encoding='utf-8-sig'))
     cfg.setdefault('port', 8787)
     cfg.setdefault('host', '127.0.0.1')
     cfg.setdefault('allow_origins', ['https://nostalgiavue.vercel.app'])
@@ -50,7 +50,12 @@ def load_config():
     return cfg
 
 
-CFG = load_config()
+try:
+    CFG = load_config()
+except Exception:
+    import traceback
+    (HERE / 'bridge-error.log').write_text(traceback.format_exc(), encoding='utf-8')
+    raise
 DUR_FILE = HERE / '.durations.json'
 try:
     DURATIONS = json.loads(DUR_FILE.read_text())
@@ -127,6 +132,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', origin)
             self.send_header('Vary', 'Origin')
         self.send_header('Access-Control-Allow-Headers', 'Range, X-NV-Token')
+        # Chrome asks before a public site (vercel.app) reaches a private address like a tailnet one
+        if self.headers.get('Access-Control-Request-Private-Network'):
+            self.send_header('Access-Control-Allow-Private-Network', 'true')
         self.send_header('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length')
 
     def send_json(self, obj, code=200):
@@ -253,4 +261,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception:
+        import traceback
+        (HERE / 'bridge-error.log').write_text(traceback.format_exc(), encoding='utf-8')
+        raise

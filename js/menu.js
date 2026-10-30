@@ -188,7 +188,13 @@ async function act(what, el) {
       folders = tree.dirs || [];
       out.textContent = `✓ ${info.name || 'Bridge'} online · ${folders.length} folders${info.roms ? ' · ROMs found' : ''}`;
       renderMenu(); $('#mBridge').textContent = out.textContent;
-    } catch (e) { out.textContent = '✗ No answer. Is the Bridge running and are you on Tailscale (https address)?'; }
+    } catch (e) {
+      const code = String(e && e.message || '').split(' ')[0];
+      out.textContent = code === '401' ? '✗ The Bridge answered but the token doesn’t match. Re-open the pairing link from the installer, or copy the token from config.json.'
+        : /^\d{3}$/.test(code) ? `✗ The Bridge answered with error ${code}.`
+        : !/^https:\/\//.test(settings.bridgeUrl) ? '✗ The address must start with https:// (your tailnet name, e.g. https://pc.tail1234.ts.net).'
+        : '✗ Can’t reach it. Check: the Bridge is running on the PC, Tailscale is on here, and Chrome didn’t block “local network access” (allow it if asked).';
+    }
     return;
   }
   if (what === 'jellyfin') {
