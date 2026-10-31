@@ -1,7 +1,8 @@
 name: Nightly YouTube pre-fetch
 
 # Fills data/yt/ with YouTube search results so viewers don't spend the API quota.
-# Needs the repository secret YT_API_KEY (Settings > Secrets and variables > Actions).
+# Uses the repository secret YT_API_KEY if there is one; otherwise it searches through the site's
+# /api/yt proxy, which uses the YouTube key stored on Vercel.
 on:
   schedule:
     - cron: '37 8 * * *'   # 08:37 UTC, overnight in the US

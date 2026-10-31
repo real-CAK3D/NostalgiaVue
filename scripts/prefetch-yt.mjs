@@ -7,10 +7,13 @@ import path from 'node:path';
 import { buildLineup } from '../js/lineup.js';
 import { ytCacheKey, ytCacheFile } from '../js/ytcache.js';
 
+// With the YT_API_KEY secret the searches go straight to Google; without it they go through the
+// site's own /api/yt proxy, which uses the key already stored on Vercel (no GitHub secret needed).
 const KEY = process.env.YT_API_KEY;
+const SITE = (process.env.NV_SITE || 'https://nostalgiavue.vercel.app').replace(/\/+$/, '');
 const BUDGET = +(process.env.YT_BUDGET || 70); // leaves ~30 of the 100 daily searches for viewers
 const DIR = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'data', 'yt');
-if (!KEY) { console.error('YT_API_KEY is not set'); process.exit(1); }
+console.log(KEY ? 'searching with the YT_API_KEY secret' : `no YT_API_KEY secret: searching through ${SITE}/api/yt`);
 fs.mkdirSync(DIR, { recursive: true });
 const indexPath = path.join(DIR, '_index.json');
 const index = fs.existsSync(indexPath) ? JSON.parse(fs.readFileSync(indexPath, 'utf8')) : {};
@@ -31,13 +34,13 @@ console.log(`${wanted.size} searches in the lineup, ${order.filter(k => !index[k
 let done = 0;
 for (const key of order.slice(0, BUDGET)) {
   const { q, channelId, long } = wanted.get(key);
-  const p = new URLSearchParams({ part: 'snippet', type: 'video', maxResults: '30', q, videoEmbeddable: 'true', key: KEY });
+  const p = new URLSearchParams(KEY ? { part: 'snippet', type: 'video', maxResults: '30', q, videoEmbeddable: 'true', key: KEY } : { op: 'search', q });
   if (channelId) p.set('channelId', channelId);
   if (long) p.set('videoDuration', 'long');
-  const r = await fetch(`https://www.googleapis.com/youtube/v3/search?${p}`);
-  const j = await r.json();
+  const r = await fetch(KEY ? `https://www.googleapis.com/youtube/v3/search?${p}` : `${SITE}/api/yt?${p}`);
+  const j = await r.json().catch(() => ({}));
   if (!r.ok) {
-    console.log(`stopping: ${r.status} ${j.error?.message || ''}`);
+    console.log(`stopping: ${r.status} ${typeof j.error === 'string' ? j.error : j.error?.message || ''}`);
     break;
   }
   const items = (j.items || []).filter(i => i.id?.videoId).map(i => [i.id.videoId, i.snippet.title, i.snippet.channelTitle]);
