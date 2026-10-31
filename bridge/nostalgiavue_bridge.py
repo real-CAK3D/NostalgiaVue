@@ -18,7 +18,7 @@ if sys.stdout is None or sys.stderr is None:
     _log = open(HERE / 'bridge.log', 'a', buffering=1, encoding='utf-8')
     sys.stdout = sys.stdout or _log
     sys.stderr = sys.stderr or _log
-VERSION = '1.0.0'
+VERSION = '1.3.0'
 VIDEO = {'.mp4', '.m4v', '.webm', '.mov', '.mkv', '.ogv'}
 AUDIO = {'.mp3', '.m4a', '.aac', '.ogg', '.opus', '.flac', '.wav'}
 FOLDER_CORE = {
