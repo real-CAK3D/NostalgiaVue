@@ -18,6 +18,21 @@ fs.mkdirSync(DIR, { recursive: true });
 const indexPath = path.join(DIR, '_index.json');
 const index = fs.existsSync(indexPath) ? JSON.parse(fs.readFileSync(indexPath, 'utf8')) : {};
 
+const ADULT = new Set(['AFTER DARK', 'HALF BAKED']);    // PIN-locked: YouTube's safe search would hide them
+const api = (op, params) => KEY
+  ? fetch(`https://www.googleapis.com/youtube/v3/${op}?${new URLSearchParams({ ...params, key: KEY })}`)
+  : fetch(`${SITE}/api/yt?${new URLSearchParams({ op, ...params })}`);
+// drop age-restricted and no-embed videos: they can't play inside the TV
+async function playable(items) {
+  if (!items.length) return items;
+  try {
+    const r = await api('videos', { part: 'contentDetails,status', id: items.map(i => i[0]).join(',') });
+    if (!r.ok) return items;
+    const ok = new Set(((await r.json()).items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => v.id));
+    return items.filter(i => ok.has(i[0]));
+  } catch { return items; }
+}
+
 // every search the lineup can make (live searches are skipped: they go stale within hours)
 const wanted = new Map();
 for (const ch of buildLineup()) {
@@ -25,7 +40,7 @@ for (const ch of buildLineup()) {
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
   for (const q of qs) for (const c of (s.channels && s.channels.length ? s.channels : [null])) {
     const key = ytCacheKey(q, { channelId: c, long: s.long });
-    wanted.set(key, { q, channelId: c, long: !!s.long });
+    wanted.set(key, { q, channelId: c, long: !!s.long, adult: ADULT.has(ch.cat) });
   }
 }
 const order = [...wanted.keys()].sort((a, b) => (index[a]?.t || 0) - (index[b]?.t || 0));
@@ -33,17 +48,18 @@ console.log(`${wanted.size} searches in the lineup, ${order.filter(k => !index[k
 
 let done = 0;
 for (const key of order.slice(0, BUDGET)) {
-  const { q, channelId, long } = wanted.get(key);
-  const p = new URLSearchParams(KEY ? { part: 'snippet', type: 'video', maxResults: '30', q, videoEmbeddable: 'true', key: KEY } : { op: 'search', q });
-  if (channelId) p.set('channelId', channelId);
-  if (long) p.set('videoDuration', 'long');
-  const r = await fetch(KEY ? `https://www.googleapis.com/youtube/v3/search?${p}` : `${SITE}/api/yt?${p}`);
+  const { q, channelId, long, adult } = wanted.get(key);
+  const p = KEY ? { part: 'snippet', type: 'video', maxResults: '30', q, videoEmbeddable: 'true' } : { q };
+  if (channelId) p.channelId = channelId;
+  if (long) p.videoDuration = 'long';
+  if (adult) p.safeSearch = 'none';
+  const r = await api('search', p);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) {
     console.log(`stopping: ${r.status} ${typeof j.error === 'string' ? j.error : j.error?.message || ''}`);
     break;
   }
-  const items = (j.items || []).filter(i => i.id?.videoId).map(i => [i.id.videoId, i.snippet.title, i.snippet.channelTitle]);
+  const items = await playable((j.items || []).filter(i => i.id?.videoId).map(i => [i.id.videoId, i.snippet.title, i.snippet.channelTitle]));
   const file = ytCacheFile(key);
   fs.writeFileSync(path.join(DIR, file), JSON.stringify(items));
   index[key] = { t: Date.now(), f: file, n: items.length };

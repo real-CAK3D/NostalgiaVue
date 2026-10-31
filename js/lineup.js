@@ -844,7 +844,7 @@ const MORE_SHOWS = [
   show(966, 'AFTER DARK', 'SPBK', 'MTV Spring Break', ['mtv spring break 90s', 'mtv spring break 1995 full', 'spring break 2000s mtv beach']),
   show(967, 'AFTER DARK', 'TSEX', 'Teen Sex Comedies', ['porkys best scenes', 'revenge of the nerds best scenes', 'american pie best scenes', 'bachelor party 1984 best scenes', 'fast times at ridgemont high scenes'], [], { desc: 'Porky’s, Revenge of the Nerds, American Pie, Bachelor Party and the rest of the 80s and 90s teen sex comedies.' }),
   show(968, 'AFTER DARK', 'LNAN', 'Late Night Anthologies', ['erotic confessions full episode', 'women stories of passion full episode', 'beverly hills bordello', 'hotline 1994 series', 'silk stalkings full episode']),
-  show(969, 'AFTER DARK', 'PBAD', 'Playboy After Dark', ['playboy after dark 1969 full episode', 'playboys penthouse 1959', 'hugh hefner playboy after dark']),
+  show(969, 'AFTER DARK', 'PBAD', 'Playboy After Dark', ['playboy after dark 1969 full episode', 'playboys penthouse 1959', 'hugh hefner playboy after dark', 'playboy after dark'], [TS('playboy after dark', "playboy's penthouse", 'playboys penthouse', 'hugh hefner')], { desc: 'Hugh Hefner’s 1959 and 1969 late-night shows.' }),
   a(970, 'AFTER DARK', 'GRND', 'Grindhouse After Dark', ['subject:(sexploitation OR "nudie cutie" OR "nudie-cutie")', TS('sexploitation', 'nudie cutie')], { desc: 'Vintage drive-in sexploitation and nudie-cutie films from archive.org.' }),
   a(971, 'AFTER DARK', 'BRLQ', 'Burlesque & Pin-Up', [TS('burlesque', 'striptease', 'pin-up', 'pinup', 'peep show')], { desc: 'Old burlesque films, striptease reels and pin-up loops from archive.org.' }),
   show(972, 'DRAMA', 'KITT', 'Knight Rider', ep('Knight Rider')),

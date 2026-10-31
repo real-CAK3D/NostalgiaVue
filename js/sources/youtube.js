@@ -58,6 +58,7 @@ async function ytApi(op, params) {
   if (!(await serverReady())) throw new Error('no YouTube key');
   return ytFetch(`api/yt?${new URLSearchParams({ op, ...params })}`);
 }
+const ADULT_SEARCH = new Set(['AFTER DARK', 'HALF BAKED']);
 // Google's error -> what to do about it
 let lastErr = '';
 export function explainYtError(m) {
@@ -84,16 +85,27 @@ async function staticSearch(k) {
   const e = (await staticIndex)[k]; if (!e || !e.n) return null;
   try { const rows = await fetchJSON('data/yt/' + e.f); return rows.map(([id, title, by]) => ({ id, title: decode(title), by: decode(by) })); } catch { return null; }
 }
-async function apiSearch(q, { channelId, long, live } = {}) {
+// Age-restricted videos and ones with embedding turned off only show "Video unavailable" in the
+// TV, so they're dropped before airing (one cheap lookup per search).
+async function playable(items) {
+  if (!items.length) return items;
+  try {
+    const j = await ytApi('videos', { part: 'contentDetails,status', id: items.map(i => i.id).join(',') });
+    const ok = new Set((j.items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => v.id));
+    return items.filter(i => ok.has(i.id));
+  } catch { return items; }
+}
+async function apiSearch(q, { channelId, long, live, adult } = {}) {
   const k = ytCacheKey(q, { channelId, long, live });
-  if (cache[k]) return cache[k];
+  if (cache[k] && cache[k].length) return cache[k];
   if (!live) { const pre = await staticSearch(k); if (pre && pre.length) { cache[k] = pre; keep(); return pre; } }
   const p = { part: 'snippet', type: 'video', maxResults: '50', q, videoEmbeddable: 'true' };
   if (channelId) p.channelId = channelId;
   if (long) p.videoDuration = 'long';
   if (live) p.eventType = 'live';
+  if (adult) p.safeSearch = 'none';            // PIN-locked channels: YouTube's default filter hides everything
   const j = await ytApi('search', p);
-  const items = (j.items || []).filter(i => i.id && i.id.videoId).map(i => ({ id: i.id.videoId, title: decode(i.snippet.title), by: decode(i.snippet.channelTitle) }));
+  const items = await playable((j.items || []).filter(i => i.id && i.id.videoId).map(i => ({ id: i.id.videoId, title: decode(i.snippet.title), by: decode(i.snippet.channelTitle) })));
   cache[k] = items; keep();
   return items;
 }
@@ -114,7 +126,7 @@ async function searchItems(ch) {
   // walk through its results. Channel-restricted searches merge their results.
   const extra = s.live ? '' : eraWords();
   const q = qs[hash(daySeed(), ch.n) % qs.length] + (extra ? ' ' + extra : '');
-  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live }).catch(e => { lastErr = e.message; return []; })));
+  const lists = await Promise.all((s.channels && s.channels.length ? s.channels : [null]).map(c => apiSearch(q, { channelId: c, long: s.long, live: s.live, adult: ADULT_SEARCH.has(ch.cat) }).catch(e => { lastErr = e.message; return []; })));
   const seen = new Set(), out = [];
   for (const l of lists) for (const it of l) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }
   return out.length ? out : null;

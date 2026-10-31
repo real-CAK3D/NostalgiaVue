@@ -4,7 +4,9 @@
 // edge for a day so everyone watching shares the daily quota.
 const OPS = {
   ping: null,
-  search: { path: 'search', fixed: { part: 'snippet', type: 'video', videoEmbeddable: 'true', maxResults: '50' }, allow: ['q', 'channelId', 'videoDuration', 'eventType'] },
+  search: { path: 'search', fixed: { part: 'snippet', type: 'video', videoEmbeddable: 'true', maxResults: '50' }, allow: ['q', 'channelId', 'videoDuration', 'eventType', 'safeSearch'] },
+  // which results can actually play inside the TV (age-restricted and no-embed videos can't)
+  videos: { path: 'videos', fixed: { part: 'contentDetails,status', maxResults: '50' }, allow: ['id'] },
   playlists: { path: 'playlists', fixed: { part: 'snippet', maxResults: '50' }, allow: ['id'] },
   channels: { path: 'channels', fixed: { part: 'id,snippet' }, allow: ['forHandle', 'id'] },
 };
