@@ -3,7 +3,7 @@
 import { settings, state } from './store.js';
 import { bridgeUrl, bridgeReady } from './sources/local.js';
 
-const LOCAL_ONLY = new Set(['zoom', 'remote', 'num', 'bridgeUrl', 'bridgeToken', 'place', 'adultOk']);
+const LOCAL_ONLY = new Set(['zoom', 'remote', 'num', 'bridgeUrl', 'bridgeToken', 'place', 'adultOk', 'xxxOn', 'xxxLinks']);
 let timer = 0, pulling = false;
 
 export async function pullSettings() {

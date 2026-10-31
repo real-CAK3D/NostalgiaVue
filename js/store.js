@@ -41,7 +41,9 @@ export const DEFAULTS = {
   jellyfinKey: '',
   adultOk: false,         // "I'm 18 or older" confirmed on this device (needed to set a PIN)
   translate: true,
-  shareStats: true,       // send anonymous "watching channel N" check-ins for the shared counts        // show foreign-language descriptions in English
+  shareStats: true,
+  xxxOn: false,           // XXX channel 599 turned on (with its password) on this device
+  xxxLinks: [],           // video links for the XXX channel, kept on this device only       // send anonymous "watching channel N" check-ins for the shared counts        // show foreign-language descriptions in English
   ytKey: '',             // optional YouTube Data API key (search, ON DEMAND, @handles)
   ytNames: {},           // channel names learned from YouTube
   localMap: {},          // channel number -> {type:'bridge'|'jellyfin', path|parentId, label}

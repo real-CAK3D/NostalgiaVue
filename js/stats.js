@@ -30,7 +30,7 @@ async function post(body) {
 const TICK = 15;
 setInterval(() => {
   if (!state.on || document.hidden || !state.num) return;
-  const ch = chanByNum(state.num); if (!ch) return;
+  const ch = chanByNum(state.num); if (!ch || ch.cat === 'XXX') return;   // never kept or shared
   const d = new Date().toISOString().slice(0, 10);
   mine.ch[ch.n] = (mine.ch[ch.n] || 0) + TICK;
   mine.cat[ch.cat] = (mine.cat[ch.cat] || 0) + TICK;
@@ -44,7 +44,7 @@ let beatTimer = 0;
 async function beat() {
   clearTimeout(beatTimer); beatTimer = setTimeout(beat, 60000);
   if (!sharing() || !state.on || document.hidden || !state.num) return;
-  const ch = chanByNum(state.num); if (!ch) return;
+  const ch = chanByNum(state.num); if (!ch || ch.cat === 'XXX') return;
   try {
     const j = await post({ op: 'beat', ch: ch.n, cat: ch.cat || 'OTHER' });
     if (j) { watchingHere = { ch: ch.n, ...j }; tell(); }
@@ -68,7 +68,7 @@ export function rate(n, stars) {
   stars = mine.rate[n] === stars ? 0 : stars;     // same star again clears it
   if (stars) mine.rate[n] = stars; else delete mine.rate[n];
   keep();
-  if (sharing()) post({ op: 'rate', ch: n, stars }).then(() => { summaryAt = 0; }).catch(() => {});
+  if (sharing() && chanByNum(n)?.cat !== 'XXX') post({ op: 'rate', ch: n, stars }).then(() => { summaryAt = 0; }).catch(() => {});
   return stars;
 }
 export const starsHTML = (n, cls = '') => `<span class="stars ${cls}" data-rate="${n}">${[1, 2, 3, 4, 5].map(i => `<b data-star="${i}" class="${i <= myRating(n) ? 'on' : ''}">★</b>`).join('')}</span>`;

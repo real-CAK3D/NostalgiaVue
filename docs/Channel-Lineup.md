@@ -558,12 +558,21 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 
 | Ch | Call | Name | Source |
 |---|---|---|---|
+| 580 | ECON | Erotic Confessions | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 581 | COED | Co-Ed Confidential | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 582 | MAXS | Late Night Series | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 583 | EMMS | Emmanuelle in Space | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 584 | SPDI | Space Babes Drive-In (60s & 70s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 585 | SLAV | Space Babes (80s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 586 | BABE | Beach Babes from Beyond (90s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 587 | BIKI | Bikini B-Movie Spoofs (2000s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 590 | FLSH | Flesh Gordon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 591 | BARB | Barbarella | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 592 | GALX | Galaxina | archive.org |
 | 593 | SPBB | Space Babes | archive.org |
 | 594 | SXSF | Sexy Sci-Fi | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 595 | HVMT | Heavy Metal & Adult Animation | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
+| 599 | XXX | XXX · Adults Only | xxx |
 
 ## My Playlists (600–699)
 

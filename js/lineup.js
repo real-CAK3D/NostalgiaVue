@@ -974,11 +974,23 @@ const EXTRA = [
   show(575, 'GAME SHOWS', 'DATE', 'The Dating Game & Newlywed Game', ['the dating game full episode', 'the newlywed game bob eubanks full episode']),
   show(576, 'GAME SHOWS', 'FAIL', 'Game Show Fails', ['game show fails', 'funniest game show moments', 'game show bloopers']),
   // After Dark sci-fi (PIN-locked with the rest of AFTER DARK)
+  // late-night cable & B-movie sexy sci-fi (YouTube's search API returns nothing for words like
+  // "erotic", "playboy" or "bordello", so searches use titles and stars instead; archive.org backs them up)
+  show(580, 'AFTER DARK', 'ECON', 'Erotic Confessions', ['jacqueline lovell confessions full episode', 'confessions 1994 late night anthology full episode', 'julie strain confessions series'], [TS('erotic confessions')], { desc: 'The 90s late-night anthology series, hosted by Jacqueline Lovell.' }),
+  show(581, 'AFTER DARK', 'COED', 'Co-Ed Confidential', ['co-ed confidential cinemax', 'co ed confidential full episode', 'co-ed confidential 4play']),
+  show(582, 'AFTER DARK', 'MAXS', 'Late Night Series', ['lingerie cinemax series full episode', 'passion cove full episode', 'beverly hills exotic tales', 'thrillers late night cable series 2000s']),
+  show(583, 'AFTER DARK', 'EMMS', 'Emmanuelle in Space', ['emmanuelle in space', 'emmanuelle first contact 1994', 'emmanuelle 2000 movie', 'emmanuelle through time', 'jewel of emmanuelle']),
+  show(584, 'AFTER DARK', 'SPDI', 'Space Babes Drive-In (60s & 70s)', ['50000 bc before clothing 1963', 'kiss me quick 1964', 'zeta one 1969', '2069 a sex odyssey', 'wam bam thank you spaceman', 'cinderella 2000 1977', 'the girl from starship venus', 'spermula 1976', 'outer touch 1979', 'beast in space 1980'],
+    [TS('nude on the moon', '50,000 b.c.', 'kiss me quick', 'monster of camp sunshine', 'space thing', 'the curious dr. humpp', 'zeta one', '2069 a.d.', 'the pleasure machines', 'invasion of the bee girls', 'galaxina')], { desc: 'Nude on the Moon, 50,000 B.C. (Before Clothing), Kiss Me Quick!, Space Thing, Zeta One, Invasion of the Bee Girls, Wam Bam Thank You Spaceman, Cinderella 2000…' }),
+  show(585, 'AFTER DARK', 'SLAV', 'Space Babes (80s)', ['slave girls from beyond infinity', 'star slammer 1986', 'galactic gigolo 1987', 'dr alien 1989', 'bad girls from mars 1990', 'sorority babes in the slimeball bowl-o-rama', 'the party animal 1984', 'weird science 1985', 'flesh gordon meets the cosmic cheerleaders'], [TS('slave girls from beyond infinity', 'galactic gigolo', 'star slammer')], { desc: 'Slave Girls from Beyond Infinity, Star Slammer, Galactic Gigolo, Dr. Alien, Bad Girls from Mars, Weird Science…' }),
+  show(586, 'AFTER DARK', 'BABE', 'Beach Babes from Beyond (90s)', ['beach babes from beyond 1993', 'attack of the 60 foot centerfold', 'vampire vixens from venus', 'dinosaur island 1994', 'petticoat planet 1996', 'virtual girl 1998', 'species ii 1998', 'femalien 1996', 'the exotic time machine 1998', 'vampirella 1996'], [], { desc: 'Beach Babes from Beyond, Attack of the 60 Foot Centerfold, Vampire Vixens from Venus, Dinosaur Island, Petticoat Planet, Femalien, Virtual Girl…' }),
+  show(587, 'AFTER DARK', 'BIKI', 'Bikini B-Movie Spoofs (2000s)', ['bikini girls on dinosaur planet', 'play-mate of the apes', 'baberellas 2003', 'spiderbabe 2003', 'the girl who shagged me', 'the breastford wives', 'cleavagefield 2009', 'batbabe the dark nightie', 'bikini time machine', 'the big bust theory', 'stacked racks from mars', 'bikini frankenstein'], [], { desc: 'Retromedia and Seduction Cinema spoofs: Play-Mate of the Apes, Baberellas, SpiderBabe, The Girl Who Shagged Me, Cleavagefield, The Breastford Wives…' }),
+  { n: 599, cat: 'XXX', call: 'XXX', name: 'XXX · Adults Only', kind: 'xxx', desc: 'Hardcore, for adults only. Turned on and unlocked with its own password.' },
   show(590, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
   show(591, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),
   a(592, 'AFTER DARK', 'GALX', 'Galaxina', [TS('galaxina')], { desc: 'Galaxina (1980), the public-domain space-robot cult film.' }),
   a(593, 'AFTER DARK', 'SPBB', 'Space Babes', [TS('cat-women of the moon', 'fire maidens from outer space', 'queen of outer space', 'mars needs women', 'nude on the moon', 'missile to the moon', 'the wild world of batwoman', 'project moonbase')], { desc: 'Pin-up girls from outer space: Cat-Women of the Moon, Fire Maidens from Outer Space, Mars Needs Women, Nude on the Moon…' }),
-  show(594, 'AFTER DARK', 'SXSF', 'Sexy Sci-Fi', ['lifeforce 1985', 'liquid sky 1982', 'invasion of the bee girls', 'spaced out 1979', 'cherry 2000', 'species 1995'], [TS('invasion of the bee girls', 'sexy sci-fi')], { desc: 'Lifeforce, Liquid Sky, Invasion of the Bee Girls, Spaced Out, Cherry 2000, Species and more.' }),
+  show(594, 'AFTER DARK', 'SXSF', 'Sexy Sci-Fi', ['lifeforce 1985', 'liquid sky 1982', 'invasion of the bee girls', 'spaced out 1979', 'cherry 2000', 'species 1995', 'starcrash 1978', 'zardoz 1974', 'forbidden zone 1980', 'logans run 1976', 'the wasp woman 1995', 'barbarella 1968'], [TS('invasion of the bee girls', 'sexy sci-fi')], { desc: 'Lifeforce, Liquid Sky, Invasion of the Bee Girls, Spaced Out, Cherry 2000, Species and more.' }),
   show(595, 'AFTER DARK', 'HVMT', 'Heavy Metal & Adult Animation', ['heavy metal 1981', 'fritz the cat', 'heavy metal 2000 movie', 'cool world 1992']),
 ];
 
@@ -1025,7 +1037,8 @@ export const chanByNum = n => CHANNELS.find(c => c.n === n);
 export const KIDS_CATS = new Set(['KIDS', 'CARTOONS', 'LEARNING', 'NATURE', 'SCIENCE', 'GAMES', 'GUIDE', 'SEASONAL', 'COZY']);
 const KIDS_KINDS = new Set(['weather', 'guidech', 'games']);
 export const kidsHidden = ch => !!(ch && settings.kids && !KIDS_CATS.has(ch.cat) && !KIDS_KINDS.has(ch.kind));
-export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n));
+// the XXX channel stays off the dial and out of the guide until it's turned on with its password
+export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n)) || (chanByNum(n)?.kind === 'xxx' && !settings.xxxOn);
 export const surfable = () => CHANNELS.filter(c => !isHidden(c.n));
 
 export function nextFree(sectionId) {

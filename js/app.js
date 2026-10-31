@@ -3,6 +3,7 @@ import { $, $$, esc, sleep } from './util.js';
 import { settings, save, saveQuiet, state } from './store.js';
 import { pullSettings, pushSoon } from './sync.js';
 import { toEnglish, langName } from './translate.js';
+import { tuneXxx, xxxSites, xxxUnlocked, xxxLockAgain } from './xxx.js';
 import { channelChanged, poweredOff, watchingNow, sharedSummary, myStats, myRating, rate, starsHTML, fmtMins } from './stats.js';
 let sharedNow = null;
 // stars anywhere (INFO panel, Stats tab): click to rate, click the same star again to clear
@@ -141,6 +142,7 @@ export async function tune(n, { silent } = {}) {
     case 'bars': return tuneBars();
     case 'ytlive': return tuneLive(ch, token);
     case 'vcr': return tuneVCR(ch, token);
+    case 'xxx': return tuneXxx(ch, token);
     case 'station': case 'external': return tuneCard(ch);
   }
   msg('NO SIGNAL');
@@ -216,7 +218,7 @@ async function power() {
     }
     if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
-    state.on = false; state.token++; poweredOff(); clearUnlocks(); cancelPin(); pipClose(); state.sleepAt = 0;
+    state.on = false; state.token++; poweredOff(); clearUnlocks(); xxxLockAgain(); cancelPin(); pipClose(); state.sleepAt = 0;
     closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
     set.classList.remove('on'); set.classList.add('off-anim'); updateReception();
     if (era() !== '00s') { const d = $('#dot'); d.classList.remove('go'); void d.offsetWidth; d.classList.add('go'); }
@@ -305,8 +307,9 @@ async function act(a) {
     case 'vcr': return tune(880);
     case 'games': return tune(3);
     case 'find': return openMenu('channels');
-    case 'back': if (webActive()) { stopWeb(); return tuneCard(ch); } clearOverlays(); return;
+    case 'back': if (webActive()) { stopWeb(); return ch.kind === 'xxx' ? xxxSites(ch) : tuneCard(ch); } clearOverlays(); return;
     case 'ok':
+      if (ch && ch.kind === 'xxx' && xxxUnlocked() && settings.xxxOn) { stopWeb(); return tuneXxx(ch, state.token, { next: true }); }
       if (ch && (ch.kind === 'external' || ch.kind === 'station') && ch.url) return webActive() || ch.drm ? openExternal(ch) : watchOnTV(ch);
       if (ch && ch.kind === 'ytlive') return tune(ch.from);
       if (ch && ch.kind === 'local' && await openLibrary(ch)) return;

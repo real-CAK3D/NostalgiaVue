@@ -8,6 +8,7 @@ import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
 import { applySubs } from './player.js';
+import { checkXxx, xxxUnlocked, xxxLockAgain, embedUrl, SITES } from './xxx.js';
 import { myStats, sharedSummary, starsHTML, fmtMins, resetMyStats } from './stats.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
@@ -119,7 +120,7 @@ function body() {
         ${c.user ? `<button type="button" class="m-x" data-del="${c.n}" aria-label="Delete">✕</button>` : '<i></i>'}</div>`).join('')}</div>`;
     }
     case 'parental': {
-      const cats = [...new Set(CHANNELS.map(c => c.cat))].filter(Boolean).sort();
+      const cats = [...new Set(CHANNELS.map(c => c.cat))].filter(c => c && c !== 'XXX').sort();
       return `
       <p class="m-note">Adult channels (${ADULT_CATS.join(', ')}, Lingerie Football) are always locked. Set a 4-digit PIN to unlock them and to lock anything else. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN. Everything here is stored only on this device.</p>
       ${settings.adultOk
@@ -132,7 +133,14 @@ function body() {
         ? `<label class="m-cat" title="Always locked"><input type="checkbox" checked disabled> ${esc(c)} 🔒</label>`
         : `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
       <h4>Locked channels</h4>
-      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
+      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>
+      <h4>XXX channel <small>(599 · hardcore · its own password)</small></h4>
+      ${!settings.adultOk ? '<p class="m-note">Confirm you’re 18 or older above first.</p>'
+        : !xxxUnlocked() ? `<div class="m-row"><span>Password</span><input type="password" id="mXxxPw" autocomplete="off"><button type="button" class="m-eye" data-eyeid="mXxxPw" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="xxxunlock">${settings.xxxOn ? 'Unlock to edit' : 'Turn on'}</button><em id="mXxxMsg">${settings.xxxOn ? 'On · hidden from the guide until unlocked' : 'Off · channel 599 is hidden'}</em></div>`
+        : `<div class="m-row"><span>Channel 599</span><em>✓ On and unlocked until the TV is turned off</em><button type="button" class="m-btn danger" data-do="xxxoff">Turn off</button></div>
+           <p class="m-note">Paste video links, one per line, from ${SITES.map(s => s[0]).join(', ')} or any direct .mp4/.m3u8 link. They play through each site’s own embedded player, a new one every half hour (OK = next). Kept only on this device and never counted in stats.</p>
+           <textarea id="mXxxLinks" rows="6" spellcheck="false" placeholder="https://www.pornhub.com/view_video.php?viewkey=…">${esc((settings.xxxLinks || []).join('\n'))}</textarea>
+           <div class="m-row"><span></span><button type="button" class="m-btn" data-do="xxxsave">Save links</button><em id="mXxxMsg"></em></div>`}`;
     }
     case 'stats': return `<div id="mStats"><p class="m-note">Counting…</p></div>
       ${check('shareStats', 'Share anonymous viewing counts (channel number and category only, no account)')}
@@ -290,6 +298,16 @@ async function act(what, el) {
     }
     return;
   }
+  if (what === 'xxxunlock') {
+    const pw = $('#mXxxPw').value;
+    if (!(await checkXxx(pw))) { $('#mXxxMsg').textContent = '✗ Wrong password'; return; }
+    settings.xxxOn = true; changed(true); renderMenu(); return;
+  }
+  if (what === 'xxxsave') {
+    settings.xxxLinks = $('#mXxxLinks').value.split(/\s+/).map(s => s.trim()).filter(s => embedUrl(s));
+    save(); const n = settings.xxxLinks.length; renderMenu(); $('#mXxxMsg').textContent = `✓ ${n} video${n === 1 ? '' : 's'} saved`; return;
+  }
+  if (what === 'xxxoff') { settings.xxxOn = false; xxxLockAgain(); changed(true); renderMenu(); return; }
   if (what === 'resetstats') {
     if (!confirm('Erase this TV’s watch history and ratings?')) return;
     resetMyStats(); renderMenu(); return;
