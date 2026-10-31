@@ -1,18 +1,20 @@
 // On-screen TV settings (MENU button).
 import { $, $$, esc } from './util.js';
 import { settings, save, state, exportSettings, importSettings, resetAll, eraLabel } from './store.js';
-import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf } from './lineup.js';
+import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf, isHidden, ADULT_CATS } from './lineup.js';
 import { iconSVG } from './icons.js';
 import { SETS, setId, era } from './sets.js';
 import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
 import { applySubs } from './player.js';
-import { checkXxx, xxxUnlocked, xxxLockAgain, embedUrl, SITES } from './xxx.js';
+import { xxxUnlocked, xxxLockAgain, embedUrl, SITES } from './xxx.js';
+import { leave as leaveService } from './service.js';
+const APP_VERSION = '1.4.0';
 import { myStats, sharedSummary, starsHTML, fmtMins, resetMyStats } from './stats.js';
 import { lockup } from './logo.js';
 import { GUIDE_STYLES } from './guide.js';
-import { pinSet, setPin, confirmPin, ADULT_CATS } from './parental.js';
+import { pinSet, setPin, confirmPin } from './parental.js';
 
 const TABS = [['picture', 'Picture'], ['sound', 'Sound'], ['ads', 'Commercials'], ['location', 'Location'], ['sources', 'Sources'], ['channels', 'Channels'], ['parental', 'Parental'], ['stats', 'Stats'], ['system', 'System']];
 let tab = 'picture', libs = [], folders = [], installEvt = null;
@@ -120,27 +122,46 @@ function body() {
         ${c.user ? `<button type="button" class="m-x" data-del="${c.n}" aria-label="Delete">✕</button>` : '<i></i>'}</div>`).join('')}</div>`;
     }
     case 'parental': {
-      const cats = [...new Set(CHANNELS.map(c => c.cat))].filter(c => c && c !== 'XXX').sort();
+      const cats = [...new Set(CHANNELS.filter(c => !isHidden(c.n)).map(c => c.cat))].filter(Boolean).sort();
       return `
-      <p class="m-note">Adult channels (${ADULT_CATS.join(', ')}, Lingerie Football) are always locked. Set a 4-digit PIN to unlock them and to lock anything else. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN. Everything here is stored only on this device.</p>
+      <p class="m-note">Set a 4-digit PIN to lock channels. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN. Everything here is stored only on this device.</p>
       ${settings.adultOk
         ? '<div class="m-row"><span>Age</span><em>✓ Confirmed 18 or older on this device</em></div>'
         : '<div class="m-row"><span>Age</span><button type="button" class="m-btn" data-do="adult">I am 18 or older</button><em>Needed before a PIN can be set</em></div>'}
-      <div class="m-row"><span>${pinSet() ? 'Change PIN' : 'Set a PIN'}</span><input type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4 digits" autocomplete="off" ${settings.adultOk ? '' : 'disabled'}><button type="button" class="m-eye" data-eyeid="mPin" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="pin" ${settings.adultOk ? '' : 'disabled'}>Save PIN</button><em id="mPinMsg">${pinSet() ? 'PIN is set' : 'No PIN yet: only adult channels are locked'}</em></div>
+      <div class="m-row"><span>${pinSet() ? 'Change PIN' : 'Set a PIN'}</span><input type="password" id="mPin" inputmode="numeric" maxlength="4" placeholder="4 digits" autocomplete="off" ${settings.adultOk ? '' : 'disabled'}><button type="button" class="m-eye" data-eyeid="mPin" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="pin" ${settings.adultOk ? '' : 'disabled'}>Save PIN</button><em id="mPinMsg">${pinSet() ? 'PIN is set' : 'No PIN yet: nothing is locked'}</em></div>
       ${check('kids', 'Kids profile')}
       <h4>Locked categories</h4>
-      <div class="m-cats">${cats.map(c => ADULT_CATS.includes(c)
-        ? `<label class="m-cat" title="Always locked"><input type="checkbox" checked disabled> ${esc(c)} 🔒</label>`
-        : `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
+      <div class="m-cats">${cats.map(c => `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
       <h4>Locked channels</h4>
-      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>
-      <h4>XXX channel <small>(599 · hardcore · its own password)</small></h4>
-      ${!settings.adultOk ? '<p class="m-note">Confirm you’re 18 or older above first.</p>'
-        : !xxxUnlocked() ? `<div class="m-row"><span>Password</span><input type="password" id="mXxxPw" autocomplete="off"><button type="button" class="m-eye" data-eyeid="mXxxPw" aria-label="Show or hide">👁</button><button type="button" class="m-btn" data-do="xxxunlock">${settings.xxxOn ? 'Unlock to edit' : 'Turn on'}</button><em id="mXxxMsg">${settings.xxxOn ? 'On · hidden from the guide until unlocked' : 'Off · channel 599 is hidden'}</em></div>`
-        : `<div class="m-row"><span>Channel 599</span><em>✓ On and unlocked until the TV is turned off</em><button type="button" class="m-btn danger" data-do="xxxoff">Turn off</button></div>
-           <p class="m-note">Paste video links, one per line, from ${SITES.map(s => s[0]).join(', ')} or any direct .mp4/.m3u8 link. They play through each site’s own embedded player, a new one every half hour (OK = next). Kept only on this device and never counted in stats.</p>
-           <textarea id="mXxxLinks" rows="6" spellcheck="false" placeholder="https://www.pornhub.com/view_video.php?viewkey=…">${esc((settings.xxxLinks || []).join('\n'))}</textarea>
-           <div class="m-row"><span></span><button type="button" class="m-btn" data-do="xxxsave">Save links</button><em id="mXxxMsg"></em></div>`}`;
+      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
+    }
+    // only reachable through the service code (see service.js)
+    case 'service': {
+      if (!state.service) return '';
+      const hidden = CHANNELS.filter(c => isHidden(c.n)).length;
+      let used = 0; try { for (const k of Object.keys(localStorage)) used += (localStorage.getItem(k) || '').length; } catch {}
+      return `
+      <p class="m-note service-head">SERVICE MODE · NostalgiaVue ${APP_VERSION} · the remote light stays green while you’re in here. Close the menu to leave.</p>
+      <h4>Adult channels</h4>
+      ${check('adultShown', 'Show adult channels on this TV (After Dark, Half Baked, Lingerie Football)')}
+      ${check('xxxOn', 'Show the XXX channel (599)')}
+      <p class="m-note">Shown channels still ask for the service password before they play, once per power-on.</p>
+      <div class="m-row"><span>Right now</span><em>${xxxUnlocked() ? 'Unlocked until the TV is turned off' : 'Locked'}</em>${xxxUnlocked() ? '<button type="button" class="m-btn" data-do="relock">Lock now</button>' : ''}</div>
+      <h4>XXX videos</h4>
+      <p class="m-note">Video links, one per line, from ${SITES.map(s => s[0]).join(', ')}, or any direct .mp4/.m3u8 link. They play through each site’s own embedded player, a new one every half hour (OK = next). Kept only on this device; channel 599 is never counted in stats.</p>
+      <textarea id="mXxxLinks" rows="6" spellcheck="false" placeholder="https://www.pornhub.com/view_video.php?viewkey=…">${esc((settings.xxxLinks || []).join('\n'))}</textarea>
+      <div class="m-row"><span></span><button type="button" class="m-btn" data-do="xxxsave">Save links</button><em id="mXxxMsg">${(settings.xxxLinks || []).length} saved</em></div>
+      <h4>Diagnostics</h4>
+      <div class="m-row"><span>Channels</span><em>${CHANNELS.length} in the lineup · ${hidden} hidden on this TV</em></div>
+      <div class="m-row"><span>Stored on this device</span><em>${Math.round(used / 1024)} KB</em></div>
+      <div class="m-row"><span>YouTube</span><button type="button" class="m-btn" data-do="ytkey">Test</button><em id="mYT"></em></div>
+      <div class="m-row"><span>Shared stats</span><button type="button" class="m-btn" data-do="svcstats">Test</button><em id="mSvcStats"></em></div>
+      <div class="m-row"><span>Bridge</span><button type="button" class="m-btn" data-do="bridge">Test</button><em id="mBridge"></em></div>
+      <h4>Maintenance</h4>
+      <div class="m-row"><span>Caches</span><button type="button" class="m-btn" data-do="clearyt">Clear YouTube lists</button><button type="button" class="m-btn" data-do="cleartr">Clear translations</button><em id="mCache"></em></div>
+      <div class="m-row"><span>App</span><button type="button" class="m-btn" data-do="hardreload">Clear app cache & reload</button></div>
+      <div class="m-row"><span>Tips</span><button type="button" class="m-btn" data-do="resettips">Show first-run tips again</button></div>
+      <div class="m-row"><span></span><button type="button" class="m-btn danger" data-do="svcexit">Exit service mode</button></div>`;
     }
     case 'stats': return `<div id="mStats"><p class="m-note">Counting…</p></div>
       ${check('shareStats', 'Share anonymous viewing counts (channel number and category only, no account)')}
@@ -162,7 +183,7 @@ export function renderMenu() {
   const m = $('#menu');
   m.dataset.style = era();
   m.innerHTML = `<div class="m-head"><span>${era() === '80s' ? 'TV SETUP' : 'MENU'}</span><button type="button" class="m-close" data-do="close" aria-label="Close">✕</button></div>
-    <nav class="m-tabs">${TABS.map(([k, t]) => `<button type="button" data-tab="${k}" class="${k === tab ? 'on' : ''}">${t}</button>`).join('')}</nav>
+    <nav class="m-tabs">${(state.service ? [...TABS, ['service', 'SERVICE']] : TABS).map(([k, t]) => `<button type="button" data-tab="${k}" class="${k === tab ? 'on' : ''}">${t}</button>`).join('')}</nav>
     <div class="m-body">${body()}</div>`;
   if (tab === 'channels') { suggestNumber(); previewIcon(); }
   if (tab === 'stats') fillStats();
@@ -175,19 +196,22 @@ function bars(entries, fmt, max = 10) {
   const top = rows[0][1];
   return `<div class="st-bars">${rows.map(([label, v]) => `<div class="st-row"><span>${esc(label)}</span><i style="--w:${Math.max(3, v / top * 100)}%"></i><em>${fmt(v)}</em></div>`).join('')}</div>`;
 }
+// hidden channels (adult ones switched off in service mode) never show up in the stats
+const shownCh = o => Object.entries(o || {}).filter(([n]) => chanByNum(+n) && !isHidden(+n));
+const shownCat = o => Object.entries(o || {}).filter(([c]) => settings.adultShown || !ADULT_CATS.includes(c));
 const chLabel = n => { const c = chanByNum(+n); return c ? `${c.n} ${c.name}` : `Channel ${n}`; };
 const mins = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`;
 async function fillStats() {
   const box = $('#mStats'); if (!box) return;
   const me = myStats(), total = Object.values(me.ch).reduce((a, b) => a + b, 0);
   const days = Object.entries(me.days).sort().slice(-7).map(([d, v]) => [new Date(d + 'T12:00').toLocaleDateString([], { weekday: 'short' }), v]);
-  const rated = Object.entries(me.rate).map(([n, v]) => [chLabel(n), v]);
+  const rated = shownCh(me.rate).map(([n, v]) => [chLabel(n), v]);
   const cur = chanByNum(state.num);
   let html = `<h4>This TV <small>(since ${new Date(me.since).toLocaleDateString()})</small></h4>
     <div class="st-big"><b>${fmtMins(total)}</b><small>watched in all</small></div>
     ${cur ? `<div class="m-row"><span>Rate ${esc(cur.n + ' ' + cur.name)}</span>${starsHTML(cur.n)}</div>` : ''}
-    <h5>Your most-watched channels</h5>${bars(Object.entries(me.ch).map(([n, v]) => [chLabel(n), v]), fmtMins)}
-    <h5>By category</h5>${bars(Object.entries(me.cat), fmtMins, 12)}
+    <h5>Your most-watched channels</h5>${bars(shownCh(me.ch).map(([n, v]) => [chLabel(n), v]), fmtMins)}
+    <h5>By category</h5>${bars(shownCat(me.cat), fmtMins, 12)}
     <h5>Last 7 days</h5>${bars(days, fmtMins, 7)}
     <h5>Your ratings</h5>${bars(rated, v => '★'.repeat(v), 20)}`;
   box.innerHTML = html;
@@ -198,14 +222,14 @@ async function fillStats() {
       ? '<h4>Everyone</h4><p class="m-note">Sharing is off, so the shared counts are hidden.</p>'
       : '<h4>Everyone</h4><p class="m-note">Shared counts (who’s watching what, most watched, average ratings) need the site’s free stats database. The site owner connects one in Vercel › Storage › Upstash for Redis. Until then, only this TV’s stats show.</p>';
   } else {
-    const rt = Object.entries(all.ratings).filter(([, r]) => r.n >= 1).map(([n, r]) => [`${chLabel(n)} (${r.n})`, r.avg]);
+    const rt = shownCh(all.ratings).filter(([, r]) => r.n >= 1).map(([n, r]) => [`${chLabel(n)} (${r.n})`, r.avg]);
     html += `<h4>Everyone</h4>
       <div class="st-big"><b>${all.live.total}</b><small>TVs on right now</small><b>${all.tvsToday}</b><small>TVs today</small></div>
-      <h5>Watching right now</h5>${bars(Object.entries(all.live.by).map(([n, v]) => [chLabel(n), v]), v => `👁 ${v}`)}
-      <h5>Most watched today</h5>${bars(Object.entries(all.today).map(([n, v]) => [chLabel(n), v]), mins)}
-      <h5>Most watched of all time</h5>${bars(Object.entries(all.all).map(([n, v]) => [chLabel(n), v]), mins)}
+      <h5>Watching right now</h5>${bars(shownCh(all.live.by).map(([n, v]) => [chLabel(n), v]), v => `👁 ${v}`)}
+      <h5>Most watched today</h5>${bars(shownCh(all.today).map(([n, v]) => [chLabel(n), v]), mins)}
+      <h5>Most watched of all time</h5>${bars(shownCh(all.all).map(([n, v]) => [chLabel(n), v]), mins)}
       <h5>Top rated</h5>${bars(rt, v => '★ ' + v)}
-      <h5>By category (everyone)</h5>${bars(Object.entries(all.cats), mins, 12)}`;
+      <h5>By category (everyone)</h5>${bars(shownCat(all.cats), mins, 12)}`;
   }
   $('#mStats').innerHTML = html;
 }
@@ -216,7 +240,7 @@ export function openMenu(t) {
   (small ? document.body : $('#tube')).appendChild(m);
   m.hidden = false; renderMenu(); setTimeout(() => $('#menu .m-tabs .on')?.focus(), 30);
 }
-export function closeMenu() { state.menu = false; $('#menu').hidden = true; document.activeElement?.blur?.(); }
+export function closeMenu() { if (state.service) { if (tab === 'service') tab = 'picture'; leaveService(); } state.menu = false; $('#menu').hidden = true; document.activeElement?.blur?.(); }
 
 function suggestNumber() {
   const s = $('#aSec')?.value; if (!s) return;
@@ -298,16 +322,27 @@ async function act(what, el) {
     }
     return;
   }
-  if (what === 'xxxunlock') {
-    const pw = $('#mXxxPw').value;
-    if (!(await checkXxx(pw))) { $('#mXxxMsg').textContent = '✗ Wrong password'; return; }
-    settings.xxxOn = true; changed(true); renderMenu(); return;
-  }
   if (what === 'xxxsave') {
     settings.xxxLinks = $('#mXxxLinks').value.split(/\s+/).map(s => s.trim()).filter(s => embedUrl(s));
     save(); const n = settings.xxxLinks.length; renderMenu(); $('#mXxxMsg').textContent = `✓ ${n} video${n === 1 ? '' : 's'} saved`; return;
   }
-  if (what === 'xxxoff') { settings.xxxOn = false; xxxLockAgain(); changed(true); renderMenu(); return; }
+  if (what === 'relock') { xxxLockAgain(); renderMenu(); return; }
+  if (what === 'svcexit') return closeMenu();
+  if (what === 'svcstats') {
+    const out = $('#mSvcStats'); out.textContent = 'Checking…';
+    try { const r = await fetch('api/stats'); const j = await r.json().catch(() => ({})); out.textContent = r.ok ? `✓ Connected · ${j.live?.total ?? 0} TVs on now, ${j.tvsToday ?? 0} today` : `✗ ${j.error || r.status}`; }
+    catch { out.textContent = '✗ No answer'; }
+    return;
+  }
+  if (what === 'clearyt' || what === 'cleartr') {
+    let n = 0; try { for (const k of Object.keys(localStorage)) if (what === 'clearyt' ? k.startsWith('nv.ytcache.') : k === 'nv.translations') { localStorage.removeItem(k); n++; } } catch {}
+    $('#mCache').textContent = n ? '✓ Cleared' : 'Nothing to clear'; return;
+  }
+  if (what === 'hardreload') {
+    try { for (const r of await navigator.serviceWorker?.getRegistrations?.() || []) await r.unregister(); for (const k of await caches.keys()) await caches.delete(k); } catch {}
+    location.reload(); return;
+  }
+  if (what === 'resettips') { try { localStorage.removeItem('nv.installHint'); } catch {} return; }
   if (what === 'resetstats') {
     if (!confirm('Erase this TV’s watch history and ratings?')) return;
     resetMyStats(); renderMenu(); return;
@@ -394,7 +429,11 @@ export function bindMenu() {
     if (k && el.type !== 'range') {
       settings[k] = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' && /^\d+$/.test(el.value) ? +el.value : el.value.trim();
       if (k === 'yearFrom' || k === 'yearTo') settings[k] = el.value ? +el.value : null;
-      changed(k === 'set'); if (k === 'set' || k.startsWith('year')) renderMenu();
+      if (k === 'adultShown' && el.checked && !settings.adultOk) {
+        if (!confirm('Adult channels have sexual content and drug references.\n\nPress OK only if you are 18 or older.')) { el.checked = settings.adultShown = false; return; }
+        settings.adultOk = true;
+      }
+      changed(k === 'set' || k === 'adultShown' || k === 'xxxOn'); if (k === 'set' || k.startsWith('year')) renderMenu();
       if (k === 'kids' && settings.kids && state.on) hooks().tune?.(state.num);
       if (k.startsWith('year') || k === 'eraYouTube') hooks().eraChanged?.();
       if (k === 'cc') { ytCaptions(); applySubs(); }

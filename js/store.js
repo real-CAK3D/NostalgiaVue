@@ -42,6 +42,7 @@ export const DEFAULTS = {
   adultOk: false,         // "I'm 18 or older" confirmed on this device (needed to set a PIN)
   translate: true,
   shareStats: true,
+  adultShown: false,      // adult channels on the dial (switched in service mode)
   xxxOn: false,           // XXX channel 599 turned on (with its password) on this device
   xxxLinks: [],           // video links for the XXX channel, kept on this device only       // send anonymous "watching channel N" check-ins for the shared counts        // show foreign-language descriptions in English
   ytKey: '',             // optional YouTube Data API key (search, ON DEMAND, @handles)

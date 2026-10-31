@@ -13,13 +13,16 @@ import { inApp } from './sources/special.js';
 
 const HASH = 'db74c33d9b26cfd8be91c9f26bda3a827d7dff89ef7d71ca336414bdeefc2555';
 let unlocked = false, idx = null;
+// one unlock covers the adult channels and XXX until the set is turned off
 export const xxxUnlocked = () => unlocked;
 export const xxxLockAgain = () => { unlocked = false; idx = null; };
 async function sha(s) {
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('nostalgiavue-xxx:' + s));
   return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
 }
-export async function checkXxx(pw) { const ok = (await sha(pw || '')) === HASH; if (ok) unlocked = true; return ok; }
+// the service password: opens service mode, and unlocks adult channels for watching
+export const verifyPassword = async pw => (await sha(pw || '')) === HASH;
+export async function checkXxx(pw) { const ok = await verifyPassword(pw); if (ok) unlocked = true; return ok; }
 
 export const SITES = [
   ['Pornhub', 'https://www.pornhub.com/'], ['xHamster', 'https://xhamster.com/'], ['XVideos', 'https://www.xvideos.com/'],
@@ -52,18 +55,18 @@ function frame(url, note) {
   setTimeout(() => { hint.hidden = true; }, 6000);
 }
 
-function askPassword(ch, token, bad) {
+export function askPassword(ch, token, bad, then) {
   staticOff();
   scene(`<div class="card lock"><div class="card-name">🔞 ${esc(ch.name)}</div>
-    <div class="card-text">Adults only. Enter the XXX password.</div>
+    <div class="card-text">Adults only. Enter the password.</div>
     <form class="xxx-pw"><input type="password" autocomplete="off" placeholder="password"><button type="submit" class="card-go">Unlock</button></form>
     ${bad ? '<div class="card-text bad">Wrong password</div>' : ''}</div>`, 'cardscene');
   const form = document.querySelector('.xxx-pw'), input = form.querySelector('input');
   input.focus();
   form.onsubmit = async e => {
     e.preventDefault();
-    if (await checkXxx(input.value)) { if (token === state.token) tuneXxx(ch, token); }
-    else if (token === state.token) askPassword(ch, token, true);
+    if (await checkXxx(input.value)) { if (token === state.token) then(); }
+    else if (token === state.token) askPassword(ch, token, true, then);
   };
 }
 
@@ -78,7 +81,7 @@ export function xxxSites(ch) {
 
 export function tuneXxx(ch, token, { next } = {}) {
   if (!settings.xxxOn) { staticOn(); msg(`CHANNEL ${ch.n}`, 'No signal'); return; }
-  if (!unlocked) return askPassword(ch, token);
+  if (!unlocked) return askPassword(ch, token, false, () => tuneXxx(ch, token));
   const links = xxxLinks();
   if (!links.length) return xxxSites(ch);
   if (idx == null) idx = hash(daySeed(), slotNow().slot) % links.length;

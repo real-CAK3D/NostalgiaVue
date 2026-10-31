@@ -12,7 +12,8 @@ document.addEventListener('click', e => {
   const v = rate(+g.dataset.rate, +st.dataset.star);
   g.querySelectorAll('[data-star]').forEach(b => b.classList.toggle('on', +b.dataset.star <= v));
 });
-import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS, TS } from './lineup.js';
+import { buildLineup, CHANNELS, chanByNum, isHidden, sectionOf, SECTIONS, TS, adultOff } from './lineup.js';
+import { serviceKey, leave as leaveService } from './service.js';
 import { initSound, powerOn, powerOff, relay, remoteClick, staticHiss, whine, knobClicks, tunerTick } from './sound.js';
 import { staticOn, staticOff, osdChan, osdVol, msg, hideMsg, bug, clearOverlays, splash, infoPanel, banner, barsOff, isStatic, scene } from './osd.js';
 import { v, applyVolume, stopProgram, programInfo, showProgramBanner, stopVideo } from './player.js';
@@ -114,6 +115,7 @@ export async function tune(n, { silent } = {}) {
   if (state.guide) closeGuide();
   if (!ch) { msg('NO SIGNAL'); return; }
   cancelPin();
+  if (adultOff(ch)) { staticOn(); msg(`CHANNEL ${n}`, 'No signal'); return; }   // switched off in service mode
   if (kidsHidden(ch) || isLocked(ch)) { showLock(ch, () => tune(n, { silent })); return; }
   await sleep(250 + Math.random() * 250); // the tuner hunting for a signal
   if (token !== state.token) return;
@@ -148,6 +150,10 @@ export async function tune(n, { silent } = {}) {
   msg('NO SIGNAL');
 }
 state.hooks.tune = tune;
+state.hooks.openMenu = t => openMenu(t);
+state.hooks.closeMenu = () => closeMenu();
+state.hooks.closeGuide = () => closeGuide();
+state.hooks.retune = () => { if (state.on) tune(state.num); };
 
 function step(d) {
   const list = CHANNELS.filter(c => !isHidden(c.n)).map(c => c.n);
@@ -162,7 +168,9 @@ function mute() { settings.muted = !settings.muted; applyVolume(); osdVol(); sav
 
 let digitTimer = 0;
 function digit(d) {
-  if (!state.on || state.menu) return;
+  if (!state.on) return;
+  if (serviceKey(d)) return;
+  if (state.menu) return;
   if (pinDigit(d)) return;
   // with INFO up, 1-5 rate the channel and 0 clears your rating
   if ($('#info').classList.contains('show') && !state.digits && infoCh) { rate(infoCh, +d || myRating(infoCh)); return info(true); }
@@ -218,7 +226,7 @@ async function power() {
     }
     if (pairedNote) { const n = pairedNote; pairedNote = ''; setTimeout(() => infoPanel(`<h3>📡 NostalgiaVue Bridge</h3><p>${esc(n)}</p>`, 8000), 2500); }
   } else {
-    state.on = false; state.token++; poweredOff(); clearUnlocks(); xxxLockAgain(); cancelPin(); pipClose(); state.sleepAt = 0;
+    state.on = false; state.token++; poweredOff(); clearUnlocks(); xxxLockAgain(); leaveService(); cancelPin(); pipClose(); state.sleepAt = 0;
     closeGuide(); closeMenu(); stopAll(); staticOff(); clearOverlays(); powerOff(era());
     set.classList.remove('on'); set.classList.add('off-anim'); updateReception();
     if (era() !== '00s') { const d = $('#dot'); d.classList.remove('go'); void d.offsetWidth; d.classList.add('go'); }
@@ -247,6 +255,7 @@ async function act(a) {
   if (a === 'power') return power();
   if (a === 'zoom') return toggleZoom();
   if (!state.on) return;
+  if (serviceKey(a)) return;
   // the menu swallows navigation keys
   if (state.menu) {
     if (['up', 'down', 'left', 'right', 'ok'].includes(a)) return menuNav(a);

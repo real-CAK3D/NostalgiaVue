@@ -1037,8 +1037,13 @@ export const chanByNum = n => CHANNELS.find(c => c.n === n);
 export const KIDS_CATS = new Set(['KIDS', 'CARTOONS', 'LEARNING', 'NATURE', 'SCIENCE', 'GAMES', 'GUIDE', 'SEASONAL', 'COZY']);
 const KIDS_KINDS = new Set(['weather', 'guidech', 'games']);
 export const kidsHidden = ch => !!(ch && settings.kids && !KIDS_CATS.has(ch.cat) && !KIDS_KINDS.has(ch.kind));
-// the XXX channel stays off the dial and out of the guide until it's turned on with its password
-export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n)) || (chanByNum(n)?.kind === 'xxx' && !settings.xxxOn);
+// Adult channels (and XXX) are off the dial, out of the guide and untunable until they're switched
+// on in service mode; even then they need the service password to watch.
+export const ADULT_CATS = ['AFTER DARK', 'HALF BAKED'];
+const ADULT_CHANNELS = [419, 792, 957];            // Half Baked, Kaloopy Live, Lingerie Football
+export const isAdultCh = ch => !!ch && (ch.kind === 'xxx' || ADULT_CATS.includes(ch.cat) || ADULT_CHANNELS.includes(ch.n));
+export const adultOff = ch => !!ch && (ch.kind === 'xxx' ? !settings.xxxOn : isAdultCh(ch) && !settings.adultShown);
+export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n)) || adultOff(chanByNum(n));
 export const surfable = () => CHANNELS.filter(c => !isHidden(c.n));
 
 export function nextFree(sectionId) {

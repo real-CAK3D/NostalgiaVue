@@ -298,8 +298,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 270 | MRTH | Martha Stewart | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 271 | RRAY | Rachael Ray | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 272 | SNOP | Martha & Snoop | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 273 | HITV | High Times TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 274 | GROW | The Grow Room | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 275 | SEIN | Seinfeld | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 276 | BBT | Big Bang Theory | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 277 | EHC | Everybody Hates Chris | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
@@ -381,7 +379,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 343 | TALK | Hacker Talks | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 344 | TTV | TechTV · The Screen Savers | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 345 | SPCX | Rocket Launches | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 346 | BONG | Bong Appétit | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 
 ## More Cable (351–419)
 
@@ -455,7 +452,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 416 | ROST | Roast Pit | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 417 | PRNK | Prank Patrol | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 418 | HOSP | General Hospital Hour | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 419 | 420 | Half Baked | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 
 ## Bring Your Own (420–499)
 
@@ -558,21 +554,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 
 | Ch | Call | Name | Source |
 |---|---|---|---|
-| 580 | ECON | Erotic Confessions | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 581 | COED | Co-Ed Confidential | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 582 | MAXS | Late Night Series | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 583 | EMMS | Emmanuelle in Space | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 584 | SPDI | Space Babes Drive-In (60s & 70s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 585 | SLAV | Space Babes (80s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 586 | BABE | Beach Babes from Beyond (90s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 587 | BIKI | Bikini B-Movie Spoofs (2000s) | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 590 | FLSH | Flesh Gordon | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 591 | BARB | Barbarella | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 592 | GALX | Galaxina | archive.org |
-| 593 | SPBB | Space Babes | archive.org |
-| 594 | SXSF | Sexy Sci-Fi | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 595 | HVMT | Heavy Metal & Adult Animation | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 599 | XXX | XXX · Adults Only | xxx |
 
 ## My Playlists (600–699)
 
@@ -646,7 +627,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 789 | MUSC | Live Music | YouTube (YouTube search + ON DEMAND) |
 | 790 | FIRE | Fireplace Live | YouTube (YouTube search + ON DEMAND) |
 | 791 | TRAIN | Train Cam Live | YouTube (YouTube search + ON DEMAND) |
-| 792 | KLPY | Kaloopy TV Live | YouTube (YouTube search + ON DEMAND) |
 
 ## Shows A–Z (800–899)
 
@@ -769,10 +749,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 909 | THRE | Three’s Company | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 910 | GILL | Gilligan’s Island | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 911 | MASH | M*A*S*H | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 912 | KLPY | Kaloopy TV | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 913 | RSHO | Red Shoe Diaries | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 914 | MAXX | Late Night Cable | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 915 | SWIM | Swimsuit Specials | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 916 | MANS | The Man Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 917 | MNCI | Mind of Mencia | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 918 | CHAP | Chappelle’s Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
@@ -814,7 +790,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 954 | RUGB | Rugby | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 955 | MMA | MMA Fight Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 956 | HOCK | Hockey | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 957 | LFL | Lingerie Football | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 958 | RWRL | Real World / Road Rules | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 959 | PNKD | Punk’d | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 960 | BAM | Viva La Bam | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
@@ -823,12 +798,6 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 963 | BANG | Headbangers Ball | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 964 | BNNY | The Benny Hill Show | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 965 | LMOV | Comedy Movie Night | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 966 | SPBK | MTV Spring Break | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 967 | TSEX | Teen Sex Comedies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 968 | LNAN | Late Night Anthologies | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 969 | PBAD | Playboy After Dark | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 970 | GRND | Grindhouse After Dark | archive.org |
-| 971 | BRLQ | Burlesque & Pin-Up | archive.org |
 | 972 | KITT | Knight Rider | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 973 | MACG | MacGyver | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
 | 974 | DUKE | The Dukes of Hazzard | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

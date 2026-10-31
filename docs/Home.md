@@ -28,8 +28,8 @@ NostalgiaVue is a 1980s–2000s TV in your browser: https://nostalgiavue.vercel.
 | 500–529 | Pay-per-view & streaming shortcuts |
 | 530–549 | Maker Lab (ESP32, Raspberry Pi, electronics, homelab) |
 | 550–579 | Game Show Network |
-| 580–599 | Late-night PPV (After Dark sci-fi at 590s) |
+| 580–599 | Late-night PPV |
 | 600–699 | My playlists |
 | 700–799 | LIVE |
 | 800–899 | Shows A–Z (880 = VCR) |
-| 900–999 | More Shows (950s = sports; After Dark is PIN-locked) |
+| 900–999 | More Shows (950s = sports) |

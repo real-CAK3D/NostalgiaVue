@@ -78,3 +78,5 @@
 .xxx-pw{display:flex;gap:.5em;justify-content:center;margin:.8em 0}
 .xxx-pw input{font:inherit;font-size:.9em;padding:.3em .6em;border-radius:6px;border:1px solid #666;background:#111;color:#fff;max-width:60%}
 .xxx-sites{flex-wrap:wrap;justify-content:center}
+.service-head{color:#3dff6a;font-weight:600}
+.card.service .card-name{color:#3dff6a;letter-spacing:.15em}

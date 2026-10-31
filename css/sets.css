@@ -93,6 +93,7 @@
 .remote button{border:0}
 .r-ir{width:24px;height:10px;margin:0 auto;border-radius:6px;background:#3a0c0c;box-shadow:inset 0 1px 3px #000}
 .r-ir.blink{background:#ff4040;box-shadow:0 0 10px #ff4040}
+.r-ir.service,.r-ir.service.blink{background:#3dff6a!important;box-shadow:0 0 12px #3dff6a!important}
 .r-row{display:flex;justify-content:space-between;gap:8px;align-items:stretch}
 .r-col{display:flex;flex-direction:column;gap:6px;justify-content:center;flex:1}
 .r-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
