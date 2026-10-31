@@ -1,7 +1,7 @@
 // On-screen TV settings (MENU button).
 import { $, $$, esc } from './util.js';
 import { settings, save, state, exportSettings, importSettings, resetAll, eraLabel } from './store.js';
-import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf, isHidden, ADULT_CATS } from './lineup.js';
+import { SECTIONS, CHANNELS, buildLineup, chanByNum, nextFree, makeCall, sectionOf, isHidden, ADULT_CATS, isAdultCh } from './lineup.js';
 import { iconSVG } from './icons.js';
 import { SETS, setId, era } from './sets.js';
 import { resolvePlace } from './sources/special.js';
@@ -122,7 +122,8 @@ function body() {
         ${c.user ? `<button type="button" class="m-x" data-del="${c.n}" aria-label="Delete">✕</button>` : '<i></i>'}</div>`).join('')}</div>`;
     }
     case 'parental': {
-      const cats = [...new Set(CHANNELS.filter(c => !isHidden(c.n)).map(c => c.cat))].filter(Boolean).sort();
+      // adult channels are locked by the service password, so they never show up in these lists
+      const cats = [...new Set(CHANNELS.filter(c => !isHidden(c.n) && !isAdultCh(c)).map(c => c.cat))].filter(Boolean).sort();
       return `
       <p class="m-note">Set a 4-digit PIN to lock channels. Locked channels ask for the PIN (typed with the remote’s number buttons) and stay unlocked until the TV is turned off. The Kids profile hides everything except kids, cartoons, learning, nature and science channels; turning it off needs the PIN. Everything here is stored only on this device.</p>
       ${settings.adultOk
@@ -133,7 +134,7 @@ function body() {
       <h4>Locked categories</h4>
       <div class="m-cats">${cats.map(c => `<label class="m-cat"><input type="checkbox" data-lockcat="${esc(c)}" ${(settings.lockedCats || []).includes(c) ? 'checked' : ''}> ${esc(c)}</label>`).join('')}</div>
       <h4>Locked channels</h4>
-      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
+      <div class="m-row"><span>Channel numbers</span><input type="text" id="mLockCh" value="${esc((settings.lockedChannels || []).filter(n => !isAdultCh(chanByNum(n))).join(', '))}"><button type="button" class="m-btn" data-do="lockch">Save</button></div>`;
     }
     // only reachable through the service code (see service.js)
     case 'service': {
@@ -377,7 +378,8 @@ async function act(what, el) {
   if (what === 'pin') { const r = setPin($('#mPin').value.trim()); renderMenu(); $('#mPinMsg').textContent = r; return; }
   if (what === 'lockch') {
     if (!confirmPin('Change locked channels')) return renderMenu();
-    settings.lockedChannels = $('#mLockCh').value.split(/[^0-9]+/).filter(Boolean).map(Number); changed(); renderMenu(); return;
+    const typed = $('#mLockCh').value.split(/[^0-9]+/).filter(Boolean).map(Number).filter(n => !isAdultCh(chanByNum(n)));
+    settings.lockedChannels = [...typed, ...(settings.lockedChannels || []).filter(n => isAdultCh(chanByNum(n)))]; changed(); renderMenu(); return;
   }
   if (what === 'era') {
     const y = el.dataset.y ? +el.dataset.y : null;
