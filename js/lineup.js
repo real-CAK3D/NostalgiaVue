@@ -245,7 +245,7 @@ const NOSTALGIA = [
 const CARTOON_YT = ['UCMsgXPD3wzzt8RxHJmXH7hQ', 'UCgPClNr5VSYC3syrDUIlzLw', 'UC9trsD1jCTXXtN3xIOIU8gg', 'UCmst562fALOY2cKb4IFgqEg', 'UC5M_h2S8Ldoc9M6f7B-_m6A', 'UCx8nU9xWEyden60hkKBaAvg', 'UCxGAABgVaQHvpu-6APxDyZg'];
 const TALK_YT = ['UCsT0YIqwnpJCM-mx7-gSA4Q', 'UCAuUUnT6oDeKwE6v1NGQxug', 'UCsooa4yRKGN_zEE8iknghZA', 'UCwzCMiicL-hBUzyjWiJaseg', 'UCJm8Q-9K_8n-UBrgwEo4yLA', 'UCYlCO4i0yJhQPHO5C7FsL0Q'];
 const COZY_YT = ['UCgyeJxD05YnoDquRMNBfBqw', 'UCJ0n5PDCBQZVlZYGmmK5adg', 'UCPD_bxCRGpmmeQcbe2kpPaA'];
-const MOVIE_YT = ['UC0RiBBJuV3vUzvwJJ2cBrJA', 'UC7rrSVE7CSDl5MCsOwI8Gbg'];
+const MOVIE_YT = ['UC8IHAQMuiJdY6ALuhG7iU8Q', 'UC7rrSVE7CSDl5MCsOwI8Gbg'];
 const FIRE_SEASON = ['new years fireplace', 'valentines fireplace', 'irish pub fireplace', 'spring rain fireplace', 'spring fireplace birds', 'summer campfire',
   'fourth of july campfire', 'summer night campfire', 'autumn fireplace', 'halloween fireplace', 'thanksgiving fireplace', 'christmas fireplace'];
 // autoName: the guide shows the channel's real YouTube name once it has aired
@@ -312,17 +312,17 @@ const YOUTUBE = [
   yt(202, 'YOUTUBE', 'CN', 'Cartoon Network', ['UCMsgXPD3wzzt8RxHJmXH7hQ']),
   yt(203, 'YOUTUBE', 'WBK', 'Looney Tunes · WB Kids', ['UC9trsD1jCTXXtN3xIOIU8gg']),
   yt(204, 'YOUTUBE', 'BEAN', 'Mr Bean', ['UCkAGrHCLFmlK3H2kd6isipg']),
-  yt(205, 'YOUTUBE', 'PBSK', 'PBS Kids', ['UCmNIdCsMr-kjBzpzFH14cZg']),
+  yt(205, 'YOUTUBE', 'PBSK', 'PBS Kids', ['UCrNnk0wFBnCS1awGjq_ijGQ']),
   yt(206, 'YOUTUBE', 'CNAS', 'Cartoon Network Asia', ['UC9hVEGaTpAYMVd-bRsOYKwA']),
   yt(207, 'YOUTUBE', 'SNL', 'Saturday Night Live', ['UCqFzWxSCi39LnW1JKFR3efg'], { q: [TS('saturday night live', 'snl')] }),
-  yt(208, 'YOUTUBE', 'MAD', 'MADtv', ['UCVQHDhC-5u7ze2qWNyTGM3g'], { q: [TS('mad tv', 'madtv')] }),
+  yt(208, 'YOUTUBE', 'MAD', 'MADtv', ['UCIrllb3BU3z5hJfC701AtPw'], { q: [TS('mad tv', 'madtv')] }),
   yt(209, 'YOUTUBE', 'BOOM', 'Boomerang', ['UCmst562fALOY2cKb4IFgqEg']),
   yn(210, 'TOON', 'Toon Playlist', 'PLD_4GEDP7Kh8hdM2i215l-YNUluzt_q7T'),
   yn(211, 'TCLB', 'Toon Club', 'UC5M_h2S8Ldoc9M6f7B-_m6A'),
   yn(212, 'TMAR', 'Toon Marathon', 'PLSmufUDCoA7WmNwbemxvVtTQhcl_nXnUK'),
   yn(213, 'TOON', 'Toon Time', 'UCx8nU9xWEyden60hkKBaAvg'),
   yn(214, 'TOON', 'Toon Town Tube', 'UCxGAABgVaQHvpu-6APxDyZg'),
-  yn(215, 'MOVA', 'Free Movies A', 'UC0RiBBJuV3vUzvwJJ2cBrJA', { cat: 'MOVIES' }),
+  yn(215, 'MOVA', 'Free Movies A', 'UC8IHAQMuiJdY6ALuhG7iU8Q', { cat: 'MOVIES' }),
   yn(216, 'MOVB', 'Free Movies B', 'UC7rrSVE7CSDl5MCsOwI8Gbg', { cat: 'MOVIES' }),
   yn(217, 'STND', 'Stand-Up Tube', 'UCkN6tCk7n8TCJbqlPI8shGg', { cat: 'COMEDY' }),
   yt(218, 'TALKS', 'TEDX', 'TEDx Talks', ['UCsT0YIqwnpJCM-mx7-gSA4Q']),
@@ -484,11 +484,11 @@ const PPV = [
 const AREA_PRESETS = {
   '04240': [
     { n: 6,  call: 'WCSH', name: 'WCSH 6 · NBC · NEWS CENTER Maine', net: 'NBC', url: 'https://www.newscentermaine.com/', yt: ['UCQAUoXXSGHSntpTPvWwvXbg'] },
-    { n: 8,  call: 'WMTW', name: 'WMTW News 8 · ABC', net: 'ABC', url: 'https://www.wmtw.com/', yt: ['UC8p1vwvWtl6T73JiExfWs1g'] },
+    { n: 8,  call: 'WMTW', name: 'WMTW News 8 · ABC', net: 'ABC', url: 'https://www.wmtw.com/', yt: ['UCqvtjfI2zzRl_2W_KpEnuMg'] },
     { n: 9,  call: 'WX9',  name: 'Local on the 9s · Weather', kind: 'weather' },
     { n: 10, call: 'WCBB', name: 'WCBB 10 · Maine Public', net: 'PBS', url: 'https://www.mainepublic.org/' },
     { n: 12, call: 'PINE', name: 'Pine Tree Past', kind: 'archive', q: [TS('maine', 'portland maine', 'lewiston', 'auburn maine', 'bangor')], desc: 'Old films and footage from around Maine.' },
-    { n: 13, call: 'WGME', name: 'WGME CBS 13', net: 'CBS', url: 'https://wgme.com/', yt: ['UCeY0bbntWzzVIaj2z3QigXg'] },
+    { n: 13, call: 'WGME', name: 'WGME CBS 13', net: 'CBS', url: 'https://wgme.com/', yt: ['UCUx2xAViYolMLCQAC8vgYvw'] },
     { n: 21, call: 'GFTV', name: 'Great Falls TV (Auburn)', net: 'PEG', url: 'https://www.auburnmaine.gov/Pages/Great-Falls-TV/Great-Falls-TV' },
     { n: 23, call: 'WPFO', name: 'WPFO 23', net: 'IND', url: 'https://fox23maine.com/' },
     { n: 24, call: 'WPXT', name: 'WPXT · The CW (51)', net: 'CW', url: '' },
@@ -902,7 +902,7 @@ const EXTRA = [
   show(330, 'GAMING', 'GSPT', 'GameSpot', ['gamespot review', 'gamespot trailer']),
   show(331, 'GAMING', 'XPLY', 'G4 · X-Play', ['x-play g4 full episode', 'attack of the show g4', 'g4tv classic']),
   tube(332, 'GAMING', 'LGR', 'Retro Computing & Games', ['UCLx053rWZxCiYWsBETgdKrQ', 'UC8uT9cgJorJPWu7ITLGo9Ww'], 'LGR and The 8-Bit Guy: old PCs, retro games and thrift-store finds.'),
-  tube(333, 'GAMING', 'GDQ', 'Speedruns (GDQ)', ['UC4a-Gbdw7vOaccHmFo40b9g'], 'Games Done Quick speedruns.'),
+  tube(333, 'GAMING', 'GDQ', 'Speedruns (GDQ)', ['UCI3DTtB-a3fJPjKtQ5kYHfA'], 'Games Done Quick speedruns.'),
   show(334, 'GAMING', 'E3', 'E3 & Classic Trailers', ['e3 press conference 2000s full', 'classic video game trailers', 'e3 2006 full']),
   show(335, 'GAMING', 'GHIS', 'Video Game History', ['gaming historian', 'noclip documentary', 'video game history documentary']),
   show(336, 'GAMING', 'LONG', 'Longplays', ['nes longplay full game no commentary', 'snes longplay full game', 'n64 longplay']),
