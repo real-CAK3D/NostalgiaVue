@@ -9,6 +9,7 @@ import { settings, save, state, eraWords } from '../store.js';
 import { staticOn, staticOff, hideMsg, msg, banner, scene, clearScene } from '../osd.js';
 import { tuneArchive } from './archive.js';
 import { ytCacheKey } from '../ytcache.js';
+import { onNow, lengthOf, learnLength, parseRuntime } from '../schedule.js';
 
 const yt = { player: null, ready: false, ch: null, cands: [], cand: 0, errs: 0, token: 0, playing: false, lastVid: '', watchdog: 0, items: null, picker: null };
 
@@ -83,7 +84,7 @@ let staticIndex = null;
 async function staticSearch(k) {
   staticIndex = staticIndex || fetch('data/yt/_index.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const e = (await staticIndex)[k]; if (!e || !e.n) return null;
-  try { const rows = await fetchJSON('data/yt/' + e.f); return rows.map(([id, title, by]) => ({ id, title: decode(title), by: decode(by) })); } catch { return null; }
+  try { const rows = await fetchJSON('data/yt/' + e.f); return rows.map(([id, title, by, len]) => ({ id, title: decode(title), by: decode(by), len: len || 0 })); } catch { return null; }
 }
 // Age-restricted videos and ones with embedding turned off only show "Video unavailable" in the
 // TV, so they're dropped before airing (one cheap lookup per search).
@@ -91,8 +92,8 @@ async function playable(items) {
   if (!items.length) return items;
   try {
     const j = await ytApi('videos', { part: 'contentDetails,status', id: items.map(i => i.id).join(',') });
-    const ok = new Set((j.items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => v.id));
-    return items.filter(i => ok.has(i.id));
+    const ok = new Map((j.items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => [v.id, parseRuntime(v.contentDetails?.duration)]));
+    return items.filter(i => ok.has(i.id)).map(i => ({ ...i, len: ok.get(i.id) }));   // with running times for the schedule
   } catch { return items; }
 }
 async function apiSearch(q, { channelId, long, live, adult } = {}) {
@@ -119,6 +120,15 @@ export async function resolveHandle(handle) {
   return c ? { id: c.id, name: c.snippet.title } : null;
 }
 
+// Today's search results for the guide, if they're already here (never fetches)
+export function guideItems(ch) {
+  const s = ch.search; if (!s || s.live) return null;
+  const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q), extra = eraWords();
+  const q = qs[hash(daySeed(), ch.n) % qs.length] + (extra ? ' ' + extra : '');
+  const seen = new Set(), out = [];
+  for (const c of s.channels && s.channels.length ? s.channels : [null]) for (const it of cache[ytCacheKey(q, { channelId: c, long: s.long })] || []) if (!seen.has(it.id)) { seen.add(it.id); out.push(it); }
+  return out.length && out.filter(i => lengthOf(i)).length > out.length / 2 ? out : null;
+}
 async function searchItems(ch) {
   const s = ch.search; if (!s) return null;
   const qs = typeof s.q === 'function' ? s.q() : [].concat(s.q);
@@ -163,8 +173,12 @@ function load(pick) {
   yt.playing = false;
   if (yt.items) {
     const ids = yt.items.map(i => i.id);
-    const index = pick ?? hash(daySeed(), yt.ch.n, slot) % ids.length;
-    yt.player.loadPlaylist({ playlist: ids, index, startSeconds: pick != null ? 0 : Math.floor(elapsed % 300) });
+    // real-length schedule when the running times are known; otherwise one video per half hour
+    const known = yt.items.filter(i => lengthOf(i)).length > yt.items.length / 2;
+    const now = known ? onNow(yt.items) : null;
+    const index = pick ?? (now ? now.idx % ids.length : hash(daySeed(), yt.ch.n, slot) % ids.length);
+    const at = pick != null ? 0 : now ? Math.floor(now.offset) : Math.floor(elapsed % 300);
+    yt.player.loadPlaylist({ playlist: ids, index, startSeconds: at });
   } else {
     const id = yt.cands[yt.cand];
     if (isVideo(id)) yt.player.loadVideoById({ videoId: id, startSeconds: 0 });
@@ -180,6 +194,7 @@ function onStateChange(e) {
     yt.errs = 0; clearTimeout(yt.watchdog); staticOff(); hideMsg();
     const d = yt.player.getVideoData();
     learnName(d.author);
+    learnLength(d.video_id, yt.player.getDuration?.() || 0);
     if (!yt.playing || d.video_id !== yt.lastVid) {
       yt.lastVid = d.video_id;
       banner({ ch: yt.ch, title: d.title || yt.ch.name, sub: [d.author, 'YouTube', yt.items ? 'Press OK for ON DEMAND' : ''].filter(Boolean).join(' · ') });

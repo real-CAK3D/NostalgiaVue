@@ -5,12 +5,24 @@ import { CHANNELS, isHidden } from './lineup.js';
 import { getList, listsDone, listKey } from './sources/archive.js';
 import { iconSVG, CAT_HUE } from './icons.js';
 import { isLocked } from './parental.js';
+import { locate } from './schedule.js';
+import { guideItems } from './sources/youtube.js';
 
 export const GUIDE_STYLES = [['prevue', 'Prevue (1990s blue grid)'], ['tvguide', 'TV Guide Channel (2000s)'], ['cable', 'Cable Box (green screen)'], ['teletext', 'Teletext (1980s blocks)']];
 const hueOf = cat => CAT_HUE[cat] ?? 225;
 import { lockup } from './logo.js';
 
 
+// The program in a half-hour slot: { t: title, start: its first slot, blocks: how many it fills }.
+// archive.org and YouTube search channels follow the real-length schedule; others are one block.
+function programAt(ch, slot) {
+  let l = null;
+  if (ch.kind === 'archive' && !(ch.custom && !settings.custom)) { l = listsDone.get(listKey(ch)); if (!l || !l.length) l = null; }
+  else if (ch.kind === 'yt' && ch.search) l = guideItems(ch);
+  if (!l) return { t: programTitle(ch, slot), start: slot, blocks: 1, whole: true };   // no schedule: one running title
+  const at = locate(l, slot), it = l[at.idx % l.length];
+  return { t: one(it.title) || it.identifier || ch.name, start: at.startSlot, blocks: at.blocks };
+}
 function programTitle(ch, slot) {
   switch (ch.kind) {
     case 'yt': return ch.name;
@@ -43,7 +55,17 @@ export function guideGridHTML({ start = 0, count = CHANNELS.length, auto = false
   for (const [ch, i] of rows) {
     if (!auto && ch.cat !== lastCat) html += `<div class="g-cat" style="--h:${hueOf(ch.cat)}">${esc(lastCat = ch.cat)}</div>`;
     // every category has its own color, like the old printed TV Guide grids
-    const cells = [0, 1, 2].map(k => { const t = programTitle(ch, slot + k); return `<div class="g-cell${k ? '' : ' now'}${dim(t) ? ' dim' : ''}" style="--h:${hueOf(ch.cat)}">${esc(t)}</div>`; }).join('');
+    // a show that runs long spans columns; ◂ / ▸ mark shows that started earlier or run past the grid
+    const progs = [];
+    for (let k = 0; k < 3; k++) {
+      const p = programAt(ch, slot + k), prev = progs[progs.length - 1];
+      const same = prev && prev.t === p.t && (prev.whole ? p.whole : prev.start === p.start && prev.blocks === p.blocks);
+      if (same) prev.span++; else progs.push({ ...p, span: 1, k });
+    }
+    const cells = progs.map(p => {
+      const t = p.whole ? p.t : (p.start < slot && p.k === 0 ? '◂ ' : '') + p.t + (p.start + p.blocks > slot + 3 && p.k + p.span === 3 ? ' ▸' : '');
+      return `<div class="g-cell${p.k ? '' : ' now'}${dim(p.t) ? ' dim' : ''}" style="--h:${hueOf(ch.cat)}${p.span > 1 ? `;grid-column:span ${p.span}` : ''}">${esc(t)}</div>`;
+    }).join('');
     html += `<div class="g-row${i === sel ? ' sel' : ''}${ch.n === state.num ? ' tuned' : ''}" data-i="${i}"><div class="g-cell g-ch"><span class="g-ico">${iconSVG(ch)}</span><em>${ch.n}</em><span class="g-call">${(settings.favorites || []).includes(ch.n) ? '★' : ''}${isLocked(ch) ? '🔒' : ''}${esc(ch.call)}</span></div>${cells}</div>`;
   }
   return html + '</div>';
@@ -52,7 +74,9 @@ export function guideGridHTML({ start = 0, count = CHANNELS.length, auto = false
 let timer = 0, rafId = 0;
 const soon = () => { if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0; render(); }); };
 
-function render() {
+// scroll: bring the highlighted row into view (opening the guide or moving the cursor); background
+// refreshes when a channel's schedule arrives leave the scroll position alone
+function render(scroll) {
   if (!state.guide) return;
   const { slot, start } = slotNow(), h24 = settings.clock24;
   $('#gClock').textContent = new Date().toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !h24 }) + (eraOn() ? ` · ${eraLabel().toUpperCase()}` : '');
@@ -62,9 +86,10 @@ function render() {
   const sel = CHANNELS[state.guideSel];
   if (sel) {
     const desc = sel.desc || (sel.kind === 'yt' ? 'Clips and full episodes from the official YouTube channel.' : sel.kind === 'archive' ? `${sel.cat.charAt(0) + sel.cat.slice(1).toLowerCase()} from the archive.org ${sel.audio ? 'audio' : 'film & TV'} vaults.` : '');
-    $('#gDesc').innerHTML = `<div class="gd-head">${iconSVG(sel)}<div><b>${esc(programTitle(sel, slot))}</b><small>CH ${sel.n} · ${esc(sel.name)} · until ${fmtTime(start + SLOT, h24)}</small></div></div>${esc(desc)}<small>Next: ${esc(programTitle(sel, slot + 1))}</small>`;
+    const p = programAt(sel, slot), next = p.whole ? programAt(sel, slot + 1) : programAt(sel, p.start + p.blocks);
+    $('#gDesc').innerHTML = `<div class="gd-head">${iconSVG(sel)}<div><b>${esc(p.t)}</b><small>CH ${sel.n} · ${esc(sel.name)} · ${fmtTime(start - (slot - p.start) * SLOT, h24)} – ${fmtTime(start + (p.start + p.blocks - slot) * SLOT, h24)}</small></div></div>${esc(desc)}<small>Next: ${esc(next.t)}</small>`;
   }
-  rowsEl.querySelector(`[data-i="${state.guideSel}"]`)?.scrollIntoView({ block: 'nearest' });
+  if (scroll) rowsEl.querySelector(`[data-i="${state.guideSel}"]`)?.scrollIntoView({ block: 'nearest' });
   loadNear();
 }
 // Fetch schedules for the rows around the cursor first.
@@ -82,14 +107,14 @@ export function openGuide() {
   let i = CHANNELS.findIndex(c => c.n === state.num);
   state.guideSel = i < 0 ? 0 : i;
   ['#banner', '#info'].forEach(q => $(q).classList.remove('show'));
-  render();
-  clearInterval(timer); timer = setInterval(render, 20000);
+  render(true);
+  clearInterval(timer); timer = setInterval(() => render(), 20000);
 }
 export function closeGuide() { state.guide = false; $('#screen').classList.remove('guide-open'); clearInterval(timer); }
 export function guideMove(d) {
   const n = CHANNELS.length; let i = state.guideSel;
   do { i = (i + d + n) % n; } while (isHidden(CHANNELS[i].n) && i !== state.guideSel);
-  state.guideSel = i; render();
+  state.guideSel = i; render(true);
 }
 export function guidePage(d) { for (let k = 0; k < 6; k++) guideMove(d); }
 export const guideSelected = () => CHANNELS[state.guideSel];

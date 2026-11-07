@@ -35,7 +35,7 @@ More than 770 channels out of the box. Every channel, including ones you add, ge
 - **ON DEMAND:** once `YT_API_KEY` is set on Vercel, YouTube channels like Movie Night, the Elon Channel and Stand-Up Legends get a list of titles to pick from (press OK).
 - **Era selector** (MENU › Channels): pick a decade or any year range and the whole TV airs content from those years.
 - Show or hide the remote, or switch to **screen-only zoom** and full screen.
-- Half-hour broadcast schedule: tuning in drops you into whatever's already on.
+- Real-length broadcast schedule: every show gets as many half-hour blocks as it runs (a sitcom 30 min, a drama an hour, a movie two hours), and the guide shows long shows spanning their whole time. Tuning in drops you into whatever's already on.
 - A color-coded **GUIDE** (every category has its own color) in four styles: Prevue, 2000s TV Guide Channel, cable-box green screen and 80s teletext. Press INFO in the guide to flip styles. Plus a **Guide Channel** (31) that scrolls the grid on its own.
 - **Commercial breaks** every 10/15/20/30 minutes, using real vintage ads (can be turned off).
 - **NostalgiaVue logo animation** at power-on. All sounds are synthesized: relay clicks, degauss thump, static, 15.7 kHz whine and the dial clunk.

@@ -16,7 +16,7 @@ async function limited(fn, urgent) {
 export function search(q, rows = 200, urgent = false, sort = 'downloads desc') {
   return limited(async () => {
     const p = new URLSearchParams({ q, rows: String(rows), page: '1', output: 'json' });
-    ['identifier', 'title', 'year', 'creator', 'mediatype'].forEach(f => p.append('fl[]', f));
+    ['identifier', 'title', 'year', 'creator', 'mediatype', 'runtime'].forEach(f => p.append('fl[]', f));
     p.append('sort[]', sort);
     const j = await fetchJSON(`${API}/advancedsearch.php?${p}`);
     return (j.response || {}).docs || [];

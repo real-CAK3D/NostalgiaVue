@@ -1,8 +1,9 @@
 // The <video> element, HLS support, and the half-hour "broadcast schedule" that every
 // list-based channel (archive.org, your drives, Jellyfin, custom streams) airs through.
-import { $, esc, one, hash, daySeed, slotNow, loadScript } from './util.js';
+import { $, esc, one, hash, daySeed, slotNow, loadScript, SLOT } from './util.js';
 import { settings, state } from './store.js';
 import { toEnglish } from './translate.js';
+import { onNow, learnLength, entryKey, blocksFor } from './schedule.js';
 import { staticOn, staticOff, msg, hideMsg, banner, scene, clearScene, bars } from './osd.js';
 
 export const v = $('#vid');
@@ -118,9 +119,10 @@ let breakHook = null;
 export const setBreakHook = f => { breakHook = f; };
 
 export async function airList(ch, list, resolve, token, opts = {}) {
-  const { slot, elapsed } = slotNow();
   // fromStart: tapes and on-demand picks play from the top instead of joining the schedule mid-show
-  return airFrom(ch, list, resolve, opts.fromStart ? 0 : slot, opts.fromStart ? 0 : elapsed, token, opts);
+  if (opts.fromStart) return airFrom(ch, list, resolve, 0, 0, token, opts);
+  const now = onNow(list);           // real-length schedule: long shows keep their whole time
+  return airFrom(ch, list, resolve, now.idx, now.offset, token, opts);
 }
 async function airFrom(ch, list, resolve, idx, offset, token, opts) {
   for (let a = 0; a < 8; a++) {
@@ -133,15 +135,27 @@ async function airFrom(ch, list, resolve, idx, offset, token, opts) {
 }
 function start(ch, list, resolve, listIdx, p, offset, token, opts) {
   const files = p.groups[0]; let fi = 0, off = offset;
+  const entry = list[((listIdx % list.length) + list.length) % list.length];
+  // what the source says this program runs: one file, or the episode picked from a multi-file item
+  if (p.kind === 'video' && files.length > 1 && !opts.fromStart) fi = hash(daySeed(), ch.n, listIdx) % files.length;
+  const runs = p.kind === 'video' ? files[fi].len : files.reduce((t, f) => t + (f.len || 0), 0);
+  if (runs > 60 && !opts.fromStart) {
+    learnLength(entryKey(entry), runs);
+    // tuned in after the show ended but before its time slot is up: the next show starts early
+    if (off > runs - 5) return airFrom(ch, list, resolve, listIdx + 1, 0, token, opts);
+  }
   if (off > 0) {
     if (p.kind === 'video' && files.length > 1) {
-      fi = hash(daySeed(), ch.n, listIdx) % files.length; const L = files[fi].len; if (L) off %= L;
+      const L = files[fi].len; if (L) off %= L;
     } else {
       const lenOf = f => f.len || 240, total = files.reduce((s, f) => s + lenOf(f), 0); off %= total;
       while (fi < files.length - 1 && off > lenOf(files[fi])) { off -= lenOf(files[fi]); fi++; }
     }
   }
-  cur = { ch, list, resolve, listIdx, p, g: 0, fi, token, startOff: off, opts, bannered: false };
+  // the slot this airing fills, for the channel banner: rounded to the half hour like a TV listing
+  const len = runs > 60 ? runs : 0, began = Date.now() - off * 1000;
+  const from = slotNow(began).start, span = len ? [from, from + blocksFor(len) * SLOT] : null;
+  cur = { ch, list, resolve, listIdx, p, g: 0, fi, token, startOff: off, opts, bannered: false, span };
   loadFile();
 }
 function showAudioScene() {
@@ -176,7 +190,10 @@ function loadFile() {
 export function skip() {
   const c = cur; if (!c || c.token !== state.token) return;
   cur = null; stopVideo(); if (!c.opts.bg) staticOn();
-  airFrom(c.ch, c.list, c.resolve, c.listIdx + 1, 0, c.token, c.opts);
+  // next show: whatever the schedule has on now if we've fallen behind it, else the next one in line
+  const now = c.opts.fromStart ? null : onNow(c.list);
+  if (now && now.idx > c.listIdx) airFrom(c.ch, c.list, c.resolve, now.idx, now.offset, c.token, c.opts);
+  else airFrom(c.ch, c.list, c.resolve, c.listIdx + 1, 0, c.token, c.opts);
 }
 export function stopProgram() { cur = null; stopVideo(); v.hidden = false; }
 
@@ -196,7 +213,7 @@ export function programInfo() {
 }
 export function showProgramBanner(ms) {
   const i = programInfo(); if (!i) return;
-  banner({ ch: cur.ch, title: i.title, sub: i.sub }, ms);
+  banner({ ch: cur.ch, title: i.title, sub: i.sub, span: cur.span }, ms);
   const c = cur;
   toEnglish(i.title).then(t => { const el = $('#banner .b-title'); if (t.from && cur === c && el) el.textContent = t.text; });
 }

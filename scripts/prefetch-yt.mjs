@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { buildLineup } from '../js/lineup.js';
 import { ytCacheKey, ytCacheFile } from '../js/ytcache.js';
+import { parseRuntime } from '../js/schedule.js';
 
 // With the YT_API_KEY secret the searches go straight to Google; without it they go through the
 // site's own /api/yt proxy, which uses the key already stored on Vercel (no GitHub secret needed).
@@ -28,8 +29,8 @@ async function playable(items) {
   try {
     const r = await api('videos', { part: 'contentDetails,status', id: items.map(i => i[0]).join(',') });
     if (!r.ok) return items;
-    const ok = new Set(((await r.json()).items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => v.id));
-    return items.filter(i => ok.has(i[0]));
+    const ok = new Map(((await r.json()).items || []).filter(v => v.status?.embeddable !== false && v.contentDetails?.contentRating?.ytRating !== 'ytAgeRestricted').map(v => [v.id, parseRuntime(v.contentDetails?.duration)]));
+    return items.filter(i => ok.has(i[0])).map(i => [...i, ok.get(i[0])]);   // [id, title, channel, seconds]
   } catch { return items; }
 }
 
