@@ -47,7 +47,7 @@ body.zoom.zoom-ui .zoombar{transform:translateX(-50%)}
 }
 
 /* the set lights up the wall behind it, tinted by what's on */
-#glow{position:absolute;inset:-12% -18%;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1.2s,background 1.5s;
+#glow{position:absolute;inset:-12% -18% 0;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1.2s,background 1.5s;
   background:radial-gradient(ellipse 55% 50% at 50% 45%,hsl(var(--gh,220) 80% 55% / .45),transparent 70%);filter:blur(30px)}
 .set.on #glow{opacity:1;animation:glowflick 4s ease-in-out infinite}
 @keyframes glowflick{0%,100%{opacity:.9}50%{opacity:1}}
@@ -56,3 +56,22 @@ body.night .hint{opacity:.5}
 body.no-glow #glow{display:none}
 .ear,.whip{pointer-events:auto;cursor:grab}
 .ears{pointer-events:none}
+
+/* ---------- fits phones, tablets and desktops (js/fit.js sizes the set and remote) ---------- */
+/* the wall glow spreads past the set; clip it at the screen edge so phones and tablets don't zoom out */
+html,body{overflow-x:hidden;overflow-x:clip}
+html{-webkit-text-size-adjust:100%;overscroll-behavior:none}
+body{touch-action:manipulation;overscroll-behavior:none;
+  padding:max(14px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+body.fit-row .room{flex-wrap:nowrap;gap:min(40px,3vw);max-width:none}
+body.fit-col .room{flex-direction:column;flex-wrap:nowrap;gap:14px}
+body.fit-row .set,body.fit-col .set{flex:none;max-width:none}
+body.fit-row .remote,body.fit-col .remote{flex:none}
+/* small phones upright: the set stays on screen while the remote scrolls under it */
+body.pin-tv .set{position:sticky;top:max(6px,env(safe-area-inset-top));z-index:30}
+body.pin-tv{justify-content:flex-start}
+/* keyboard shortcuts mean nothing on a touch screen */
+@media (pointer:coarse){ .hint{display:none} }
+button,.screen{-webkit-touch-callout:none}
+/* iPhone/iPad Safari zooms the page into any text box under 16px and leaves it zoomed */
+@media (pointer:coarse){ input,select,textarea{font-size:max(16px,1em)!important} }
