@@ -79,3 +79,50 @@
 .pw-form input{font:inherit;font-size:.9em;padding:.3em .6em;border-radius:6px;border:1px solid #666;background:#111;color:#fff;max-width:60%}
 .service-head{color:#3dff6a;font-weight:600}
 .card.service .card-name{color:#3dff6a;letter-spacing:.15em}
+
+/* ---------- phones & tablets: settings, guide and lists as full-screen pages (js/sheet.js) ---------- */
+#menu.mobile{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#menu.mobile.tablet{--u:6.2px;inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,94vw);height:min(92vh,1200px);
+  border-radius:18px;box-shadow:0 0 0 100vmax rgba(0,0,0,.6);font-size:17px}
+#menu.mobile .m-tabs button,#menu.mobile .m-btn,#menu.mobile .m-eye,#menu.mobile select{min-height:44px}
+#menu.mobile .m-close{min-width:44px;min-height:44px;font-size:24px}
+#menu.mobile .m-row{min-height:48px}
+#menu.mobile .m-check i{width:52px;height:30px;border-radius:16px}
+#menu.mobile .m-check i::after{top:3px;left:3px;width:24px;height:24px}
+#menu.mobile .m-check input:checked+i::after{transform:translateX(22px)}
+#menu.mobile .m-tabs{position:sticky;top:0;z-index:1}
+
+.g-close{display:none}
+#guide.sheet{position:fixed;inset:0;z-index:190;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#guide.sheet.open{display:flex}
+#guide.sheet .g-close,#sheetScene .g-close{display:block;position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));z-index:60;
+  width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:22px}
+#guide.sheet .g-top{height:auto;padding:12px 64px 10px 16px}
+#guide.sheet .g-side{gap:4px}
+#guide.sheet .g-logo{font-size:20px}
+#guide.sheet .g-clock{font-size:26px}
+#guide.sheet .g-desc{font-size:15px;flex:none;max-height:8em}
+#guide.sheet .g-desc b{font-size:18px;max-width:none}
+#guide.sheet .g-desc small{font-size:13px}
+#guide.sheet .g-grid{margin:0 10px 10px;border-width:2px}
+#guide.sheet .g-row{grid-template-columns:104px repeat(3,1fr);border-bottom-width:1px}
+#guide.sheet .g-head{font-size:14px}
+#guide.sheet .g-head div{padding:6px 8px}
+#guide.sheet .g-cat{font-size:12px;padding:5px 10px;border-left-width:6px}
+#guide.sheet .g-cell{font-size:15px;padding:12px 8px;border-right-width:1px}
+#guide.sheet .g-ch{gap:6px;padding:4px 6px}
+#guide.sheet .g-ico{width:28px}
+#guide.sheet .g-ch em{font-size:16px}
+#guide.sheet .g-call{font-size:12px}
+#guide.sheet .g-row.tuned .g-ch{box-shadow:inset 4px 0 0 #63ff6e}
+@media (max-width:480px){ #guide.sheet .g-row{grid-template-columns:84px repeat(3,1fr)} #guide.sheet .g-cell{font-size:13px;padding:12px 6px} }
+
+#sheetScene{position:fixed;inset:0;z-index:190;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background:linear-gradient(180deg,#2a0606,#080202)}
+#sheetScene .ondemand{position:absolute;inset:0;display:flex;flex-direction:column;color:#fff}
+#sheetScene .od-head{padding:14px 64px 12px 16px;font:700 20px Oswald;color:#ffd23f;border-bottom:3px solid #c4161c}
+#sheetScene .od-head small{display:block;font:15px VT323,monospace;color:#ffb3b3}
+#sheetScene .od-list{flex:1;overflow-y:auto;padding:6px 10px;-webkit-overflow-scrolling:touch}
+#sheetScene .od-item{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+#sheetScene .od-item b{font-size:16px}
+#sheetScene .od-item small{font-size:13px}

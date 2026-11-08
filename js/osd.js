@@ -1,5 +1,6 @@
 // Everything drawn on the glass that isn't the program itself: snow, OSD, banners, messages.
 import { watchingNow } from './stats.js';
+import { sheetMode, pinToView, unpinFromView } from './sheet.js';
 import { $, esc, pad, fmtTime, slotNow, SLOT } from './util.js';
 import { settings, state } from './store.js';
 import { staticHiss, tone, chime } from './sound.js';
@@ -113,7 +114,15 @@ export function bug(ch) {
 }
 
 /* ---------- scene layer (radio art, cards, weather, menus...) ---------- */
-export function scene(html, cls = '') { const s = $('#scene'); s.className = cls; s.innerHTML = html; s.hidden = !html; return s; }
+export function scene(html, cls = '') {
+  // the ON DEMAND and library lists open as a full-screen page on phones and tablets
+  const sheet = html && cls === 'odscene' && sheetMode();
+  let sh = $('#sheetScene');
+  if (sheet && !sh) { sh = document.createElement('div'); sh.id = 'sheetScene'; document.body.appendChild(sh); }
+  if (sh) { sh.innerHTML = sheet ? `<button type="button" class="g-close" data-act="back" aria-label="Close">✕</button>${html}` : ''; sh.hidden = !sheet; if (sheet) pinToView(sh); else unpinFromView(sh); }
+  const s = $('#scene'); s.className = cls; s.innerHTML = sheet ? '' : html; s.hidden = !html || sheet;
+  return sheet ? sh : s;
+}
 export function clearScene() { scene(''); }
 
 /* ---------- power-on brand splash ---------- */

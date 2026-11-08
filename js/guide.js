@@ -6,6 +6,7 @@ import { getList, listsDone, listKey } from './sources/archive.js';
 import { iconSVG, CAT_HUE } from './icons.js';
 import { isLocked } from './parental.js';
 import { locate } from './schedule.js';
+import { sheetMode, pinToView, unpinFromView } from './sheet.js';
 import { guideItems } from './sources/youtube.js';
 
 export const GUIDE_STYLES = [['prevue', 'Prevue (1990s blue grid)'], ['tvguide', 'TV Guide Channel (2000s)'], ['cable', 'Cable Box (green screen)'], ['teletext', 'Teletext (1980s blocks)']];
@@ -102,6 +103,12 @@ function loadNear() {
 export function openGuide() {
   if (!state.on) return;
   state.guide = true; $('#screen').classList.add('guide-open');
+  // phones and tablets: the guide opens as its own full-screen page, readable and tappable
+  const g = $('#guide'), sheet = sheetMode();
+  g.classList.toggle('sheet', sheet); g.classList.toggle('open', sheet);
+  if (sheet && g.parentElement !== document.body) document.body.appendChild(g);
+  if (sheet) pinToView(g);
+  if (sheet && !g.querySelector('.g-close')) g.insertAdjacentHTML('afterbegin', '<button type="button" class="g-close" data-act="back" aria-label="Close guide">✕</button>');
   $('#guide').dataset.gstyle = settings.guideStyle || 'prevue';
   $('#gLogo').innerHTML = lockup('white', 'gl');
   let i = CHANNELS.findIndex(c => c.n === state.num);
@@ -110,7 +117,11 @@ export function openGuide() {
   render(true);
   clearInterval(timer); timer = setInterval(() => render(), 20000);
 }
-export function closeGuide() { state.guide = false; $('#screen').classList.remove('guide-open'); clearInterval(timer); }
+export function closeGuide() {
+  state.guide = false; $('#screen').classList.remove('guide-open'); clearInterval(timer);
+  const g = $('#guide'); g.classList.remove('open'); unpinFromView(g);
+  if (g.parentElement === document.body) $('#tube').prepend(g);   // back inside the set for next time
+}
 export function guideMove(d) {
   const n = CHANNELS.length; let i = state.guideSel;
   do { i = (i + d + n) % n; } while (isHidden(CHANNELS[i].n) && i !== state.guideSel);

@@ -9,6 +9,7 @@ import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
 import { applySubs } from './player.js';
 import { adultUnlocked, lockAdultAgain } from './adultlock.js';
+import { sheetMode, isPhone, pinToView, unpinFromView } from './sheet.js';
 import { leave as leaveService } from './service.js';
 const APP_VERSION = '1.4.0';
 import { myStats, sharedSummary, starsHTML, fmtMins, resetMyStats } from './stats.js';
@@ -231,12 +232,14 @@ async function fillStats() {
 }
 export function openMenu(t) {
   if (t) tab = t; state.menu = true;
-  const m = $('#menu'), small = matchMedia('(max-width: 760px)').matches;
+  const m = $('#menu'), small = sheetMode();
   m.classList.toggle('mobile', small);
+  m.classList.toggle('tablet', small && !isPhone());   // a centered panel on tablets, edge to edge on phones
+  if (small) pinToView(m, !isPhone()); else unpinFromView(m);
   (small ? document.body : $('#tube')).appendChild(m);
   m.hidden = false; renderMenu(); setTimeout(() => $('#menu .m-tabs .on')?.focus(), 30);
 }
-export function closeMenu() { if (state.service) { if (tab === 'service') tab = 'picture'; leaveService(); } state.menu = false; $('#menu').hidden = true; document.activeElement?.blur?.(); }
+export function closeMenu() { unpinFromView($('#menu')); if (state.service) { if (tab === 'service') tab = 'picture'; leaveService(); } state.menu = false; $('#menu').hidden = true; document.activeElement?.blur?.(); }
 
 function suggestNumber() {
   const s = $('#aSec')?.value; if (!s) return;
