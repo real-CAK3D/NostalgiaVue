@@ -1004,6 +1004,7 @@ const EXTRA = [
   show(492, 'AFTER DARK', 'DITA', 'Burlesque Revival', ['dita von teese', 'neo burlesque performance', 'burlesque hall of fame weekend', 'burlesque documentary']),
   show(493, 'AFTER DARK', 'SHOT', 'Swimsuit & Calendar Shoots', ['pirelli calendar making of', 'sports illustrated swimsuit behind the scenes', 'calendar shoot behind the scenes', 'swimsuit photoshoot behind the scenes']),
   show(494, 'AFTER DARK', 'SPRB', 'Spring Break Classics', ['spring break 1983 movie', 'where the boys are 84', 'fraternity vacation 1985', 'mtv spring break 1990s', 'girls just want to have fun spring break']),
+  show(495, 'AFTER DARK', 'HTRO', 'Hawaiian Tropic & Bikini Contests', ['hawaiian tropic pageant 90s', 'hawaiian tropic international pageant', 'miss hawaiian tropic', 'bikini contest 1990s', 'bikini contest daytona beach 1980s', 'venus swimwear bikini contest', 'bikini open 1980s'], [], { desc: 'Hawaiian Tropic pageants and the 80s and 90s beach bikini contests from Daytona, Panama City and Venice Beach.' }),
   show(590, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
   show(591, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),
   a(592, 'AFTER DARK', 'GALX', 'Galaxina', [TS('galaxina')], { desc: 'Galaxina (1980), the public-domain space-robot cult film.' }),
