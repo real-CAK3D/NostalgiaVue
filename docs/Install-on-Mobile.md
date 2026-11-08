@@ -1,6 +1,6 @@
 # Install on Mobile
 
-NostalgiaVue is a Progressive Web App. Installing it gives you a home-screen icon and full-screen TV, with no browser bars. The TV also shows the steps for your phone in **MENU › System › Add to Home Screen** (on Android Chrome that button installs it directly). The TV fits any screen: on a tablet or phone held upright the set sits on top with a wide remote under it, and turned sideways the set and remote sit side by side, with no scrolling.
+NostalgiaVue is a Progressive Web App. Installing it gives you a home-screen icon and full-screen TV, with no browser bars. The TV also shows the steps for your phone in **MENU › System › Add to Home Screen** (on Android Chrome that button installs it directly).
 
 - **iPhone / iPad (Safari):** open https://nostalgiavue.vercel.app › Share › **Add to Home Screen**.
 - **Android (Chrome):** open the site › ⋮ › **Install app**. You can also use MENU › System › *Install as an app*.

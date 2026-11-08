@@ -3,7 +3,6 @@ import { $, $$, esc, sleep } from './util.js';
 import { settings, save, saveQuiet, state } from './store.js';
 import { pullSettings, pushSoon } from './sync.js';
 import { toEnglish, langName } from './translate.js';
-import { initFit } from './fit.js';
 import { tuneXxx, xxxSites, xxxUnlocked, xxxLockAgain } from './xxx.js';
 import { channelChanged, poweredOff, watchingNow, sharedSummary, myStats, myRating, rate, starsHTML, fmtMins } from './stats.js';
 let sharedNow = null;
@@ -380,5 +379,3 @@ bindAntenna();
 apply();
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
-
-initFit();

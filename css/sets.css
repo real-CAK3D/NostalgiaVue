@@ -252,31 +252,3 @@
   .skin-combo .panel{grid-template-columns:1fr}
 }
 .r-row.small .rpill{font-size:9px;padding:6px 0;letter-spacing:.05em}
-
-/* ---------- wide remote: three columns, for tall screens (iPad / phones upright), set by js/fit.js ---------- */
-.remote.wide{display:grid;grid-template-columns:auto auto auto;grid-auto-rows:auto;column-gap:clamp(18px,4vw,34px);row-gap:10px;
-  align-items:center;justify-items:center;width:auto!important;max-width:none!important;transform:none!important;border-radius:30px}
-.remote.wide>:nth-child(1){grid-column:1;grid-row:1}
-.remote.wide>:nth-child(2){grid-column:1;grid-row:2}
-.remote.wide>:nth-child(3){grid-column:1;grid-row:3/7}
-.remote.wide>:nth-child(4){grid-column:2;grid-row:1/5}
-.remote.wide>:nth-child(5){grid-column:2;grid-row:5/7}
-.remote.wide>:nth-child(6){grid-column:3;grid-row:1}
-.remote.wide>:nth-child(7){grid-column:3;grid-row:2}
-.remote.wide>:nth-child(8){grid-column:3;grid-row:3}
-.remote.wide>:nth-child(9){grid-column:3;grid-row:4}
-.remote.wide>:nth-child(10){grid-column:3;grid-row:5}
-.remote.wide>:nth-child(11){grid-column:3;grid-row:6}
-/* touch screens: the remote sits straight (the desktop tilt wastes room and clips at the edge) */
-@media (pointer:coarse){ body.fit-row .remote,body.fit-col .remote{transform:none!important} }
-
-/* narrow phones: the 80s sets drop their knob panels and speaker grille (decoration the remote
-   duplicates) so the picture stays big and the remote fits under it */
-@media (max-width:760px){
-  body.fit-col .skin-console .side,body.fit-col .skin-console .panel,body.fit-col .skin-portable .side{display:none}
-  body.fit-col .skin-console .cabinet{grid-template-columns:1fr;grid-template-areas:"bezel"}
-  body.fit-col .skin-portable .cabinet{grid-template-columns:1fr;grid-template-areas:"bezel"}
-}
-/* the wide remote keeps a normal 3 x 4 number pad with even keys */
-.remote.wide .r-grid{grid-template-columns:repeat(3,minmax(0,1fr));width:max-content}
-.remote.wide .r-grid>*{min-width:3.2em}
