@@ -20,15 +20,25 @@ const led = on => document.getElementById('ir')?.classList.toggle('service', on)
 // press was part of the code and shouldn't do its normal job.
 export function serviceKey(k) {
   const now = Date.now();
-  if (now - last > 5000) { pos = 0; code = null; }
+  if (now - last > 10000) { pos = 0; code = null; }
   last = now;
+  // on phones and tablets the menu and guide cover the remote, so closing them (✕ / BACK) between
+  // presses doesn't break the sequence
+  if (k === 'back' && code == null) return false;
   if (code != null) {                               // armed: digits are the code, OK checks it
     if (/^\d$/.test(k) && code.length < 8) { code += k; return true; }
     const tried = code; code = null; pos = 0;
     if (k === 'ok' && hash('nv-service', tried) === CODE) { enter(); return true; }
     return k === 'ok';
   }
-  if (k === ARM[pos]) { if (++pos === ARM.length) { pos = 0; code = ''; } return false; }
+  if (k === ARM[pos]) {
+    if (++pos === ARM.length) {
+      // armed: the 5th GUIDE press doesn't open the guide again, and everything closes so the
+      // number buttons are in reach
+      pos = 0; code = ''; hooks().closeMenu?.(); hooks().closeGuide?.(); return true;
+    }
+    return false;
+  }
   pos = k === ARM[0] ? 1 : 0;
   return false;
 }
