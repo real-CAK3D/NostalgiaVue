@@ -176,8 +176,12 @@ function load(pick) {
     // real-length schedule when the running times are known; otherwise one video per half hour
     const known = yt.items.filter(i => lengthOf(i)).length > yt.items.length / 2;
     const now = known ? onNow(yt.items) : null;
-    const index = pick ?? (now ? now.idx % ids.length : hash(daySeed(), yt.ch.n, slot) % ids.length);
-    const at = pick != null ? 0 : now ? Math.floor(now.offset) : Math.floor(elapsed % 300);
+    let index = pick ?? (now ? now.idx % ids.length : hash(daySeed(), yt.ch.n, slot) % ids.length);
+    let at = pick != null ? 0 : now ? Math.floor(now.offset) : Math.floor(elapsed % 300);
+    // a video shorter than its time slot has already ended: the next one starts early instead of
+    // asking YouTube to start past the end (which played nothing)
+    const len = lengthOf(yt.items[index]);
+    if (pick == null && len && at > len - 20) { index = (index + 1) % ids.length; at = 0; }
     yt.player.loadPlaylist({ playlist: ids, index, startSeconds: at });
   } else {
     const id = yt.cands[yt.cand];
