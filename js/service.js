@@ -4,7 +4,7 @@
 import { state } from './store.js';
 import { hash } from './util.js';
 import { scene, staticOff } from './osd.js';
-import { verifyPassword } from './xxx.js';
+import { verifyPassword } from './adultlock.js';
 
 // MENU and GUIDE presses arm it; then a code on the number buttons and OK. Only a fingerprint of the
 // code is kept here, so reading this file doesn't give it away.
@@ -41,9 +41,9 @@ function enter() {
 function ask(bad) {
   scene(`<div class="card lock service"><div class="card-name">SERVICE MODE</div>
     <div class="card-text">Enter the service password.</div>
-    <form class="xxx-pw"><input type="password" autocomplete="off"><button type="submit" class="card-go">OK</button></form>
+    <form class="pw-form"><input type="password" autocomplete="off"><button type="submit" class="card-go">OK</button></form>
     ${bad ? '<div class="card-text bad">Wrong password</div>' : ''}</div>`, 'cardscene');
-  const form = document.querySelector('.xxx-pw'), input = form.querySelector('input');
+  const form = document.querySelector('.pw-form'), input = form.querySelector('input');
   input.focus();
   input.addEventListener('keydown', e => { if (e.key === 'Escape') leave(); });
   form.onsubmit = async e => {

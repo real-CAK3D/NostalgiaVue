@@ -160,7 +160,7 @@ Generated from `js/lineup.js`. Channels you add in **MENU › Channels** go in t
 | 137 | FEAR | Sci-Fi & Horror | archive.org |
 | 138 | SPKR | Spooky Radio | archive.org (audio) |
 | 139 | HOST | Horror Hosts | YouTube (YouTube search + ON DEMAND, archive.org fallback) |
-| 140 | HOLI | Halloween Channel | archive.org |
+| 140 | HOLI | Thanksgiving Channel | archive.org |
 | 141 | XMAS | Yule Channel | archive.org |
 | 142 | BOO | Halloween HQ | archive.org |
 | 143 | UFO | Paranormal Pursuits | YouTube (YouTube search + ON DEMAND, archive.org fallback) |

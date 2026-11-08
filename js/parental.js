@@ -6,7 +6,7 @@ import { settings, save, state } from './store.js';
 import { scene, staticOff, msg } from './osd.js';
 import { iconSVG } from './icons.js';
 import { kidsHidden, isAdultCh, ADULT_CATS } from './lineup.js';
-import { xxxUnlocked, askPassword } from './xxx.js';
+import { adultUnlocked, askPassword } from './adultlock.js';
 export { kidsHidden };
 
 const unlocked = new Set();                  // channels unlocked with the PIN until the set is turned off
@@ -15,9 +15,9 @@ export const clearUnlocks = () => unlocked.clear();
 export const pinSet = () => /^\d{4}$/.test(settings.pin || '');
 export { ADULT_CATS };
 export const isAdult = isAdultCh;
-// adult channels: the service password, once per power-on (see xxx.js); everything else: the PIN
+// adult channels: the service password, once per power-on (see adultlock.js); everything else: the PIN
 export function isLocked(ch) {
-  if (isAdult(ch)) return !xxxUnlocked();
+  if (isAdult(ch)) return !adultUnlocked();
   if (unlocked.has(ch.n)) return false;
   if (!pinSet()) return false;
   return (settings.lockedCats || []).includes(ch.cat) || (settings.lockedChannels || []).includes(ch.n);

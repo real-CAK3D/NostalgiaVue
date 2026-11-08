@@ -8,7 +8,7 @@ import { resolvePlace } from './sources/special.js';
 import { bridgeApi, jellyfinLibraries, parseM3U } from './sources/local.js';
 import { parseYouTube, resolveHandle, testYouTube, explainYtError, ytCaptions } from './sources/youtube.js';
 import { applySubs } from './player.js';
-import { xxxUnlocked, xxxLockAgain, embedUrl, SITES } from './xxx.js';
+import { adultUnlocked, lockAdultAgain } from './adultlock.js';
 import { leave as leaveService } from './service.js';
 const APP_VERSION = '1.4.0';
 import { myStats, sharedSummary, starsHTML, fmtMins, resetMyStats } from './stats.js';
@@ -145,13 +145,8 @@ function body() {
       <p class="m-note service-head">SERVICE MODE · NostalgiaVue ${APP_VERSION} · the remote light stays green while you’re in here. Close the menu to leave.</p>
       <h4>Adult channels</h4>
       ${check('adultShown', 'Show adult channels on this TV (After Dark, Half Baked, Lingerie Football)')}
-      ${check('xxxOn', 'Show the XXX channel (599)')}
       <p class="m-note">Shown channels still ask for the service password before they play, once per power-on.</p>
-      <div class="m-row"><span>Right now</span><em>${xxxUnlocked() ? 'Unlocked until the TV is turned off' : 'Locked'}</em>${xxxUnlocked() ? '<button type="button" class="m-btn" data-do="relock">Lock now</button>' : ''}</div>
-      <h4>XXX videos</h4>
-      <p class="m-note">Video links, one per line, from ${SITES.map(s => s[0]).join(', ')}, or any direct .mp4/.m3u8 link. They play through each site’s own embedded player, a new one every half hour (OK = next). Kept only on this device; channel 599 is never counted in stats.</p>
-      <textarea id="mXxxLinks" rows="6" spellcheck="false" placeholder="https://www.pornhub.com/view_video.php?viewkey=…">${esc((settings.xxxLinks || []).join('\n'))}</textarea>
-      <div class="m-row"><span></span><button type="button" class="m-btn" data-do="xxxsave">Save links</button><em id="mXxxMsg">${(settings.xxxLinks || []).length} saved</em></div>
+      <div class="m-row"><span>Right now</span><em>${adultUnlocked() ? 'Unlocked until the TV is turned off' : 'Locked'}</em>${adultUnlocked() ? '<button type="button" class="m-btn" data-do="relock">Lock now</button>' : ''}</div>
       <h4>Diagnostics</h4>
       <div class="m-row"><span>Channels</span><em>${CHANNELS.length} in the lineup · ${hidden} hidden on this TV</em></div>
       <div class="m-row"><span>Stored on this device</span><em>${Math.round(used / 1024)} KB</em></div>
@@ -323,11 +318,7 @@ async function act(what, el) {
     }
     return;
   }
-  if (what === 'xxxsave') {
-    settings.xxxLinks = $('#mXxxLinks').value.split(/\s+/).map(s => s.trim()).filter(s => embedUrl(s));
-    save(); const n = settings.xxxLinks.length; renderMenu(); $('#mXxxMsg').textContent = `✓ ${n} video${n === 1 ? '' : 's'} saved`; return;
-  }
-  if (what === 'relock') { xxxLockAgain(); renderMenu(); return; }
+  if (what === 'relock') { lockAdultAgain(); renderMenu(); return; }
   if (what === 'svcexit') return closeMenu();
   if (what === 'svcstats') {
     const out = $('#mSvcStats'); out.textContent = 'Checking…';
@@ -435,7 +426,7 @@ export function bindMenu() {
         if (!confirm('Adult channels have sexual content and drug references.\n\nPress OK only if you are 18 or older.')) { el.checked = settings.adultShown = false; return; }
         settings.adultOk = true;
       }
-      changed(k === 'set' || k === 'adultShown' || k === 'xxxOn'); if (k === 'set' || k.startsWith('year')) renderMenu();
+      changed(k === 'set' || k === 'adultShown'); if (k === 'set' || k.startsWith('year')) renderMenu();
       if (k === 'kids' && settings.kids && state.on) hooks().tune?.(state.num);
       if (k.startsWith('year') || k === 'eraYouTube') hooks().eraChanged?.();
       if (k === 'cc') { ytCaptions(); applySubs(); }

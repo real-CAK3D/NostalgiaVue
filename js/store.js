@@ -43,8 +43,6 @@ export const DEFAULTS = {
   translate: true,
   shareStats: true,
   adultShown: false,      // adult channels on the dial (switched in service mode)
-  xxxOn: false,           // XXX channel 599 turned on (with its password) on this device
-  xxxLinks: [],           // video links for the XXX channel, kept on this device only       // send anonymous "watching channel N" check-ins for the shared counts        // show foreign-language descriptions in English
   ytKey: '',             // optional YouTube Data API key (search, ON DEMAND, @handles)
   ytNames: {},           // channel names learned from YouTube
   localMap: {},          // channel number -> {type:'bridge'|'jellyfin', path|parentId, label}
@@ -75,6 +73,8 @@ function load() {
   catch { return { ...DEFAULTS }; }
 }
 export const settings = load();
+// the XXX channel and its saved links are gone
+delete settings.xxxOn; delete settings.xxxLinks;
 export function save() {
   settings.savedAt = Date.now();
   try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch {}

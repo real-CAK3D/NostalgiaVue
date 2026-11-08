@@ -985,7 +985,6 @@ const EXTRA = [
   show(585, 'AFTER DARK', 'SLAV', 'Space Babes (80s)', ['slave girls from beyond infinity', 'star slammer 1986', 'galactic gigolo 1987', 'dr alien 1989', 'bad girls from mars 1990', 'sorority babes in the slimeball bowl-o-rama', 'the party animal 1984', 'weird science 1985', 'flesh gordon meets the cosmic cheerleaders'], [TS('slave girls from beyond infinity', 'galactic gigolo', 'star slammer')], { desc: 'Slave Girls from Beyond Infinity, Star Slammer, Galactic Gigolo, Dr. Alien, Bad Girls from Mars, Weird Science…' }),
   show(586, 'AFTER DARK', 'BABE', 'Beach Babes from Beyond (90s)', ['beach babes from beyond 1993', 'attack of the 60 foot centerfold', 'vampire vixens from venus', 'dinosaur island 1994', 'petticoat planet 1996', 'virtual girl 1998', 'species ii 1998', 'femalien 1996', 'the exotic time machine 1998', 'vampirella 1996'], [], { desc: 'Beach Babes from Beyond, Attack of the 60 Foot Centerfold, Vampire Vixens from Venus, Dinosaur Island, Petticoat Planet, Femalien, Virtual Girl…' }),
   show(587, 'AFTER DARK', 'BIKI', 'Bikini B-Movie Spoofs (2000s)', ['bikini girls on dinosaur planet', 'play-mate of the apes', 'baberellas 2003', 'spiderbabe 2003', 'the girl who shagged me', 'the breastford wives', 'cleavagefield 2009', 'batbabe the dark nightie', 'bikini time machine', 'the big bust theory', 'stacked racks from mars', 'bikini frankenstein'], [], { desc: 'Retromedia and Seduction Cinema spoofs: Play-Mate of the Apes, Baberellas, SpiderBabe, The Girl Who Shagged Me, Cleavagefield, The Breastford Wives…' }),
-  { n: 599, cat: 'XXX', call: 'XXX', name: 'XXX · Adults Only', kind: 'xxx', desc: 'Hardcore, for adults only. Turned on and unlocked with its own password.' },
   show(590, 'AFTER DARK', 'FLSH', 'Flesh Gordon', ['flesh gordon 1974', 'flesh gordon meets the cosmic cheerleaders'], [TS('flesh gordon')], { desc: 'Flesh Gordon (1974) and Flesh Gordon Meets the Cosmic Cheerleaders (1989).' }),
   show(591, 'AFTER DARK', 'BARB', 'Barbarella', ['barbarella 1968', 'barbarella jane fonda']),
   a(592, 'AFTER DARK', 'GALX', 'Galaxina', [TS('galaxina')], { desc: 'Galaxina (1980), the public-domain space-robot cult film.' }),
@@ -1037,12 +1036,12 @@ export const chanByNum = n => CHANNELS.find(c => c.n === n);
 export const KIDS_CATS = new Set(['KIDS', 'CARTOONS', 'LEARNING', 'NATURE', 'SCIENCE', 'GAMES', 'GUIDE', 'SEASONAL', 'COZY']);
 const KIDS_KINDS = new Set(['weather', 'guidech', 'games']);
 export const kidsHidden = ch => !!(ch && settings.kids && !KIDS_CATS.has(ch.cat) && !KIDS_KINDS.has(ch.kind));
-// Adult channels (and XXX) are off the dial, out of the guide and untunable until they're switched
+// Adult channels are off the dial, out of the guide and untunable until they're switched
 // on in service mode; even then they need the service password to watch.
 export const ADULT_CATS = ['AFTER DARK', 'HALF BAKED'];
 const ADULT_CHANNELS = [419, 792, 957];            // Half Baked, Kaloopy Live, Lingerie Football
-export const isAdultCh = ch => !!ch && (ch.kind === 'xxx' || ADULT_CATS.includes(ch.cat) || ADULT_CHANNELS.includes(ch.n));
-export const adultOff = ch => !!ch && (ch.kind === 'xxx' ? !settings.xxxOn : isAdultCh(ch) && !settings.adultShown);
+export const isAdultCh = ch => !!ch && (ADULT_CATS.includes(ch.cat) || ADULT_CHANNELS.includes(ch.n));
+export const adultOff = ch => isAdultCh(ch) && !settings.adultShown;
 export const isHidden = n => settings.hidden.includes(n) || kidsHidden(chanByNum(n)) || adultOff(chanByNum(n));
 export const surfable = () => CHANNELS.filter(c => !isHidden(c.n));
 
